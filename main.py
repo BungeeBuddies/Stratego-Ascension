@@ -13,10 +13,12 @@ class Window(pyglet.window.Window):
 		super(Window, self).__init__()
 		self.set_size(800, 600)
 		self.lengthOfField = 10
-		self.sizeOfField = 50
+		self.sizeOfField = 25
 		self.xOffset = 175
-		self.yOffset = 100
+		self.yOffset = 75
 
+		self.isFieldSelected = False
+		self.selectedField = 0
 		self.fields = self.createPlayField()
 
 	def on_key_press(self, symbol, modifiers):
@@ -28,13 +30,15 @@ class Window(pyglet.window.Window):
 	def on_mouse_press(self, x, y, button, modifiers):
 		fieldIndex = 0
 		fieldsList = []
-		print [y, x]
+
+		if (self.selectedField is not 0):
+			self.selectedField.selected = False
 
 		for row in range(0, len(self.fields)):
 			for field in self.fields[row]:
 				fieldsList.append([field.y, field.x])
 
-		fieldSize = self.sizeOfField/2
+		fieldSize = self.sizeOfField
 
 		for extraX in range(-fieldSize, fieldSize):
 			for extraY in range(-fieldSize, fieldSize):
@@ -43,7 +47,11 @@ class Window(pyglet.window.Window):
 				except ValueError:
 					pass
 				else:
-					print "Field pressed: " + str(fieldIndex)
+					self.isFieldSelected = True
+					index = fieldIndex/self.lengthOfField
+					self.selectedField = self.fields[index][fieldIndex - index*self.lengthOfField]
+					self.selectedField.selected = False
+
 
 	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
 		pass
@@ -72,8 +80,8 @@ class Window(pyglet.window.Window):
 
 		for y in range(0, len(fields)):
 			for x in range(0, len(fields[0])):
-				fields[y][x].x = x * fields[y][x].size + self.xOffset
-				fields[y][x].y = y * fields[y][x].size + self.yOffset
+				fields[y][x].x = x * fields[y][x].size*2 + self.xOffset
+				fields[y][x].y = y * fields[y][x].size*2 + self.yOffset
 
 		return fields
 
@@ -81,10 +89,15 @@ class Window(pyglet.window.Window):
 		for y in range(0, len(self.fields)):
 			for field in self.fields[y]:
 
-				# Draw center
-				self.drawCircle(field.x, field.y, 5, [1, 1, 1])
+				if (field.selected):
+					glColor3f(1, 0, 1)
+				else:
+					glColor3f(1, 1, 1)
 
-				# Draw top side
+				# Draw center
+				# self.drawCircle(field.x, field.y, 5, [1, 1, 1])
+
+				# # Draw top side
 				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
     				(field.x + field.size, field.y + field.size, 
     				field.x - field.size, field.y + field.size)))
@@ -103,7 +116,6 @@ class Window(pyglet.window.Window):
 				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
     				(field.x + field.size, field.y - field.size,
     				field.x + field.size, field.y + field.size)))
-		
 
 	def on_draw(self):
 		pass

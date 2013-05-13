@@ -4,3 +4,4 @@ class Field:
 		self.x = x
 		self.y = y
 		self.size = size
+		self.selected = False
