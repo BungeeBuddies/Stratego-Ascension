@@ -12,6 +12,7 @@ from playscreen import PlayScreen
 class Window(pyglet.window.Window):
 
 	def __init__(self):
+
 		super(Window, self).__init__(caption = "Stratego Ascension", config = Config(sample_buffers=1, samples=4))
  		self.set_size(900, 700)
 		self.xOffset = 175
@@ -22,11 +23,29 @@ class Window(pyglet.window.Window):
 		self.isFieldSelected = False
 		self.selectedField = 0
 
+        self.click = 0
 		self.amountOfPieces = 80
 		self.pieces = self.createPieceList()
 
-	def on_key_press(self, symbol, modifiers):
-		pass
+    def on_key_press(self, symbol, modifiers):
+        pass
+    
+    def on_mouse_release(self, x, y, button, modifiers):
+        pass
+            
+    def on_mouse_press(self, x, y, button, modifiers):
+                   
+                
+        if self.click == 0:
+            
+            print'eerste klik'
+            fieldIndex = 0
+            fieldsList = []
+             
+                    
+            if (self.selectedField is not 0):
+                self.selectedField.selected = False
+                
 
 	def on_mouse_release(self, x, y, button, modifiers):
 		pass
@@ -38,9 +57,16 @@ class Window(pyglet.window.Window):
 		if (self.selectedField is not 0):
 			self.selectedField.selected = False
 
-		for row in range(0, len(self.playScreen.fields)):
-			for field in self.playScreen.fields[row]:
-				fieldsList.append([field.y, field.x])
+            
+        elif self.click==1:
+            print'tweede klik'
+            fieldIndex = 0
+            fieldsList = []
+             
+                    
+            if (self.selectedField is not 0):
+                self.selectedField.selected = False
+                
 
 		fieldSize = self.playScreen.sizeOfField
 
