@@ -7,39 +7,23 @@ from time import time
 from copy import deepcopy
 from field import Field
 from piece import Piece
-<<<<<<< HEAD
-=======
 from playscreen import PlayScreen
->>>>>>> marcelo
 
 class Window(pyglet.window.Window):
 
 	def __init__(self):
-<<<<<<< HEAD
-		super(Window, self).__init__()
-		self.set_size(800, 600)
-=======
+
 		super(Window, self).__init__(caption = "Stratego Ascension", config = Config(sample_buffers=1, samples=4))
  		self.set_size(900, 700)
->>>>>>> marcelo
 		self.xOffset = 175
 		self.yOffset = 75
 		self.fieldOffset = 1
 
-<<<<<<< HEAD
-		self.lengthOfField = 10
-		self.sizeOfField = 25
-		self.isFieldSelected = False
-		self.selectedField = 0
-		self.fields = self.createPlayField()
-=======
 		self.playScreen = PlayScreen(self)
 		# self.playScreen.fields = self.createPlayField()
 		self.isFieldSelected = False
 		self.selectedField = 0
 
->>>>>>> marcelo
-		
 		self.amountOfPieces = 80
 		self.pieces = self.createPieceList()
 
@@ -70,13 +54,8 @@ class Window(pyglet.window.Window):
 					pass
 				else:
 					self.isFieldSelected = True
-<<<<<<< HEAD
-					index = fieldIndex/self.lengthOfField
-					self.selectedField = self.fields[index][fieldIndex - index*self.lengthOfField]
-=======
 					index = fieldIndex/self.playScreen.lengthOfField
 					self.selectedField = self.playScreen.fields[index][fieldIndex - index*self.playScreen.lengthOfField]
->>>>>>> marcelo
 					self.selectedField.selected = True
 
 
@@ -156,44 +135,6 @@ class Window(pyglet.window.Window):
 				pieces.append(Piece(10))
 		return pieces	
 		
-<<<<<<< HEAD
-			
-	
-
-	def drawPlayField(self):
-		for y in range(0, len(self.fields)):
-			for field in self.fields[y]:
-
-				if (field.selected):
-					glColor3f(1, 0, 1)
-				else:
-					glColor3f(1, 1, 1)
-
-				# Draw center
-				# self.drawCircle(field.x, field.y, 5, [1, 1, 1])
-
-				# # Draw top side
-				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    				(field.x + field.size, field.y + field.size, 
-    				field.x - field.size, field.y + field.size)))
-
-				# Draw down side
-				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    				(field.x + field.size, field.y - field.size, 
-    				field.x - field.size, field.y - field.size)))
-				
-				# Draw left side
-				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    				(field.x - field.size, field.y - field.size,
-    				field.x - field.size, field.y + field.size)))
-
-				# Draw right side
-				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    				(field.x + field.size, field.y - field.size,
-    				field.x + field.size, field.y + field.size)))
-=======
->>>>>>> marcelo
-
 	def on_draw(self):
 		pass
 
