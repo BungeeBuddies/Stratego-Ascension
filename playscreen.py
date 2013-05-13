@@ -10,7 +10,8 @@ class PlayScreen:
 		self.yOffset = self.window.get_size()[1]/8 + 35
 		self.fieldOffset = 1
 
-		self.lengthOfField = 10
+		self.widthOfField = 10
+		self.heightOfField = 10
 		self.sizeOfField = 25
 		self.isFieldSelected = False
 		self.selectedField = 0
@@ -19,7 +20,7 @@ class PlayScreen:
 
 
 	def createPlayField(self):
-		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.lengthOfField)] for y in xrange(self.lengthOfField)]
+		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
 
 		for y in range(0, len(fields)):
 			for x in range(0, len(fields[0])):

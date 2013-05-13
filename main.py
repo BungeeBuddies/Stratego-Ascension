@@ -8,6 +8,7 @@ from copy import deepcopy
 from field import Field
 from piece import Piece
 from playscreen import PlayScreen
+from startscreen import StartScreen
 
 class Window(pyglet.window.Window):
 
@@ -19,14 +20,14 @@ class Window(pyglet.window.Window):
 		self.fieldOffset = 1
 		self.firstClick = True
 
-		self.playScreen = PlayScreen(self)
-		# self.playScreen.fields = self.createPlayField()
-		self.isFieldSelected = False
-		self.selectedField = 0
-
-		
 		self.amountOfPieces = 80
 		self.pieces = self.createPieceList()
+
+		self.playScreen = PlayScreen(self)
+		self.startScreen = StartScreen(self.pieces,self)
+		self.currentScreen = self.startScreen
+		self.isFieldSelected = False
+		self.selectedField = 0
 
 	def on_key_press(self, symbol, modifiers):
 		pass
@@ -41,11 +42,11 @@ class Window(pyglet.window.Window):
 		if (self.selectedField is not 0):
 			self.selectedField.selected = False
 
-		for row in range(0, len(self.playScreen.fields)):
-			for field in self.playScreen.fields[row]:
+		for row in range(0, len(self.currentScreen.fields)):
+			for field in self.currentScreen.fields[row]:
 				fieldsList.append([field.y, field.x])
 
-		fieldSize = self.playScreen.sizeOfField
+		fieldSize = self.currentScreen.sizeOfField
 
 		for extraX in range(-fieldSize, fieldSize):
 			for extraY in range(-fieldSize, fieldSize):
@@ -54,15 +55,16 @@ class Window(pyglet.window.Window):
 				except ValueError:
 					pass
 				else:
-					index = fieldIndex/self.playScreen.lengthOfField
-					self.selectedField = self.playScreen.fields[index][fieldIndex - index*self.playScreen.lengthOfField]
+					column = fieldIndex % self.currentScreen.widthOfField
+					row = (fieldIndex - column)/self.currentScreen.widthOfField
+					self.selectedField = self.currentScreen.fields[row][column]
 					self.selectedField.selected = True
 
 					if (self.firstClick):
-						self.playScreen.color = [1, 0, 1]
+						self.currentScreen.color = [1, 0, 1]
 						self.firstClick = False
 					elif (not self.firstClick):
-						self.playScreen.color = [0, 0, 1]						
+						self.currentScreen.color = [0, 0, 1]						
 						self.firstClick = True
 
 	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
@@ -88,7 +90,7 @@ class Window(pyglet.window.Window):
 		glEnd()
 
 	def createPlayField(self):
-		fields = [[Field(0, 0, self.playScreen.sizeOfField) for x in xrange(self.playScreen.lengthOfField)] for y in xrange(self.playScreen.lengthOfField)]
+		fields = [[Field(0, 0, self.currentScreen.sizeOfField) for x in xrange(self.currentScreen.lengthOfField)] for y in xrange(self.currentScreen.lengthOfField)]
 
 		for y in range(0, len(fields)):
 			for x in range(0, len(fields[0])):
@@ -146,7 +148,7 @@ class Window(pyglet.window.Window):
 		pass
 
 	def update(self, dt):
-		self.playScreen.draw()
+		self.currentScreen.draw()
 
 if __name__ == '__main__':
 	window = Window()
