@@ -17,7 +17,7 @@ class StartScreen:
 		self.sizeOfButton = 50
 		self.fields = self.createStartField()
 
-		self.color = [1, 1, 1]
+		self.bottumText = 'Player 1, setup your field'
 
 	def createStartField(self):
 		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
@@ -39,7 +39,13 @@ class StartScreen:
                           x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-20,
                           anchor_x='center', anchor_y='center').draw()
 
-		pyglet.text.Label('Player 1, setup your field',
+		pyglet.text.Label('This side is looking at the enemy',
+                          font_name='Arial',
+                          font_size=16,
+                          x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-60,
+                          anchor_x='center', anchor_y='center').draw()
+
+		pyglet.text.Label(self.bottumText,
                           font_name='Arial',
                           font_size=16,
                           x=self.window.get_size()[0]/2, y=20,
