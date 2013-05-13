@@ -13,22 +13,17 @@ class Window(pyglet.window.Window):
 	def __init__(self):
 		super(Window, self).__init__()
 		self.set_size(800, 600)
-		self.lengthOfField = 10
-<<<<<<< HEAD
-		self.sizeOfField = 25
 		self.xOffset = 175
 		self.yOffset = 75
 
+		self.lengthOfField = 10
+		self.sizeOfField = 25
 		self.isFieldSelected = False
 		self.selectedField = 0
-=======
-		self.sizeOfField = 10
-		self.amountOfPieces = 80
-		self.xOffset = 175
-		self.yOffset = 100
-		self.pieces = self.createPieceList()
->>>>>>> 7f9c6447db20d9f9ac37dda64d20d676c2539a36
 		self.fields = self.createPlayField()
+		
+		self.amountOfPieces = 80
+		self.pieces = self.createPieceList()
 
 	def on_key_press(self, symbol, modifiers):
 		pass
@@ -59,7 +54,7 @@ class Window(pyglet.window.Window):
 					self.isFieldSelected = True
 					index = fieldIndex/self.lengthOfField
 					self.selectedField = self.fields[index][fieldIndex - index*self.lengthOfField]
-					self.selectedField.selected = False
+					self.selectedField.selected = True
 
 
 	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
