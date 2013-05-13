@@ -12,40 +12,24 @@ from playscreen import PlayScreen
 class Window(pyglet.window.Window):
 
 	def __init__(self):
-
-		super(Window, self).__init__(caption = "Stratego Ascension", config = Config(sample_buffers=1, samples=4))
+		super(Window, self).__init__(caption = "Stratego Ascension", config= Config(sample_buffers=1, samples=4))
  		self.set_size(900, 700)
 		self.xOffset = 175
 		self.yOffset = 75
+		self.fieldOffset = 1
+		self.firstClick = True
 
 		self.playScreen = PlayScreen(self)
-		self.fieldOffset = 5
+		# self.playScreen.fields = self.createPlayField()
 		self.isFieldSelected = False
 		self.selectedField = 0
 
-        self.click = 0
+		
 		self.amountOfPieces = 80
 		self.pieces = self.createPieceList()
 
-    def on_key_press(self, symbol, modifiers):
-        pass
-    
-    def on_mouse_release(self, x, y, button, modifiers):
-        pass
-            
-    def on_mouse_press(self, x, y, button, modifiers):
-                   
-                
-        if self.click == 0:
-            
-            print'eerste klik'
-            fieldIndex = 0
-            fieldsList = []
-             
-                    
-            if (self.selectedField is not 0):
-                self.selectedField.selected = False
-                
+	def on_key_press(self, symbol, modifiers):
+		pass
 
 	def on_mouse_release(self, x, y, button, modifiers):
 		pass
@@ -57,16 +41,9 @@ class Window(pyglet.window.Window):
 		if (self.selectedField is not 0):
 			self.selectedField.selected = False
 
-            
-        elif self.click==1:
-            print'tweede klik'
-            fieldIndex = 0
-            fieldsList = []
-             
-                    
-            if (self.selectedField is not 0):
-                self.selectedField.selected = False
-                
+		for row in range(0, len(self.playScreen.fields)):
+			for field in self.playScreen.fields[row]:
+				fieldsList.append([field.y, field.x])
 
 		fieldSize = self.playScreen.sizeOfField
 
@@ -77,11 +54,16 @@ class Window(pyglet.window.Window):
 				except ValueError:
 					pass
 				else:
-					self.isFieldSelected = True
 					index = fieldIndex/self.playScreen.lengthOfField
 					self.selectedField = self.playScreen.fields[index][fieldIndex - index*self.playScreen.lengthOfField]
 					self.selectedField.selected = True
 
+					if (self.firstClick):
+						self.playScreen.color = [1, 0, 1]
+						self.firstClick = False
+					elif (not self.firstClick):
+						self.playScreen.color = [0, 0, 1]						
+						self.firstClick = True
 
 	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
 		pass
@@ -159,6 +141,7 @@ class Window(pyglet.window.Window):
 				pieces.append(Piece(10))
 		return pieces	
 		
+
 	def on_draw(self):
 		pass
 
