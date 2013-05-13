@@ -12,7 +12,8 @@ class Window(pyglet.window.Window):
 	def __init__(self):
 		super(Window, self).__init__()
 		self.set_size(800, 600)
-		self.sizeOfField = 10
+		self.lengthOfField = 10
+		self.sizeOfField = 50
 		self.xOffset = 175
 		self.yOffset = 100
 
@@ -25,8 +26,25 @@ class Window(pyglet.window.Window):
 		pass
 
 	def on_mouse_press(self, x, y, button, modifiers):
-		pass
-					
+		fieldIndex = 0
+		fieldsList = []
+		print [y, x]
+
+		for row in range(0, len(self.fields)):
+			for field in self.fields[row]:
+				fieldsList.append([field.y, field.x])
+
+		fieldSize = self.sizeOfField/2
+
+		for extraX in range(-fieldSize, fieldSize):
+			for extraY in range(-fieldSize, fieldSize):
+				try:
+					fieldIndex = fieldsList.index([y + extraY, x + extraX])
+				except ValueError:
+					pass
+				else:
+					print "Field pressed: " + str(fieldIndex)
+
 	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
 		pass
 
@@ -40,17 +58,17 @@ class Window(pyglet.window.Window):
 			('v2i', (x, y)),
 			('c3B', (color[0], color[1], color[2])))
 
-	def drawcircle(self, x, y, radius, color):
+	def drawCircle(self, x, y, radius, color):
 		smoothness = int(2*radius*pi)
 		glBegin(GL_TRIANGLE_FAN)
 		glColor3f(color[0], color[1], color[2])
 		for i in range(0, smoothness):
 			angle = i * pi * 2.0 / smoothness
 			glVertex2f(x + radius * cos(angle), y + radius * sin(angle))
-			glEnd()
+		glEnd()
 
 	def createPlayField(self):
-		fields = [[Field(0, 0) for x in xrange(self.sizeOfField)] for y in xrange(self.sizeOfField)]
+		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.lengthOfField)] for y in xrange(self.lengthOfField)]
 
 		for y in range(0, len(fields)):
 			for x in range(0, len(fields[0])):
@@ -62,6 +80,10 @@ class Window(pyglet.window.Window):
 	def drawPlayField(self):
 		for y in range(0, len(self.fields)):
 			for field in self.fields[y]:
+
+				# Draw center
+				self.drawCircle(field.x, field.y, 5, [1, 1, 1])
+
 				# Draw top side
 				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
     				(field.x + field.size, field.y + field.size, 
@@ -88,7 +110,7 @@ class Window(pyglet.window.Window):
 
 	def update(self, dt):
 		self.drawPlayField()
-		
+
 if __name__ == '__main__':
 	window = Window()
 	pyglet.clock.schedule_interval(window.update, 1.0/60.0)
