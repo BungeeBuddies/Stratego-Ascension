@@ -6,20 +6,25 @@ from math import pi, sin, cos
 from time import time
 from copy import deepcopy
 from field import Field
+from piece import Piece
 
 class Window(pyglet.window.Window):
 
 	def __init__(self):
 		super(Window, self).__init__()
 		self.set_size(800, 600)
-		self.lengthOfField = 10
-		self.sizeOfField = 25
 		self.xOffset = 175
 		self.yOffset = 75
+		self.fieldOffset = 1
 
+		self.lengthOfField = 10
+		self.sizeOfField = 25
 		self.isFieldSelected = False
 		self.selectedField = 0
 		self.fields = self.createPlayField()
+		
+		self.amountOfPieces = 80
+		self.pieces = self.createPieceList()
 
 	def on_key_press(self, symbol, modifiers):
 		pass
@@ -50,7 +55,7 @@ class Window(pyglet.window.Window):
 					self.isFieldSelected = True
 					index = fieldIndex/self.lengthOfField
 					self.selectedField = self.fields[index][fieldIndex - index*self.lengthOfField]
-					self.selectedField.selected = False
+					self.selectedField.selected = True
 
 
 	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
@@ -80,11 +85,56 @@ class Window(pyglet.window.Window):
 
 		for y in range(0, len(fields)):
 			for x in range(0, len(fields[0])):
-				fields[y][x].x = x * fields[y][x].size*2 + self.xOffset
-				fields[y][x].y = y * fields[y][x].size*2 + self.yOffset
+					fields[y][x].x = x * fields[y][x].size*2 + self.xOffset + self.fieldOffset * x
+					fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.fieldOffset * y
 
 		return fields
 
+	def createPieceList(self):
+		pieces = []
+		#80 pieces, 40 of team a, 40 of team b.
+		#So, do everything two times
+		for x in range (0,2):
+			#Fourty pieces
+			#One Flag
+			for x in range(0,1):
+				pieces.append(Piece('F'))
+			#six Bombs
+			for x in range(0,6):
+				pieces.append(Piece('B'))
+			#One Spy
+			for x in range(0,1):
+				pieces.append(Piece(1))
+			#Eight Scouts
+			for x in range (0,8):
+				pieces.append(Piece(2))
+			#Five Miners
+			for x in range(0,5):
+				pieces.append(Piece(3))	
+			#Four Sergeants
+			for x in range(0,4):
+				pieces.append(Piece(4))
+			#Four Lieutenants 
+			for x in range(0,4):
+				pieces.append(Piece(5))
+			#Four Captains
+			for x in range(0,4):
+				pieces.append(Piece(6))
+			#Three Majors
+			for x in range(0,3):
+				pieces.append(Piece(7))
+			#Two Colonels
+			for x in range(0,2):
+				pieces.append(Piece(8))
+			#One General
+			for x in range(0,1):
+				pieces.append(Piece(9))
+			#One Marshal
+			for x in range(0,1):
+				pieces.append(Piece(10))
+		return pieces	
+		
+			
 	def drawPlayField(self):
 		for y in range(0, len(self.fields)):
 			for field in self.fields[y]:

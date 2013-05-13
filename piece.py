@@ -1,4 +1,4 @@
-class Stuk:
+class Piece:
 	type = -1
 
 	def __init__(self,type):
