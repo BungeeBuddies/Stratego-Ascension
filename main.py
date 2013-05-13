@@ -7,21 +7,22 @@ from time import time
 from copy import deepcopy
 from field import Field
 from piece import Piece
+from playscreen import PlayScreen
 
 class Window(pyglet.window.Window):
 
 	def __init__(self):
-		super(Window, self).__init__()
-		self.set_size(800, 600)
+		super(Window, self).__init__(caption = "Stratego Ascension", config = Config(sample_buffers=1, samples=4))
+ 		self.set_size(900, 700)
 		self.xOffset = 175
 		self.yOffset = 75
 		self.fieldOffset = 1
 
-		self.lengthOfField = 10
-		self.sizeOfField = 25
+		self.playScreen = PlayScreen(self)
+		# self.playScreen.fields = self.createPlayField()
 		self.isFieldSelected = False
 		self.selectedField = 0
-		self.fields = self.createPlayField()
+
 		
 		self.amountOfPieces = 80
 		self.pieces = self.createPieceList()
@@ -39,11 +40,11 @@ class Window(pyglet.window.Window):
 		if (self.selectedField is not 0):
 			self.selectedField.selected = False
 
-		for row in range(0, len(self.fields)):
-			for field in self.fields[row]:
+		for row in range(0, len(self.playScreen.fields)):
+			for field in self.playScreen.fields[row]:
 				fieldsList.append([field.y, field.x])
 
-		fieldSize = self.sizeOfField
+		fieldSize = self.playScreen.sizeOfField
 
 		for extraX in range(-fieldSize, fieldSize):
 			for extraY in range(-fieldSize, fieldSize):
@@ -53,8 +54,8 @@ class Window(pyglet.window.Window):
 					pass
 				else:
 					self.isFieldSelected = True
-					index = fieldIndex/self.lengthOfField
-					self.selectedField = self.fields[index][fieldIndex - index*self.lengthOfField]
+					index = fieldIndex/self.playScreen.lengthOfField
+					self.selectedField = self.playScreen.fields[index][fieldIndex - index*self.playScreen.lengthOfField]
 					self.selectedField.selected = True
 
 
@@ -81,7 +82,7 @@ class Window(pyglet.window.Window):
 		glEnd()
 
 	def createPlayField(self):
-		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.lengthOfField)] for y in xrange(self.lengthOfField)]
+		fields = [[Field(0, 0, self.playScreen.sizeOfField) for x in xrange(self.playScreen.lengthOfField)] for y in xrange(self.playScreen.lengthOfField)]
 
 		for y in range(0, len(fields)):
 			for x in range(0, len(fields[0])):
@@ -134,44 +135,12 @@ class Window(pyglet.window.Window):
 				pieces.append(Piece(10))
 		return pieces	
 		
-			
-	def drawPlayField(self):
-		for y in range(0, len(self.fields)):
-			for field in self.fields[y]:
-
-				if (field.selected):
-					glColor3f(1, 0, 1)
-				else:
-					glColor3f(1, 1, 1)
-
-				# Draw center
-				# self.drawCircle(field.x, field.y, 5, [1, 1, 1])
-
-				# # Draw top side
-				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    				(field.x + field.size, field.y + field.size, 
-    				field.x - field.size, field.y + field.size)))
-
-				# Draw down side
-				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    				(field.x + field.size, field.y - field.size, 
-    				field.x - field.size, field.y - field.size)))
-				
-				# Draw left side
-				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    				(field.x - field.size, field.y - field.size,
-    				field.x - field.size, field.y + field.size)))
-
-				# Draw right side
-				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    				(field.x + field.size, field.y - field.size,
-    				field.x + field.size, field.y + field.size)))
 
 	def on_draw(self):
 		pass
 
 	def update(self, dt):
-		self.drawPlayField()
+		self.playScreen.draw()
 
 if __name__ == '__main__':
 	window = Window()
