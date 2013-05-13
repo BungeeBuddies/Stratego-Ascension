@@ -60,42 +60,35 @@ class Window(pyglet.window.Window):
 		return fields
 
 	def drawPlayField(self):
-		print "drawing"
-		
-
-	def drawPlayField(self):
-		pass
-
-	def on_draw(self):
-		pass
-
-	def update(self, dt):
 		for y in range(0, len(self.fields)):
 			for field in self.fields[y]:
 				# Draw top side
-				glColor3f(0, 1, 0)
 				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
     				(field.x + field.size, field.y + field.size, 
     				field.x - field.size, field.y + field.size)))
 
 				# Draw down side
-				glColor3f(0, 0, 1)
 				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
     				(field.x + field.size, field.y - field.size, 
     				field.x - field.size, field.y - field.size)))
 				
 				# Draw left side
-				glColor3f(1, 1, 0)
 				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
     				(field.x - field.size, field.y - field.size,
     				field.x - field.size, field.y + field.size)))
 
 				# Draw right side
-				glColor3f(1, 1, 1)
 				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
     				(field.x + field.size, field.y - field.size,
     				field.x + field.size, field.y + field.size)))
-				
+		
+
+	def on_draw(self):
+		pass
+
+	def update(self, dt):
+		self.drawPlayField()
+		
 if __name__ == '__main__':
 	window = Window()
 	pyglet.clock.schedule_interval(window.update, 1.0/60.0)
