@@ -12,15 +12,13 @@ from playscreen import PlayScreen
 class Window(pyglet.window.Window):
 
 	def __init__(self):
-
 		super(Window, self).__init__(caption = "Stratego Ascension", config = Config(sample_buffers=1, samples=4))
  		self.set_size(900, 700)
 		self.xOffset = 175
 		self.yOffset = 75
-		self.fieldOffset = 1
 
 		self.playScreen = PlayScreen(self)
-		# self.playScreen.fields = self.createPlayField()
+		self.fieldOffset = 5
 		self.isFieldSelected = False
 		self.selectedField = 0
 
