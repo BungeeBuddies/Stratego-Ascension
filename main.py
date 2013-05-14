@@ -28,6 +28,7 @@ class Window(pyglet.window.Window):
 		self.currentScreen = self.startScreen
 		self.isFieldSelected = False
 		self.selectedField = 0
+		self.clear()
 
 	def on_key_press(self, symbol, modifiers):
 		pass
