@@ -1,7 +1,9 @@
 #Defines the playfield and then passes it on to the playscreen
 import pyglet
+import copy
 from pyglet.gl import *
 from field import Field
+
 
 class StartScreen:
 	def __init__(self,pieces,window):
@@ -19,6 +21,8 @@ class StartScreen:
 
 		self.populateField()
 		self.bottomText = 'Player 1, setup your field'
+		self.firstSelected = None
+		self.secondSelected = None
 
 	def createStartField(self):
 		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
@@ -63,8 +67,16 @@ class StartScreen:
 			for field in self.fields[y]:
 
 				if (field.selected):
-					glColor3f(self.color[0], self.color[1], self.color[2])
-					# glColor3f(1, 0, 1)
+					if (self.firstSelected is None):
+						self.firstSelected = field
+					else: 
+						if (field.piece.type == ''):
+							field.piece.type = self.firstSelected.piece.type
+							self.firstSelected.piece.type = ''
+						self.firstSelected = None
+				field.selected = False
+				if (field is self.firstSelected):
+					glColor3f(1, 0, 1)
 				else:
 					glColor3f(1, 1, 1)
 
