@@ -46,8 +46,8 @@ class PlayScreen:
 			for field in self.fields[y]:
 
 				if (field.selected):
-					glColor3f(self.color[0], self.color[1], self.color[2])
-					# glColor3f(1, 0, 1)
+					#glColor3f(self.color[0], self.color[1], self.color[2])
+					glColor3f(1, 0, 1)
 				else:
 					glColor3f(1, 1, 1)
 

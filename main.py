@@ -13,7 +13,7 @@ from startscreen import StartScreen
 class Window(pyglet.window.Window):
 
 	def __init__(self):
-		super(Window, self).__init__(caption = "Stratego Ascension", config= Config(sample_buffers=1, samples=4))
+		super(Window, self).__init__()
  		self.set_size(900, 700)
 		self.xOffset = 175
 		self.yOffset = 75
@@ -28,8 +28,14 @@ class Window(pyglet.window.Window):
 		self.currentScreen = self.startScreen
 		self.isFieldSelected = False
 		self.selectedField = 0
-		self.clear()
 
+		self.fpsLabel = pyglet.text.Label('Empty',
+                          font_name='Arial',
+                          font_size=8,
+                          x=10, y=10,
+                          anchor_x='center', anchor_y='center')
+		self.last = time()
+		self.frames = 0
 
 	def on_key_press(self, symbol, modifiers):
 		pass
@@ -146,8 +152,19 @@ class Window(pyglet.window.Window):
 
 	def on_draw(self):
 		pass
-		
+
+	def draw_fps(self):
+		if time() - self.last >= 1:
+			self.fpsLabel.text = str(self.frames)
+			self.frames = 0
+			self.last = time()
+		else:
+			self.frames += 1
+		self.fpsLabel.draw()
+
 	def update(self, dt):
+		self.clear()
+		self.draw_fps()
 		self.currentScreen.draw()
 
 if __name__ == '__main__':

@@ -73,7 +73,6 @@ class StartScreen:
 						if (field.piece.type == ''):
 							field.piece.type = self.firstSelected.piece.type
 							self.firstSelected.piece.type = ''
-							self.window.clear()
 						self.firstSelected = None
 				field.selected = False
 				if (field is self.firstSelected):
