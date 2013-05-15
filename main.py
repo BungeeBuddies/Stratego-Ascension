@@ -163,11 +163,13 @@ class Window(pyglet.window.Window):
 		self.fpsLabel.draw()
 
 	def update(self, dt):
-		self.clear()
+		glMatrixMode(GL_MODELVIEW)
+		glClear(GL_COLOR_BUFFER_BIT)
+		glLoadIdentity()
 		self.draw_fps()
 		self.currentScreen.draw()
 
 if __name__ == '__main__':
 	window = Window()
-	pyglet.clock.schedule_interval(window.update, 1.0/60.0)
+	pyglet.clock.schedule_interval(window.update, 1.0/10.0)
 	pyglet.app.run()

@@ -22,7 +22,12 @@ class StartScreen:
 		self.populateField()
 		self.bottomText = 'Player 1, setup your field'
 		self.firstSelected = None
-		self.secondSelected = None
+		self.label = pyglet.text.Label('none',
+                          font_name='Arial',
+                          font_size=16,
+                          x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-20,
+                          anchor_x='center', anchor_y='center')
+
 
 	def createStartField(self):
 		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
@@ -104,8 +109,7 @@ class StartScreen:
     				field.x + field.size, field.y + field.size)))
 
 				#draw the Label
-				pyglet.text.Label(str(field.piece.type),
-                          font_name='Arial',
-                          font_size=16,
-                          x=field.x, y=field.y,
-                          anchor_x='center', anchor_y='center').draw()
+				self.label.x = field.x
+				self.label.y = field.y
+				self.label.text = str(field.piece.type)
+				self.label.draw()
