@@ -45,6 +45,7 @@ class StartScreen:
 
 
 	def draw(self):
+		self.window.clear()
 		pyglet.text.Label('Start Screen',
                           font_name='Arial',
                           font_size=16,
