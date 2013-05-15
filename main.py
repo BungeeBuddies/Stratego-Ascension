@@ -30,6 +30,7 @@ class Window(pyglet.window.Window):
 		self.selectedField = 0
 		self.clear()
 
+
 	def on_key_press(self, symbol, modifiers):
 		pass
 
@@ -102,46 +103,44 @@ class Window(pyglet.window.Window):
 
 	def createPieceList(self):
 		pieces = []
-		#80 pieces, 40 of team a, 40 of team b.
-		#So, do everything two times
-		for x in range (0,2):
-			#Fourty pieces
-			#One Flag
-			for x in range(0,1):
-				pieces.append(Piece('F'))
-			#six Bombs
-			for x in range(0,6):
-				pieces.append(Piece('B'))
-			#One Spy
-			for x in range(0,1):
-				pieces.append(Piece(1))
-			#Eight Scouts
-			for x in range (0,8):
-				pieces.append(Piece(2))
-			#Five Miners
-			for x in range(0,5):
-				pieces.append(Piece(3))	
-			#Four Sergeants
-			for x in range(0,4):
-				pieces.append(Piece(4))
-			#Four Lieutenants 
-			for x in range(0,4):
-				pieces.append(Piece(5))
-			#Four Captains
-			for x in range(0,4):
-				pieces.append(Piece(6))
-			#Three Majors
-			for x in range(0,3):
-				pieces.append(Piece(7))
-			#Two Colonels
-			for x in range(0,2):
-				pieces.append(Piece(8))
-			#One General
-			for x in range(0,1):
-				pieces.append(Piece(9))
-			#One Marshal
-			for x in range(0,1):
-				pieces.append(Piece(10))
+		#80 pieces, 40 of team a, 40 of team b. I only need to make this list for one player, thoug
+		#Fourty pieces
+		#One Flag
+		for x in range(0,1):
+			pieces.append(Piece('F'))
+		#six Bombs
+		for x in range(0,6):
+			pieces.append(Piece('B'))
+		#One Spy
+		for x in range(0,1):
+			pieces.append(Piece(1))
+		#Eight Scouts
+		for x in range (0,8):
+			pieces.append(Piece(2))
+		#Five Miners
+		for x in range(0,5):
+			pieces.append(Piece(3))	
+		#Four Sergeants
+		for x in range(0,4):
+			pieces.append(Piece(4))
+		#Four Lieutenants 
+		for x in range(0,4):
+			pieces.append(Piece(5))
+		#Four Captains
+		for x in range(0,4):
+			pieces.append(Piece(6))
+		#Three Majors
+		for x in range(0,3):
+			pieces.append(Piece(7))
+		#Two Colonels
+		for x in range(0,2):
+			pieces.append(Piece(8))
+		#One General
+		for x in range(0,1):
+			pieces.append(Piece(9))
+		#One Marshal
+		for x in range(0,1):
+			pieces.append(Piece(10))
 		return pieces	
 		
 

@@ -28,7 +28,7 @@ class PlayScreen:
 				fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.fieldOffset * y
 
 		return fields
-
+		
 	def draw(self):
 		pyglet.text.Label('Player 1',
                           font_name='Arial',

@@ -17,7 +17,8 @@ class StartScreen:
 		self.sizeOfButton = 50
 		self.fields = self.createStartField()
 
-		self.bottumText = 'Player 1, setup your field'
+		self.populateField()
+		self.bottomText = 'Player 1, setup your field'
 
 	def createStartField(self):
 		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
@@ -32,6 +33,13 @@ class StartScreen:
 				fields[y][x].y = y * fields[y][x].size*2 + yOffset + self.fieldOffset * y
 		return fields
 
+	def populateField(self):
+		for y in range(0,len(self.fields)/2):
+			for x in range(0,len(self.fields[y])):
+				field = self.fields[y][x]
+				field.piece = self.pieces[y*10+x]
+
+
 	def draw(self):
 		pyglet.text.Label('Start Screen',
                           font_name='Arial',
@@ -45,7 +53,7 @@ class StartScreen:
                           x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-60,
                           anchor_x='center', anchor_y='center').draw()
 
-		pyglet.text.Label(self.bottumText,
+		pyglet.text.Label(self.bottomText,
                           font_name='Arial',
                           font_size=16,
                           x=self.window.get_size()[0]/2, y=20,
@@ -82,3 +90,10 @@ class StartScreen:
 				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
     				(field.x + field.size, field.y - field.size,
     				field.x + field.size, field.y + field.size)))
+
+				#draw the Label
+				pyglet.text.Label(str(field.piece.type),
+                          font_name='Arial',
+                          font_size=16,
+                          x=field.x, y=field.y,
+                          anchor_x='center', anchor_y='center').draw()
