@@ -45,7 +45,6 @@ class StartScreen:
 
 
 	def draw(self):
-		self.window.clear()
 		pyglet.text.Label('Start Screen',
                           font_name='Arial',
                           font_size=16,
@@ -74,6 +73,7 @@ class StartScreen:
 						if (field.piece.type == ''):
 							field.piece.type = self.firstSelected.piece.type
 							self.firstSelected.piece.type = ''
+							self.window.clear()
 						self.firstSelected = None
 				field.selected = False
 				if (field is self.firstSelected):

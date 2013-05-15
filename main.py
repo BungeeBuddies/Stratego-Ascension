@@ -146,7 +146,7 @@ class Window(pyglet.window.Window):
 
 	def on_draw(self):
 		pass
-
+		
 	def update(self, dt):
 		self.currentScreen.draw()
 
