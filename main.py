@@ -171,5 +171,5 @@ class Window(pyglet.window.Window):
 
 if __name__ == '__main__':
 	window = Window()
-	pyglet.clock.schedule_interval(window.update, 1.0/10.0)
+	pyglet.clock.schedule_interval(window.update, 1.0/60.0)
 	pyglet.app.run()

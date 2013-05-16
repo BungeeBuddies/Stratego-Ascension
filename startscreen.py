@@ -3,6 +3,7 @@ import pyglet
 import copy
 from pyglet.gl import *
 from field import Field
+from piece import Piece
 
 
 class StartScreen:
@@ -76,8 +77,8 @@ class StartScreen:
 						self.firstSelected = field
 					else: 
 						if (field.piece.type == ''):
-							field.piece.type = self.firstSelected.piece.type
-							self.firstSelected.piece.type = ''
+							field.piece = Piece(self.firstSelected.piece.type)
+							self.firstSelected.piece = Piece('')
 						self.firstSelected = None
 				field.selected = False
 				if (field is self.firstSelected):
@@ -109,7 +110,4 @@ class StartScreen:
     				field.x + field.size, field.y + field.size)))
 
 				#draw the Label
-				self.label.x = field.x
-				self.label.y = field.y
-				self.label.text = str(field.piece.type)
-				self.label.draw()
+				field.label.draw()
