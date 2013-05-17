@@ -58,6 +58,7 @@ class StartScreen:
 			for x in range(0,len(self.fields[y])):
 				field = self.fields[y][x]
 				field.piece = self.pieces[y*10+x]
+		self.extraFields[2].piece = self.extraFields[3].piece = self.extraFields[6].piece = self.extraFields[7].piece = Piece('#') 
 
 
 	def draw(self):
@@ -65,12 +66,6 @@ class StartScreen:
                           font_name='Arial',
                           font_size=16,
                           x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-20,
-                          anchor_x='center', anchor_y='center').draw()
-
-		pyglet.text.Label('This side is looking at the enemy',
-                          font_name='Arial',
-                          font_size=16,
-                          x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-60,
                           anchor_x='center', anchor_y='center').draw()
 
 		pyglet.text.Label(self.bottomText,
@@ -98,6 +93,7 @@ class StartScreen:
 				self.drawField(field)
 
 		for field in self.extraFields:
+			glColor3f(1, 0, 0)
 			self.drawField(field)
 
 				
