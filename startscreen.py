@@ -16,9 +16,11 @@ class StartScreen:
 		self.sizeOfField = 25
 		self.xOffset = self.window.get_size()[0]/4
 		self.yOffset = self.window.get_size()[1]/8 + 70
+		self.extraYOffset = 25
 		self.fieldOffset = 1
 		self.sizeOfButton = 50
 		self.fields = self.createStartField()
+		self.extraFields = self.setupExtraFields()
 
 		self.populateField()
 		self.bottomText = 'Player 1, setup your field'
@@ -36,12 +38,20 @@ class StartScreen:
 			for x in range(0, len(fields[y])):
 				fields[y][x].x = x * fields[y][x].size*2 + self.xOffset + self.fieldOffset * x
 				fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.fieldOffset * y
-		yOffset = self.yOffset + 25
 		for y in range(len(fields)/2,len(fields)):
 			for x in range(0,len(fields[y])):
 				fields[y][x].x = x * fields[y][x].size*2 + self.xOffset + self.fieldOffset * x
-				fields[y][x].y = y * fields[y][x].size*2 + yOffset + self.fieldOffset * y
+				fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.extraYOffset + self.fieldOffset * y
 		return fields
+
+	def setupExtraFields(self):
+		fields = [Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)]
+
+		for n in range(0, len(fields)):
+			fields[n].x = n * fields[n].size*2 + self.xOffset + self.fieldOffset * n
+			fields[n].y = len(self.fields) * fields[n].size*2 + self.yOffset + self.extraYOffset  + self.fieldOffset * len(self.fields)
+		return fields
+
 
 	def populateField(self):
 		for y in range(0,len(self.fields)/2):
@@ -85,29 +95,36 @@ class StartScreen:
 					glColor3f(1, 0, 1)
 				else:
 					glColor3f(1, 1, 1)
+				self.drawField(field)
 
-				# Draw center
-				# self.drawCircle(field.x, field.y, 5, [1, 1, 1])
+		for field in self.extraFields:
+			self.drawField(field)
 
-				# # Draw top side
-				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    				(field.x + field.size, field.y + field.size, 
-    				field.x - field.size, field.y + field.size)))
-
-				# Draw down side
-				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    				(field.x + field.size, field.y - field.size, 
-    				field.x - field.size, field.y - field.size)))
 				
-				# Draw left side
-				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    				(field.x - field.size, field.y - field.size,
-    				field.x - field.size, field.y + field.size)))
 
-				# Draw right side
-				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    				(field.x + field.size, field.y - field.size,
-    				field.x + field.size, field.y + field.size)))
+	def drawField(self,field):
+		# Draw center
+		# self.drawCircle(field.x, field.y, 5, [1, 1, 1])
 
-				#draw the Label
-				field.label.draw()
+		# # Draw top side
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+    	(field.x + field.size, field.y + field.size, 
+    	field.x - field.size, field.y + field.size)))
+
+		# Draw down side
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+    		(field.x + field.size, field.y - field.size, 
+    		field.x - field.size, field.y - field.size)))
+				
+		# Draw left side
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+    		(field.x - field.size, field.y - field.size,
+    		field.x - field.size, field.y + field.size)))
+
+		# Draw right side
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+    		(field.x + field.size, field.y - field.size,
+    		field.x + field.size, field.y + field.size)))
+
+		#draw the Label
+		field.label.draw()
