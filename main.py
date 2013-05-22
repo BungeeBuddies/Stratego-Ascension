@@ -44,10 +44,13 @@ class Window(pyglet.window.Window):
 		pass
 
 	def on_mouse_press(self, x, y, button, modifiers):
+
+		if (self.selectedField is not 0):
+			self.selectedField.selected = False
 		
 		fieldClicked = self.isClicked(x, y)
 
-		if (fieldClicked is not 0):
+		if (fieldClicked is not None):
 			self.selectedField = fieldClicked
 			self.selectedField.selected = True
 
@@ -62,9 +65,6 @@ class Window(pyglet.window.Window):
 	def isClicked(self, x, y):
 		fieldIndex = 0
 		fieldsList = []
-
-		if (self.selectedField is not 0):
-			self.selectedField.selected = False
 
 		for row in range(0, len(self.currentScreen.fields)):
 			for field in self.currentScreen.fields[row]:
