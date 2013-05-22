@@ -44,6 +44,22 @@ class Window(pyglet.window.Window):
 		pass
 
 	def on_mouse_press(self, x, y, button, modifiers):
+		
+		fieldClicked = self.isClicked(x, y)
+
+		if (fieldClicked is not 0):
+			self.selectedField = fieldClicked
+			self.selectedField.selected = True
+
+			if (self.firstClick):
+				self.currentScreen.color = [1, 0, 1]
+				self.firstClick = False
+			elif (not self.firstClick):
+				self.currentScreen.color = [0, 0, 1]						
+				self.firstClick = True
+
+
+	def isClicked(self, x, y):
 		fieldIndex = 0
 		fieldsList = []
 
@@ -65,15 +81,10 @@ class Window(pyglet.window.Window):
 				else:
 					column = fieldIndex % self.currentScreen.widthOfField
 					row = (fieldIndex - column)/self.currentScreen.widthOfField
-					self.selectedField = self.currentScreen.fields[row][column]
-					self.selectedField.selected = True
+					# self.selectedField = self.currentScreen.fields[row][column]
+					return self.currentScreen.fields[row][column]
 
-					if (self.firstClick):
-						self.currentScreen.color = [1, 0, 1]
-						self.firstClick = False
-					elif (not self.firstClick):
-						self.currentScreen.color = [0, 0, 1]						
-						self.firstClick = True
+					
 
 	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
 		pass

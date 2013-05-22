@@ -6,7 +6,7 @@ from field import Field
 from piece import Piece
 
 
-class StartScreen:
+class SetupScreen:
 	def __init__(self,pieces,window):
 		self.window = window
 		self.pieces = pieces
