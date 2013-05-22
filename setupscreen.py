@@ -23,14 +23,18 @@ class SetupScreen:
 		self.extraFields = self.setupExtraFields()
 
 		self.populateField()
-		self.bottomText = 'Player 1, setup your field'
+		self.activePlayer = 1
 		self.firstSelected = None
-		self.label = pyglet.text.Label('none',
+		self.header = pyglet.text.Label('Setup Screen',
                           font_name='Arial',
                           font_size=16,
                           x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-20,
                           anchor_x='center', anchor_y='center')
-
+		self.footer = pyglet.text.Label('Player ' + str(self.activePlayer) + ', setup your field',
+                          font_name='Arial',
+                          font_size=16,
+                          x=self.window.get_size()[0]/2, y=20,
+                          anchor_x='center', anchor_y='center')
 
 	def createStartField(self):
 		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
@@ -42,6 +46,7 @@ class SetupScreen:
 			for x in range(0,len(fields[y])):
 				fields[y][x].x = x * fields[y][x].size*2 + self.xOffset + self.fieldOffset * x
 				fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.extraYOffset + self.fieldOffset * y
+		fields[0].append(Field(0,0,100))
 		return fields
 
 	def setupExtraFields(self):
@@ -54,32 +59,25 @@ class SetupScreen:
 
 
 	def populateField(self):
+		for y in range(len(self.fields)/2,len(self.fields)):
+			for x in range(0,len(self.fields[y])):
+				self.fields[y][x].piece = Piece('')
 		for y in range(0,len(self.fields)/2):
 			for x in range(0,len(self.fields[y])):
-				field = self.fields[y][x]
-				field.piece = self.pieces[y*10+x]
+				self.fields[y][x].piece = self.pieces[y*10+x]
 		self.extraFields[2].piece = self.extraFields[3].piece = self.extraFields[6].piece = self.extraFields[7].piece = Piece('#') 
 
 
 	def draw(self):
-		pyglet.text.Label('Start Screen',
-                          font_name='Arial',
-                          font_size=16,
-                          x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-20,
-                          anchor_x='center', anchor_y='center').draw()
-
-		pyglet.text.Label(self.bottomText,
-                          font_name='Arial',
-                          font_size=16,
-                          x=self.window.get_size()[0]/2, y=20,
-                          anchor_x='center', anchor_y='center').draw()
-
+		self.checkIfDone()
+		self.header.draw()
+		self.footer.draw()
 		for y in range(0, len(self.fields)):
 			for field in self.fields[y]:
-
 				if (field.selected):
 					if (self.firstSelected is None):
-						self.firstSelected = field
+						if field.piece.type != '':
+							self.firstSelected = field
 					else: 
 						if (field.piece.type == ''):
 							field.piece = Piece(self.firstSelected.piece.type)
@@ -124,3 +122,15 @@ class SetupScreen:
 
 		#draw the Label
 		field.label.draw()
+
+	def checkIfDone(self):
+		for y in range(0,len(self.fields)/2):
+			for x in range(0,len(self.fields[y])):
+				if self.fields[y][x].piece.type != '':
+					return
+		self.activePlayer += 1
+		if self.activePlayer == 2:
+			for y in range(len(self.fields)/2,len(self.fields)):
+				for x in range(0,len(self.fields[y])):
+					self.window.playScreen.fields[x][y] = self.fields[x][y]
+		self.populateField()
