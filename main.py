@@ -8,7 +8,7 @@ from copy import deepcopy
 from field import Field
 from piece import Piece
 from playscreen import PlayScreen
-from startscreen import StartScreen
+from setupscreen import SetupScreen
 
 class Window(pyglet.window.Window):
 
@@ -24,8 +24,8 @@ class Window(pyglet.window.Window):
 		self.pieces = self.createPieceList()
 
 		self.playScreen = PlayScreen(self)
-		self.startScreen = StartScreen(self.pieces,self)
-		self.currentScreen = self.startScreen
+		self.setupScreen = SetupScreen(self.pieces,self)
+		self.currentScreen = self.setupScreen
 		self.isFieldSelected = False
 		self.selectedField = 0
 
