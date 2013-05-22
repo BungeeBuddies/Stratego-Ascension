@@ -53,16 +53,18 @@ class Window(pyglet.window.Window):
 
                         if (self.firstClick):
                                 self.currentScreen.color = [1, 0, 1]
+                                print('1')
                                 self.firstClick = False
                         elif (not self.firstClick):
                                 self.currentScreen.color = [0, 0, 1]                                            
                                 self.firstClick = True
+                                print('2')
 
 
         def isClicked(self, x, y):
                 fieldIndex = 0
                 fieldsList = []
-
+                print ('klik')
                 if (self.selectedField is not 0):
                         self.selectedField.selected = False
 
