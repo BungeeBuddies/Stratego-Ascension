@@ -45,21 +45,22 @@ class Window(pyglet.window.Window):
 
 	def on_mouse_press(self, x, y, button, modifiers):
 		
-		fieldClicked = self.isClicked(x, y)
+		buttonClicked = self.buttonClicked(x,y)
+		if buttonClicked is not None:
+			buttonClicked.selected = True
+			return
+
+		fieldClicked = self.fieldClicked(x, y)
 
 		if (fieldClicked is not None):
 			self.selectedField = fieldClicked
 			self.selectedField.selected = True
 
-			if (self.firstClick):
-				self.currentScreen.color = [1, 0, 1]
-				self.firstClick = False
-			elif (not self.firstClick):
-				self.currentScreen.color = [0, 0, 1]						
-				self.firstClick = True
+	def buttonClicked(self,x,y):
+		if hasattr(self.currentScreen,'buttons'):
+			return self.currentScreen.buttons[0]
 
-
-	def isClicked(self, x, y):
+	def fieldClicked(self, x, y):
 		fieldIndex = 0
 		fieldsList = []
 

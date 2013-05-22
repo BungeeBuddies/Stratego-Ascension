@@ -46,7 +46,6 @@ class SetupScreen:
 			for x in range(0,len(fields[y])):
 				fields[y][x].x = x * fields[y][x].size*2 + self.xOffset + self.fieldOffset * x
 				fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.extraYOffset + self.fieldOffset * y
-		#fields[0].append(Field(0,0,100))
 		return fields
 
 	def setupExtraFields(self):
