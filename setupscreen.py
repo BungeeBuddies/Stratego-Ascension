@@ -58,7 +58,7 @@ class SetupScreen:
 			for x in range(0,len(self.fields[y])):
 				field = self.fields[y][x]
 				field.piece = self.pieces[y*10+x]
-		self.extraFields[2].piece = self.extraFields[3].piece = self.extraFields[6].piece = self.extraFields[7].piece = Piece('#') 
+		self.extraFields[2].piece = self.extraFields[3].piece = self.extraFields[6].piece = self.extraFields[7].piece = Piece('#',0) 
 
 
 	def draw(self):

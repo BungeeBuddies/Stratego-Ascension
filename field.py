@@ -7,7 +7,7 @@ class Field(object):
 		self._y = y
 		self.size = size
 		self.selected = False
-		self._piece = Piece('')
+		self._piece = Piece('',0)
 		self.label = pyglet.text.Label(self._piece.type,
                           font_name='Arial',
                           font_size=16,
