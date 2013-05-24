@@ -53,11 +53,14 @@ class SetupScreen:
 		return fields
 
 	def createButtons(self):
-		amountOfButtons = 1
+		amountOfButtons = 2
 		buttons = [Button(0, 0, self.buttonXSize,self.buttonYSize) for x in xrange(amountOfButtons)]
 		buttons[0].label.text = "Done!"
 		buttons[0].x = self.window.get_size()[0]/8
 		buttons[0].y = self.window.get_size()[1]/4
+		buttons[1].label.text = "Autofill"
+		buttons[1].x = self.window.get_size()[0]/8*7
+		buttons[1].y = self.window.get_size()[1]/4
 		return buttons
 
 	def setupExtraFields(self):
@@ -84,17 +87,17 @@ class SetupScreen:
 		self.footer.draw()
 		for y in range(0, len(self.fields)):
 			for field in self.fields[y]:
-				if (field.selected):
-					if (self.firstSelected is None):
+				if field.selected:
+					if self.firstSelected is None:
 						if field.piece.type != '':
 							self.firstSelected = field
 					else: 
-						if (field.piece.type == ''):
+						if field.piece.type == '':
 							field.piece = Piece(self.firstSelected.piece.type)
 							self.firstSelected.piece = Piece('')
 						self.firstSelected = None
 				field.selected = False
-				if (field is self.firstSelected):
+				if field is self.firstSelected:
 					glColor3f(1, 0, 1)
 				else:
 					glColor3f(1, 1, 1)
@@ -103,12 +106,17 @@ class SetupScreen:
 		for field in self.extraFields:
 			glColor3f(1, 0, 0)
 			self.drawField(field)
+
 		glColor3f(1, 1, 1)
-		self.drawButton(self.buttons[0])
 		if self.buttons[0].selected:
 			if  not self.checkIfDone():
 				self.footer.text = "You have to place all your pieces before you can continue"
-		self.buttons[0].selected = False
+				self.buttons[0].selected = False
+		if self.buttons[1].selected:
+			self.autofill()
+			self.buttons[1].selected = False
+		for button in self.buttons:
+			self.drawButton(button)
 
 	def drawField(self,field):
 		# Draw center
@@ -172,12 +180,35 @@ class SetupScreen:
 			for y in xrange(len(self.fields)/2,len(self.fields)):
 				for x in xrange(0,len(self.fields[y])):
 					self.window.playScreen.fields[len(self.window.playScreen.fields) + len(self.fields)/2 - y - 1][len(self.fields[y])-x-1].piece = self.fields[y][x].piece
-		if self.activePlayer == 3:
+		else: 
 			for y in xrange(len(self.fields)/2,len(self.fields)):
 				for x in xrange(0,len(self.fields[y])):
 					self.window.playScreen.fields[-len(self.fields)/2 + y][x].piece = self.fields[y][x].piece
 					self.window.currentScreen = self.window.playScreen
-		self.populateField()			
+		self.populateField()
+		return True			
 
 	def resetBottomText(self):
 		self.footer.text = 'Player ' + str(self.activePlayer) + ', setup your field'
+
+	# def autofill(self):
+	# 	for y in xrange(0,len(self.fields)/2):
+	# 		for field in self.fields[y]:
+	# 			if field.piece.type == '':
+	# 				continue
+	# 			for y in xrange(len(self.fields)/2,len(self.fields)):
+	# 				for upperField in self.fields[y]:
+	# 					if upperField.piece.type == '':
+	# 						upperField.piece = field.piece
+	# 						field.piece = Piece('')
+	# 						continue
+
+	def autofill(self):
+		regels = self.fields[:len(self.fields)/2]
+		emptyfields = [f for r in regels for f in r if f.piece.type != '']
+		topping = self.fields[len(self.fields)/2:]
+		tobefilledfields = [f for r in topping for f in r if f.piece.type == '']
+		for (a, b) in zip(emptyfields, tobefilledfields):
+			b.piece = a.piece
+			a.piece = Piece('')
+		
