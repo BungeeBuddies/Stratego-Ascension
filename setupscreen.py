@@ -73,11 +73,9 @@ class SetupScreen:
 		for y in range(len(self.fields)/2,len(self.fields)):
 			for x in range(0,len(self.fields[y])):
 				self.fields[y][x].piece = Piece('')
-		#for y in range(0,len(self.fields)/2):
-		for y in range(0,1):
+		for y in range(0,len(self.fields)/2):
 			for x in range(0,len(self.fields[y])):
 				self.fields[y][x].piece = self.pieces[y*10+x]
-				pass
 		self.extraFields[2].piece = self.extraFields[3].piece = self.extraFields[6].piece = self.extraFields[7].piece = Piece('#') 
 
 
@@ -173,12 +171,13 @@ class SetupScreen:
 		if self.activePlayer == 2:
 			for y in xrange(len(self.fields)/2,len(self.fields)):
 				for x in xrange(0,len(self.fields[y])):
-					self.window.playScreen.fields[len(self.window.playScreen.fields) + len(self.fields)/2 - y - 1][x].piece = self.fields[y][x].piece
-					self.window.currentScreen = self.window.playScreen
+					self.window.playScreen.fields[len(self.window.playScreen.fields) + len(self.fields)/2 - y - 1][len(self.fields[y])-x-1].piece = self.fields[y][x].piece
 		if self.activePlayer == 3:
-			self.window.currentScreen = self.window.playScreen
-		self.populateField()
-		return True
+			for y in xrange(len(self.fields)/2,len(self.fields)):
+				for x in xrange(0,len(self.fields[y])):
+					self.window.playScreen.fields[-len(self.fields)/2 + y][x].piece = self.fields[y][x].piece
+					self.window.currentScreen = self.window.playScreen
+		self.populateField()			
 
 	def resetBottomText(self):
 		self.footer.text = 'Player ' + str(self.activePlayer) + ', setup your field'
