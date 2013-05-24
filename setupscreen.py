@@ -4,6 +4,7 @@ import copy
 from pyglet.gl import *
 from field import Field
 from piece import Piece
+from button import Button
 
 
 class SetupScreen:
@@ -18,9 +19,10 @@ class SetupScreen:
 		self.yOffset = self.window.get_size()[1]/8 + 70
 		self.extraYOffset = 25
 		self.fieldOffset = 1
-		self.sizeOfButton = 50
 		self.fields = self.createStartField()
 		self.extraFields = self.setupExtraFields()
+
+		self.buttons = self.createButtons()
 
 		self.populateField()
 		self.activePlayer = 1
@@ -47,6 +49,16 @@ class SetupScreen:
 				fields[y][x].x = x * fields[y][x].size*2 + self.xOffset + self.fieldOffset * x
 				fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.extraYOffset + self.fieldOffset * y
 		return fields
+
+	def createButtons(self):
+		amountOfButtons = 1
+		buttonXSize = 50
+		buttonYSize = 25
+		buttons = [Button(0, 0, buttonXSize,buttonYSize) for x in xrange(amountOfButtons)]
+		buttons[0].label.text = "Done!"
+		buttons[0].x = self.window.get_size()[0]/8
+		buttons[0].y = self.window.get_size()[1]/4
+		return buttons
 
 	def setupExtraFields(self):
 		fields = [Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)]
@@ -93,6 +105,10 @@ class SetupScreen:
 			glColor3f(1, 0, 0)
 			self.drawField(field)
 
+		for button in self.buttons:
+			glColor3f(1, 1, 1)
+			self.drawButton(button)
+
 				
 
 	def drawField(self,field):
@@ -121,6 +137,30 @@ class SetupScreen:
 
 		#draw the Label
 		field.label.draw()
+
+	def drawButton(self,button):
+		# # Draw top side
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+    	(button.x + button.xSize, button.y + button.ySize, 
+    	button.x - button.xSize, button.y + button.ySize)))
+
+		# Draw down side
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+    		(button.x + button.xSize, button.y - button.ySize, 
+    		button.x - button.xSize, button.y - button.ySize)))
+				
+		# Draw left side
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+    		(button.x - button.xSize, button.y - button.ySize,
+    		button.x - button.xSize, button.y + button.ySize)))
+
+		# Draw right side
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+    		(button.x + button.xSize, button.y - button.ySize,
+    		button.x + button.xSize, button.y + button.ySize)))
+
+		#draw the Label
+		button.label.draw()
 
 	def checkIfDone(self):
 		for y in range(0,len(self.fields)/2):
