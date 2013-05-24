@@ -1,6 +1,7 @@
 #Defines the playfield and then passes it on to the playscreen
 import pyglet
 import copy
+import threading
 from pyglet.gl import *
 from field import Field
 from piece import Piece
@@ -11,7 +12,7 @@ class SetupScreen:
 	def __init__(self,pieces,window):
 		self.window = window
 		self.pieces = pieces
-		
+
 		self.widthOfField = 10
 		self.heightOfField = 8
 		self.sizeOfField = 25
@@ -21,6 +22,9 @@ class SetupScreen:
 		self.fieldOffset = 1
 		self.fields = self.createStartField()
 		self.extraFields = self.setupExtraFields()
+
+		self.buttonXSize = 50
+		self.buttonYSize = 25
 
 		self.buttons = self.createButtons()
 
@@ -37,6 +41,7 @@ class SetupScreen:
                           font_size=16,
                           x=self.window.get_size()[0]/2, y=20,
                           anchor_x='center', anchor_y='center')
+		self.resetButtomTextTimer = threading.Timer(10.0,self.resetBottomText())
 
 	def createStartField(self):
 		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
@@ -52,9 +57,7 @@ class SetupScreen:
 
 	def createButtons(self):
 		amountOfButtons = 1
-		buttonXSize = 50
-		buttonYSize = 25
-		buttons = [Button(0, 0, buttonXSize,buttonYSize) for x in xrange(amountOfButtons)]
+		buttons = [Button(0, 0, self.buttonXSize,self.buttonYSize) for x in xrange(amountOfButtons)]
 		buttons[0].label.text = "Done!"
 		buttons[0].x = self.window.get_size()[0]/8
 		buttons[0].y = self.window.get_size()[1]/4
@@ -104,12 +107,15 @@ class SetupScreen:
 		for field in self.extraFields:
 			glColor3f(1, 0, 0)
 			self.drawField(field)
+		glColor3f(1, 1, 1)
+		self.drawButton(self.buttons[0])
+		if self.buttons[0].selected:
+			if  not self.checkIfDone():
+				self.footer.text = "You have to place all your pieces before you can continue"
+				#self.resetButtomTextTimer.start()
+		self.buttons[0].selected = False
 
-		for button in self.buttons:
-			glColor3f(1, 1, 1)
-			self.drawButton(button)
 
-				
 
 	def drawField(self,field):
 		# Draw center
@@ -166,10 +172,15 @@ class SetupScreen:
 		for y in range(0,len(self.fields)/2):
 			for x in range(0,len(self.fields[y])):
 				if self.fields[y][x].piece.type != '':
-					return
+					return False
 		self.activePlayer += 1
+		self.resetBottomText(); 
 		if self.activePlayer == 2:
 			for y in range(len(self.fields)/2,len(self.fields)):
 				for x in range(0,len(self.fields[y])):
 					self.window.playScreen.fields[x][y] = self.fields[x][y]
 		self.populateField()
+		return True
+
+	def resetBottomText(self):
+		self.footer.text = 'Player ' + str(self.activePlayer) + ', setup your field'

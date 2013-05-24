@@ -58,7 +58,20 @@ class Window(pyglet.window.Window):
 
 	def buttonClicked(self,x,y):
 		if hasattr(self.currentScreen,'buttons'):
-			pass
+			buttonIndex = 0
+			buttonsList = []
+			for button in self.currentScreen.buttons:
+				buttonsList.append([button.x,button.y])
+
+			for extraX in range(-self.currentScreen.buttonXSize, self.currentScreen.buttonXSize):
+				for extraY in range(-self.currentScreen.buttonYSize, self.currentScreen.buttonYSize):
+					try:
+						buttonIndex = buttonsList.index ([x + extraX,y + extraY])
+					except ValueError:
+						pass
+					else:
+						return self.currentScreen.buttons[buttonIndex]
+
 			#return self.currentScreen.buttons[0]
 
 	def fieldClicked(self, x, y):
