@@ -1,12 +1,10 @@
 #Defines the playfield and then passes it on to the playscreen
 import pyglet
 import copy
-import threading
 from pyglet.gl import *
 from field import Field
 from piece import Piece
 from button import Button
-
 
 class SetupScreen:
 	def __init__(self,pieces,window):
@@ -41,7 +39,6 @@ class SetupScreen:
                           font_size=16,
                           x=self.window.get_size()[0]/2, y=20,
                           anchor_x='center', anchor_y='center')
-		self.resetButtomTextTimer = threading.Timer(10.0,self.resetBottomText())
 
 	def createStartField(self):
 		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
@@ -76,14 +73,15 @@ class SetupScreen:
 		for y in range(len(self.fields)/2,len(self.fields)):
 			for x in range(0,len(self.fields[y])):
 				self.fields[y][x].piece = Piece('')
-		for y in range(0,len(self.fields)/2):
+		#for y in range(0,len(self.fields)/2):
+		for y in range(0,1):
 			for x in range(0,len(self.fields[y])):
 				self.fields[y][x].piece = self.pieces[y*10+x]
+				pass
 		self.extraFields[2].piece = self.extraFields[3].piece = self.extraFields[6].piece = self.extraFields[7].piece = Piece('#') 
 
 
 	def draw(self):
-		self.checkIfDone()
 		self.header.draw()
 		self.footer.draw()
 		for y in range(0, len(self.fields)):
@@ -112,10 +110,7 @@ class SetupScreen:
 		if self.buttons[0].selected:
 			if  not self.checkIfDone():
 				self.footer.text = "You have to place all your pieces before you can continue"
-				#self.resetButtomTextTimer.start()
 		self.buttons[0].selected = False
-
-
 
 	def drawField(self,field):
 		# Draw center
@@ -176,9 +171,12 @@ class SetupScreen:
 		self.activePlayer += 1
 		self.resetBottomText(); 
 		if self.activePlayer == 2:
-			for y in range(len(self.fields)/2,len(self.fields)):
-				for x in range(0,len(self.fields[y])):
-					self.window.playScreen.fields[x][y] = self.fields[x][y]
+			for y in xrange(len(self.fields)/2,len(self.fields)):
+				for x in xrange(0,len(self.fields[y])):
+					self.window.playScreen.fields[len(self.window.playScreen.fields) + len(self.fields)/2 - y - 1][x].piece = self.fields[y][x].piece
+					self.window.currentScreen = self.window.playScreen
+		if self.activePlayer == 3:
+			self.window.currentScreen = self.window.playScreen
 		self.populateField()
 		return True
 

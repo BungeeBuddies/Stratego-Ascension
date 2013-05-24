@@ -93,7 +93,6 @@ class Window(pyglet.window.Window):
 				else:
 					column = fieldIndex % self.currentScreen.widthOfField
 					row = (fieldIndex - column)/self.currentScreen.widthOfField
-					# self.selectedField = self.currentScreen.fields[row][column]
 					return self.currentScreen.fields[row][column]
 
 
