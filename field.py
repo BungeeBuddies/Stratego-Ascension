@@ -5,6 +5,7 @@ class Field(object):
 	def __init__(self, x, y, size):
 		self._x = x
 		self._y = y
+		self.barrier = False
 		self.size = size
 		self.selected = False
 		self._piece = Piece('')
