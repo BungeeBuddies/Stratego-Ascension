@@ -191,18 +191,6 @@ class SetupScreen:
 	def resetBottomText(self):
 		self.footer.text = 'Player ' + str(self.activePlayer) + ', setup your field'
 
-	# def autofill(self):
-	# 	for y in xrange(0,len(self.fields)/2):
-	# 		for field in self.fields[y]:
-	# 			if field.piece.type == '':
-	# 				continue
-	# 			for y in xrange(len(self.fields)/2,len(self.fields)):
-	# 				for upperField in self.fields[y]:
-	# 					if upperField.piece.type == '':
-	# 						upperField.piece = field.piece
-	# 						field.piece = Piece('')
-	# 						continue
-
 	def autofill(self):
 		regels = self.fields[:len(self.fields)/2]
 		emptyfields = [f for r in regels for f in r if f.piece.type != '']
