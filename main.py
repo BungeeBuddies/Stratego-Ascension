@@ -45,24 +45,36 @@ class Window(pyglet.window.Window):
 
 	def on_mouse_press(self, x, y, button, modifiers):
 
-		if (self.selectedField is not 0):
-			self.selectedField.selected = False
-		
-		fieldClicked = self.isClicked(x, y)
+		buttonClicked = self.buttonClicked(x,y)
+		if buttonClicked is not None:
+			buttonClicked.selected = True
+			return
+
+		fieldClicked = self.fieldClicked(x, y)
 
 		if (fieldClicked is not None):
 			self.selectedField = fieldClicked
 			self.selectedField.selected = True
 
-			if (self.firstClick):
-				self.currentScreen.color = [1, 0, 1]
-				self.firstClick = False
-			elif (not self.firstClick):
-				self.currentScreen.color = [0, 0, 1]						
-				self.firstClick = True
+	def buttonClicked(self,x,y):
+		if hasattr(self.currentScreen,'buttons'):
+			buttonIndex = 0
+			buttonsList = []
+			for button in self.currentScreen.buttons:
+				buttonsList.append([button.x,button.y])
 
+			for extraX in range(-self.currentScreen.buttonXSize, self.currentScreen.buttonXSize):
+				for extraY in range(-self.currentScreen.buttonYSize, self.currentScreen.buttonYSize):
+					try:
+						buttonIndex = buttonsList.index ([x + extraX,y + extraY])
+					except ValueError:
+						pass
+					else:
+						return self.currentScreen.buttons[buttonIndex]
 
-	def isClicked(self, x, y):
+			#return self.currentScreen.buttons[0]
+
+	def fieldClicked(self, x, y):
 		fieldIndex = 0
 		fieldsList = []
 
@@ -81,8 +93,8 @@ class Window(pyglet.window.Window):
 				else:
 					column = fieldIndex % self.currentScreen.widthOfField
 					row = (fieldIndex - column)/self.currentScreen.widthOfField
-					# self.selectedField = self.currentScreen.fields[row][column]
 					return self.currentScreen.fields[row][column]
+
 
 					
 
