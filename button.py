@@ -8,6 +8,7 @@ class Button(object):
 		self.xSize = xSize
 		self.ySize = ySize
 		self.selected = False
+		self.hover = False
 		self.label = pyglet.text.Label("self._piece.type",
                           font_name='Arial',
                           font_size=16,

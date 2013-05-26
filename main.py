@@ -26,8 +26,10 @@ class Window(pyglet.window.Window):
 		self.playScreen = PlayScreen(self)
 		self.setupScreen = SetupScreen(self.pieces,self)
 		self.currentScreen = self.setupScreen
-		self.isFieldSelected = False
 		self.selectedField = 0
+
+		self.hoveredButton = 0
+		self.selectedButton = 0
 
 		self.fpsLabel = pyglet.text.Label('Empty',
                           font_name='Arial',
@@ -41,22 +43,32 @@ class Window(pyglet.window.Window):
 		pass
 
 	def on_mouse_release(self, x, y, button, modifiers):
-		pass
+		self.selectedButton.selected = False
+
+	def on_mouse_motion(self, x, y, dx, dy):
+
+		if (self.hoveredButton is not 0):
+			if ([self.hoveredButton.x, self.hoveredButton.y] is not [x, y]):
+				self.hoveredButton.hover = False
+
+		isButton = self.isButton(x, y)
+		if (isButton is not None):
+			isButton.hover = True
+			self.hoveredButton = isButton
 
 	def on_mouse_press(self, x, y, button, modifiers):
 
-		buttonClicked = self.buttonClicked(x,y)
-		if buttonClicked is not None:
-			buttonClicked.selected = True
-			return
+		isButton = self.isButton(x,y)
+		if isButton is not None:
+			self.selectedButton = isButton
+			self.selectedButton.selected = True
 
-		fieldClicked = self.fieldClicked(x, y)
-
-		if (fieldClicked is not None):
-			self.selectedField = fieldClicked
+		isField = self.isField(x, y)
+		if (isField is not None):
+			self.selectedField = isField
 			self.selectedField.selected = True
 
-	def buttonClicked(self,x,y):
+	def isButton(self,x,y):
 		if hasattr(self.currentScreen,'buttons'):
 			buttonIndex = 0
 			buttonsList = []
@@ -74,7 +86,7 @@ class Window(pyglet.window.Window):
 
 			#return self.currentScreen.buttons[0]
 
-	def fieldClicked(self, x, y):
+	def isField(self, x, y):
 		fieldIndex = 0
 		fieldsList = []
 
@@ -100,11 +112,6 @@ class Window(pyglet.window.Window):
 
 	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
 		pass
-
-
-	def on_mouse_motion(self, x, y, dx, dy):
-		pass
-
 
 	def drawPoint(self, x, y, color):
 		pyglet.graphics.draw(1, GL_POINTS,

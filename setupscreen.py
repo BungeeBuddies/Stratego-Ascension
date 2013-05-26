@@ -115,17 +115,17 @@ class SetupScreen:
 
 		glColor3f(1, 1, 1)
 		if self.buttons[0].selected:
-			self.buttons[0].selected = False
+			# self.buttons[0].selected = False
 			if  not self.checkIfDone():
 				self.footer.text = "You have to place all your pieces before you can continue"
-				if hasattr(self,'textResetTimer') and self.textResetTimer.isAlive():
+				if hasattr(self, 'textResetTimer') and self.textResetTimer.isAlive():
 					self.textResetTimer.cancel()
 					self.textResetTimer.join()
 				self.textResetTimer = threading.Timer(3,self.resetBottomText)
 				self.textResetTimer.start()
 		if self.buttons[1].selected:
 			self.autofill()
-			self.buttons[1].selected = False
+			# self.buttons[1].selected = False
 		for button in self.buttons:
 			self.drawButton(button)
 
@@ -157,25 +157,78 @@ class SetupScreen:
 		field.label.draw()
 
 	def drawButton(self,button):
+
+		offset = 0
+		if (button.selected):
+			offset = 0.1
+
+		# Button area
+		if (button.hover):		
+			glColor3f(1, 0, 0)
+		else:
+			glColor3f(0.8, 0, 0)
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+		glBegin(GL_POLYGON)
+		# Top left
+		glVertex2f(button.x - button.xSize * (1.0 + offset), button.y + button.ySize * (1.0 + offset))
+		# Top right
+		glVertex2f(button.x + button.xSize * (1.0 - offset), button.y + button.ySize * (1.0 + offset))
+		# Bottom right
+		glVertex2f(button.x + button.xSize * (1.0 - offset), button.y - button.ySize * (1.0 - offset))
+		# Bottom left
+		glVertex2f(button.x - button.xSize * (1.0 + offset), button.y - button.ySize * (1.0 - offset))
+		glEnd()
+
+		
+
+		# Button 3D Top
+		glColor3f(0.5, 0, 0)
+		glBegin(GL_POLYGON)
+		# Top left
+		glVertex2f(button.x - button.xSize * 1.2, button.y + button.ySize * 1.2)
+		# Top right
+		glVertex2f(button.x + button.xSize * 0.8, button.y + button.ySize * 1.2)
+		# Bottom right
+		glVertex2f(button.x + button.xSize * (1.0 - offset), button.y + button.ySize * (1.0 + offset))
+		# Bottom left
+		glVertex2f(button.x - button.xSize * (1.0 - offset), button.y + button.ySize * (1.0 + offset))
+		glEnd()
+
+		# Button 3D Left
+		glColor3f(0.5, 0, 0)
+		glBegin(GL_POLYGON)
+		# Top left
+		glVertex2f(button.x - button.xSize * 1.2, button.y + button.ySize * 1.2)
+		# Top right
+		glVertex2f(button.x - button.xSize * (1.0 + offset), button.y + button.ySize * (1.0 + offset))
+		# Bottom right
+		glVertex2f(button.x - button.xSize * (1.0 + offset), button.y - button.ySize * (1.0 - offset))
+		# Bottom left
+		glVertex2f(button.x - button.xSize * 1.2, button.y - button.ySize * 0.8)
+		glEnd()
+
+		glColor3f(1, 1, 1)
+
 		# # Draw top side
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    	(button.x + button.xSize, button.y + button.ySize, 
-    	button.x - button.xSize, button.y + button.ySize)))
+		# pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+  #   	(button.x + button.xSize, button.y + button.ySize, 
+  #   	button.x - button.xSize, button.y + button.ySize)))
 
-		# Draw down side
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    		(button.x + button.xSize, button.y - button.ySize, 
-    		button.x - button.xSize, button.y - button.ySize)))
+		# # Draw down side
+		# pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+  #   		(button.x + button.xSize, button.y - button.ySize, 
+  #   		button.x - button.xSize, button.y - button.ySize)))
 				
-		# Draw left side
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    		(button.x - button.xSize, button.y - button.ySize,
-    		button.x - button.xSize, button.y + button.ySize)))
+		# # Draw left side
+		# pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+  #   		(button.x - button.xSize, button.y - button.ySize,
+  #   		button.x - button.xSize, button.y + button.ySize)))
 
-		# Draw right side
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    		(button.x + button.xSize, button.y - button.ySize,
-    		button.x + button.xSize, button.y + button.ySize)))
+		# # Draw right side
+		# pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+  #   		(button.x + button.xSize, button.y - button.ySize,
+  #   		button.x + button.xSize, button.y + button.ySize)))
 
 		#draw the Label
 		button.label.draw()

@@ -36,8 +36,6 @@ class PlayScreen:
 					fields[y][x].barrier = True
 					fields[y][x].piece = Piece('#')
 
-
-
 		return fields
 		
 	def draw(self):
@@ -52,7 +50,7 @@ class PlayScreen:
                           font_size=16,
                           x=self.window.get_size()[0]/2, y=20,
                           anchor_x='center', anchor_y='center').draw()
-
+		# Draw fields
 		for y in range(0, len(self.fields)):
 			for field in self.fields[y]:
 
@@ -60,15 +58,11 @@ class PlayScreen:
 					glColor3f(1, 0, 0)
 				else:	
 					if (field.selected):
-						#glColor3f(self.color[0], self.color[1], self.color[2])
 						glColor3f(1, 0, 1)
 					else:
 						glColor3f(1, 1, 1)
 
-				# Draw center
-				# self.drawCircle(field.x, field.y, 5, [1, 1, 1])
-
-				# # Draw top side
+				# Draw top side
 				pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
     				(field.x + field.size, field.y + field.size, 
     				field.x - field.size, field.y + field.size)))
