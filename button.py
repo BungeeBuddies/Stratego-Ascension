@@ -1,14 +1,15 @@
 from piece import Piece
 import pyglet
-class Button(object):
+class button(object):
 
-	def __init__(self, x, y, xSize, ySize):
+	def __init__(self, x, y, size):
 		self._x = x
 		self._y = y
-		self.xSize = xSize
-		self.ySize = ySize
+		self.sizeX = sizeX
+		self.sizeY = sizeY
 		self.selected = False
-		self.label = pyglet.text.Label("self._piece.type",
+		self._piece = Piece('')
+		self.label = pyglet.text.Label(self._piece.type,
                           font_name='Arial',
                           font_size=16,
                           x=self._x, y=self._y,
@@ -38,3 +39,16 @@ class Button(object):
 	        del self._y
 	    return locals()
 	y = property(**y())
+
+	def piece():
+	    doc = "The piece property."
+	    def fget(self):
+	        return self._piece
+	    def fset(self, value):
+	        self._piece = value
+	        self.label.text = str(value.type)
+
+	    def fdel(self):
+	        del self._piece
+	    return locals()
+	piece = property(**piece())

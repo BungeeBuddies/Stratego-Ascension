@@ -1,6 +1,7 @@
 #Defines the playfield and then passes it on to the playscreen
 import pyglet
 import copy
+import threading
 from pyglet.gl import *
 from field import Field
 from piece import Piece
@@ -109,9 +110,14 @@ class SetupScreen:
 
 		glColor3f(1, 1, 1)
 		if self.buttons[0].selected:
+			self.buttons[0].selected = False
 			if  not self.checkIfDone():
 				self.footer.text = "You have to place all your pieces before you can continue"
-				self.buttons[0].selected = False
+				if hasattr(self,'textResetTimer') and self.textResetTimer.isAlive():
+					self.textResetTimer.cancel()
+					self.textResetTimer.join()
+				self.textResetTimer = threading.Timer(3,self.resetBottomText)
+				self.textResetTimer.start()
 		if self.buttons[1].selected:
 			self.autofill()
 			self.buttons[1].selected = False
