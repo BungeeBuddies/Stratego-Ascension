@@ -96,6 +96,11 @@ class SetupScreen:
 						if field.piece.type == '':
 							field.piece = Piece(self.firstSelected.piece.type)
 							self.firstSelected.piece = Piece('')
+						else:
+							if field.piece.type != self.firstSelected.piece.type:
+								helpPiece = self.firstSelected.piece
+								self.firstSelected.piece = field.piece
+								field.piece = helpPiece
 						self.firstSelected = None
 				field.selected = False
 				if field is self.firstSelected:
