@@ -26,10 +26,10 @@ class Window(pyglet.window.Window):
                 self.playScreen = PlayScreen(self)
                 self.setupScreen = SetupScreen(self.pieces,self)
                 self.currentScreen = self.setupScreen
-                self.selectedField = 0
+                self.selectedField = None
 
-                self.hoveredButton = 0
-                self.selectedButton = 0
+                self.hoveredButton = None
+                self.selectedButton = None
 
                 self.fpsLabel = pyglet.text.Label('Empty',
                           font_name='Arial',
@@ -43,11 +43,12 @@ class Window(pyglet.window.Window):
                 pass
 
         def on_mouse_release(self, x, y, button, modifiers):
-                self.selectedButton.selected = False
+        	if (self.selectedButton is not None):
+        		self.selectedButton.selected = False
 
         def on_mouse_motion(self, x, y, dx, dy):
 
-                if (self.hoveredButton is not 0):
+                if (self.hoveredButton is not None):
                         if ([self.hoveredButton.x, self.hoveredButton.y] is not [x, y]):
                                 self.hoveredButton.hover = False
 

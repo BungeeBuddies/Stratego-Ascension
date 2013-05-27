@@ -6,6 +6,7 @@ from pyglet.gl import *
 from field import Field
 from piece import Piece
 from button import Button
+from drawer import Drawer
 
 class SetupScreen:
 	def __init__(self,pieces,window):
@@ -87,10 +88,10 @@ class SetupScreen:
 		self.footer.draw()
 		for y in range(0, len(self.fields)):
 			for field in self.fields[y]:
+				
 				if field.selected:
-					if self.firstSelected is None:
-						if field.piece.type != '':
-							self.firstSelected = field
+					if self.firstSelected is None and field.piece.type != '':
+						self.firstSelected = field
 					else: 
 						if field.piece.type == '':
 							field.piece = Piece(self.firstSelected.piece.type, self.firstSelected.piece.steps)
@@ -102,15 +103,16 @@ class SetupScreen:
 								field.piece = helpPiece
 						self.firstSelected = None
 				field.selected = False
+				
 				if field is self.firstSelected:
 					glColor3f(1, 0, 1)
 				else:
 					glColor3f(1, 1, 1)
-				self.drawField(field)
+				Drawer.drawField(field)
 
 		for field in self.extraFields:
 			glColor3f(1, 0, 0)
-			self.drawField(field)
+			Drawer.drawField(field)
 
 		glColor3f(1, 1, 1)
 		if self.buttons[0].selected:
@@ -126,91 +128,7 @@ class SetupScreen:
 			self.autofill()
 			# self.buttons[1].selected = False
 		for button in self.buttons:
-			self.drawButton(button)
-
-	def drawField(self,field):
-		# Draw center
-		# self.drawCircle(field.x, field.y, 5, [1, 1, 1])
-
-		# # Draw top side
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    	(field.x + field.size, field.y + field.size, 
-    	field.x - field.size, field.y + field.size)))
-
-		# Draw down side
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    		(field.x + field.size, field.y - field.size, 
-    		field.x - field.size, field.y - field.size)))
-				
-		# Draw left side
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    		(field.x - field.size, field.y - field.size,
-    		field.x - field.size, field.y + field.size)))
-
-		# Draw right side
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-    		(field.x + field.size, field.y - field.size,
-    		field.x + field.size, field.y + field.size)))
-
-		#draw the Label
-		field.label.draw()
-
-	def drawButton(self,button):
-
-		offset = 0
-		if (button.selected):
-			offset = 0.1
-
-		# Button area
-		if (button.hover):		
-			glColor3f(1, 0, 0)
-		else:
-			glColor3f(0.8, 0, 0)
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-		glBegin(GL_QUADS)
-		# Top left
-		glVertex2f(button.x - button.xSize * (1.0 + offset), button.y + button.ySize * (1.0 + offset))
-		# Top right
-		glVertex2f(button.x + button.xSize * (1.0 - offset), button.y + button.ySize * (1.0 + offset))
-		# Bottom right
-		glVertex2f(button.x + button.xSize * (1.0 - offset), button.y - button.ySize * (1.0 - offset))
-		# Bottom left
-		glVertex2f(button.x - button.xSize * (1.0 + offset), button.y - button.ySize * (1.0 - offset))
-		glEnd()
-
-		
-
-		# Button 3D Top
-		glColor3f(0.5, 0, 0)
-		glBegin(GL_QUADS)
-		# Top left
-		glVertex2f(button.x - button.xSize * 1.2, button.y + button.ySize * 1.2)
-		# Top right
-		glVertex2f(button.x + button.xSize * 0.8, button.y + button.ySize * 1.2)
-		# Bottom right
-		glVertex2f(button.x + button.xSize * (1.0 - offset), button.y + button.ySize * (1.0 + offset))
-		# Bottom left
-		glVertex2f(button.x - button.xSize * (1.0 - offset), button.y + button.ySize * (1.0 + offset))
-		glEnd()
-
-		# Button 3D Left
-		glColor3f(0.5, 0, 0)
-		glBegin(GL_QUADS)
-		# Top left
-		glVertex2f(button.x - button.xSize * 1.2, button.y + button.ySize * 1.2)
-		# Top right
-		glVertex2f(button.x - button.xSize * (1.0 + offset), button.y + button.ySize * (1.0 + offset))
-		# Bottom right
-		glVertex2f(button.x - button.xSize * (1.0 + offset), button.y - button.ySize * (1.0 - offset))
-		# Bottom left
-		glVertex2f(button.x - button.xSize * 1.2, button.y - button.ySize * 0.8)
-		glEnd()
-
-		glColor3f(1, 1, 1)
-
-		#draw the Label
-		button.label.draw()
+			Drawer.drawButton(button)
 
 	def checkIfDone(self):
 		for y in range(0,len(self.fields)/2):

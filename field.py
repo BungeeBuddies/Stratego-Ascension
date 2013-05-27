@@ -7,6 +7,7 @@ class Field(object):
 		self._y = y
 		self.barrier = False
 		self.size = size
+		self.color = [1, 1, 1]
 		self.selected = False
 		self._piece = Piece('',0)
 		self.label = pyglet.text.Label(self._piece.type,
@@ -14,6 +15,11 @@ class Field(object):
                           font_size=16,
                           x=self._x, y=self._y,
                           anchor_x='center', anchor_y='center')
+
+	def draw():
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
+    				(self.x + self.size, self.y + self.size, 
+    				self.x - self.size, self.y + self.size)))
 
 	def x():
 	    doc = "The x property."
