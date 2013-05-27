@@ -13,6 +13,7 @@ class Field(object):
                           font_size=16,
                           x=self._x, y=self._y,
                           anchor_x='center', anchor_y='center')
+		self.field.piece = False 
 
 	def x():
 	    doc = "The x property."
