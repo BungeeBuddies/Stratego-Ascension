@@ -34,7 +34,7 @@ class PlayScreen:
 					pass
 				else:
 					fields[y][x].barrier = True
-					fields[y][x].piece = Piece('#')
+					fields[y][x].piece = Piece('#',0)
 
 		return fields
 		

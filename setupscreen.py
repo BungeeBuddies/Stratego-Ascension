@@ -76,12 +76,11 @@ class SetupScreen:
 	def populateField(self):
 		for y in range(len(self.fields)/2,len(self.fields)):
 			for x in range(0,len(self.fields[y])):
-				self.fields[y][x].piece = Piece('')
+				self.fields[y][x].piece = Piece('', 0)
 		for y in range(0,len(self.fields)/2):
 			for x in range(0,len(self.fields[y])):
 				self.fields[y][x].piece = self.pieces[y*10+x]
-		self.extraFields[2].piece = self.extraFields[3].piece = self.extraFields[6].piece = self.extraFields[7].piece = Piece('#') 
-
+		self.extraFields[2].piece = self.extraFields[3].piece = self.extraFields[6].piece = self.extraFields[7].piece = Piece('#',0) 
 
 	def draw(self):
 		self.header.draw()
@@ -94,8 +93,8 @@ class SetupScreen:
 							self.firstSelected = field
 					else: 
 						if field.piece.type == '':
-							field.piece = Piece(self.firstSelected.piece.type)
-							self.firstSelected.piece = Piece('')
+							field.piece = Piece(self.firstSelected.piece.type, self.firstSelected.piece.steps)
+							self.firstSelected.piece = Piece('',0)
 						else:
 							if field.piece.type != self.firstSelected.piece.type:
 								helpPiece = self.firstSelected.piece
@@ -210,26 +209,6 @@ class SetupScreen:
 
 		glColor3f(1, 1, 1)
 
-		# # Draw top side
-		# pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-  #   	(button.x + button.xSize, button.y + button.ySize, 
-  #   	button.x - button.xSize, button.y + button.ySize)))
-
-		# # Draw down side
-		# pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-  #   		(button.x + button.xSize, button.y - button.ySize, 
-  #   		button.x - button.xSize, button.y - button.ySize)))
-				
-		# # Draw left side
-		# pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-  #   		(button.x - button.xSize, button.y - button.ySize,
-  #   		button.x - button.xSize, button.y + button.ySize)))
-
-		# # Draw right side
-		# pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-  #   		(button.x + button.xSize, button.y - button.ySize,
-  #   		button.x + button.xSize, button.y + button.ySize)))
-
 		#draw the Label
 		button.label.draw()
 
@@ -262,5 +241,4 @@ class SetupScreen:
 		tobefilledfields = [f for r in topping for f in r if f.piece.type == '']
 		for (a, b) in zip(emptyfields, tobefilledfields):
 			b.piece = a.piece
-			a.piece = Piece('')
-		
+			a.piece = Piece('', 0)
