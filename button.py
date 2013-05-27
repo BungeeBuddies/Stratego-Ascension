@@ -9,10 +9,10 @@ class Button(object):
 		self.ySize = ySize
 		self.selected = False
 		self.hover = False
-		self.label = pyglet.text.Label("self._piece.type",
-                          font_name='Arial',
-                          font_size=16,
+		self.label = pyglet.text.HTMLLabel("",
                           x=self._x, y=self._y,
+                          multiline = True,
+                          width = 50,
                           anchor_x='center', anchor_y='center')
 
 	def x():

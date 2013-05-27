@@ -9,6 +9,7 @@ from field import Field
 from piece import Piece
 from playscreen import PlayScreen
 from setupscreen import SetupScreen
+from startscreen import StartScreen
 
 class Window(pyglet.window.Window):
 
@@ -23,10 +24,16 @@ class Window(pyglet.window.Window):
                 self.amountOfPieces = 80
                 self.pieces = self.createPieceList()
 
+                self.startScreen = StartScreen(self)
                 self.playScreen = PlayScreen(self)
                 self.setupScreen = SetupScreen(self.pieces,self)
+<<<<<<< HEAD
                 self.currentScreen = self.setupScreen
                 self.selectedField = None
+=======
+                self.currentScreen = self.startScreen
+                self.selectedField = 0
+>>>>>>> Startscreen
 
                 self.hoveredButton = None
                 self.selectedButton = None
@@ -88,25 +95,27 @@ class Window(pyglet.window.Window):
                         #return self.currentScreen.buttons[0]
 
         def isField(self, x, y):
-                fieldIndex = 0
-                fieldsList = []
+                if hasattr(self.currentScreen,'fields'):
+                
+                        fieldIndex = 0
+                        fieldsList = []
 
-                for row in range(0, len(self.currentScreen.fields)):
-                        for field in self.currentScreen.fields[row]:
-                                fieldsList.append([field.y, field.x])
+                        for row in range(0, len(self.currentScreen.fields)):
+                                for field in self.currentScreen.fields[row]:
+                                        fieldsList.append([field.y, field.x])
 
-                fieldSize = self.currentScreen.sizeOfField
+                        fieldSize = self.currentScreen.sizeOfField
 
-                for extraX in range(-fieldSize, fieldSize):
-                        for extraY in range(-fieldSize, fieldSize):
-                                try:
-                                        fieldIndex = fieldsList.index([y + extraY, x + extraX])
-                                except ValueError:
-                                        pass
-                                else:
-                                        column = fieldIndex % self.currentScreen.widthOfField
-                                        row = (fieldIndex - column)/self.currentScreen.widthOfField
-                                        return self.currentScreen.fields[row][column]
+                        for extraX in range(-fieldSize, fieldSize):
+                                for extraY in range(-fieldSize, fieldSize):
+                                        try:
+                                                fieldIndex = fieldsList.index([y + extraY, x + extraX])
+                                        except ValueError:
+                                                pass
+                                        else:
+                                                column = fieldIndex % self.currentScreen.widthOfField
+                                                row = (fieldIndex - column)/self.currentScreen.widthOfField
+                                                return self.currentScreen.fields[row][column]
 
 
                                         
