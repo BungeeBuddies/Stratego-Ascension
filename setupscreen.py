@@ -90,18 +90,21 @@ class SetupScreen:
 			for field in self.fields[y]:
 				
 				if field.selected:
+					
 					if self.firstSelected is None and field.piece.type != '':
 						self.firstSelected = field
 					else: 
+						
 						if field.piece.type == '':
 							field.piece = Piece(self.firstSelected.piece.type, self.firstSelected.piece.steps)
-							self.firstSelected.piece = Piece('',0)
+							self.firstSelected.piece = Piece('', 0)
 						else:
 							if field.piece.type != self.firstSelected.piece.type:
 								helpPiece = self.firstSelected.piece
 								self.firstSelected.piece = field.piece
 								field.piece = helpPiece
 						self.firstSelected = None
+
 				field.selected = False
 				
 				if field is self.firstSelected:
