@@ -28,7 +28,7 @@ class Window(pyglet.window.Window):
                 self.playScreen = PlayScreen(self)
                 self.setupScreen = SetupScreen(self.pieces,self)
 
-                self.currentScreen = self.setupScreen
+                self.currentScreen = self.startScreen
                 self.selectedField = None
 
                 self.hoveredButton = 0
