@@ -91,8 +91,9 @@ class SetupScreen:
 				
 				if field.selected:
 					
-					if self.firstSelected is None and field.piece.type != '':
-						self.firstSelected = field
+					if self.firstSelected is None:
+						if field.piece.type != '':
+							self.firstSelected = field
 					else: 
 						
 						if field.piece.type == '':
