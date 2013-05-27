@@ -168,7 +168,7 @@ class SetupScreen:
 			glColor3f(0.8, 0, 0)
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-		glBegin(GL_POLYGON)
+		glBegin(GL_QUADS)
 		# Top left
 		glVertex2f(button.x - button.xSize * (1.0 + offset), button.y + button.ySize * (1.0 + offset))
 		# Top right
@@ -183,7 +183,7 @@ class SetupScreen:
 
 		# Button 3D Top
 		glColor3f(0.5, 0, 0)
-		glBegin(GL_POLYGON)
+		glBegin(GL_QUADS)
 		# Top left
 		glVertex2f(button.x - button.xSize * 1.2, button.y + button.ySize * 1.2)
 		# Top right
@@ -196,7 +196,7 @@ class SetupScreen:
 
 		# Button 3D Left
 		glColor3f(0.5, 0, 0)
-		glBegin(GL_POLYGON)
+		glBegin(GL_QUADS)
 		# Top left
 		glVertex2f(button.x - button.xSize * 1.2, button.y + button.ySize * 1.2)
 		# Top right
