@@ -7,25 +7,18 @@ class Drawer(object):
 	@staticmethod
 	def drawField(field):
 
-		# Draw top side
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-					(field.x + field.size, field.y + field.size, 
-					field.x - field.size, field.y + field.size)))
-
-		# Draw down side
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-			(field.x + field.size, field.y - field.size, 
-			field.x - field.size, field.y - field.size)))
-				
-		# Draw left side
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-			(field.x - field.size, field.y - field.size,
-			field.x - field.size, field.y + field.size)))
-
-		# Draw right side
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
-			(field.x + field.size, field.y - field.size,
-			field.x + field.size, field.y + field.size)))
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+		glBegin(GL_QUADS)
+		# Top left
+		glVertex2f(field.x + field.size, field.y + field.size)
+		# Top right
+		glVertex2f(field.x - field.size, field.y + field.size)
+		# Bottom right
+		glVertex2f(field.x - field.size, field.y - field.size)
+		# Bottom left
+		glVertex2f(field.x + field.size, field.y - field.size)
+		glEnd()
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
 		field.label.draw()
 
