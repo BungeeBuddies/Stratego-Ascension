@@ -60,91 +60,49 @@ class PlayScreen:
                           anchor_x='center', anchor_y='center').draw()
 		# Draw fields
 		for y in range(0, len(self.fields)):
-			for x in range( 0,len(self.fields[y])):
-				
+			for x in range( 0,len(self.fields[y])):				
 				field = self.fields[y][x]
-				if field.selected:
-					
-					
+				if field.selected:				
 					if self.firstSelected is None:
-						if field.piece.type != '':
-							self.firstSelected = field
-							
-						if field.piece.type is'F':
-							self.firstSelected = None								
-							print ('Flag')	
-							
-						if field.piece.type is'B':
-							self.firstSelected = None								
-							print ('Bom')
-						if field.piece.type is '#':
-							self.firstSelected = None
-							print ('Blok')
-						
+						if field.piece.type != '' and field.piece.type is not 'F' and field.piece.type is not'B' and field.piece.type is not '#':
+								self.firstSelected = field
 					else: 
-						done = True
-						
-						if done:
-							if field.piece.type == '#':
-								print('blokkade')
-								done = False
-						if done:
-							if self.firstSelected.piece.type == 1 :
-								if field.piece.type == 10:
+						#TODO check if the player can take this amount of steps
+						switch(field.piece.type){
+							case '#':
+								print "blokkade"
+								break
+							case 10:
+								if self.firstSelected.piece.type == 1:
 									print('Spy =D')
-									field.piece = Piece(self.firstSelected.piece.type, self.firstSelected.piece.steps)
+									field.piece = self.firstSelected.piece
 									self.firstSelected.piece = Piece('', 0)
-									done = False
-						if done:
-							if self.firstSelected.piece.type == 3 :
-								if field.piece.type == 'B':
-									print ('Byebye Bom')
-									field.piece = Piece(self.firstSelected.piece.type, self.firstSelected.piece.steps)
+								break
+							case 'B':
+								if self.firstSelected.piece.type == 3:
+										print "bomb removed"
+										field.piece = self.firstSelected.piece
+										self.firstSelected.piece = Piece('', 0)
+								break
+							case 'F':
+								print "Victory!"
+								#TODO goto endscreen
+								break
+							case '':
+								field.piece = self.firstSelected.piece
+								self.firstSelected.piece = Piece('', 0)
+							default:
+								if field.piece < self.firstSelected.piece:
+									field.piece = self.firstSelected.piece
 									self.firstSelected.piece = Piece('', 0)
-									done = False	
-						if done:
-							if field.piece.type =='F':
-								field.piece = Piece(self.firstSelected.piece.type, self.firstSelected.piece.steps)
-								self.firstSelected.piece = Piece('', 0)
-								print ('You Win')
-								done = False								
-						if done:
-							
-							if self.firstSelected.piece.type > field.piece.type :
-								
-								field.piece = Piece(self.firstSelected.piece.type, self.firstSelected.piece.steps)
-								self.firstSelected.piece = Piece('', 0)
-								done = False
-								print ('Win')
-						if done:		
-							if field.piece.type == (''):
-								field.piece = Piece(self.firstSelected.piece.type, self.firstSelected.piece.steps)
-								self.firstSelected.piece = Piece('', 0)
-								print('leeg')
-								done = False
-						if done:		
-							if self.firstSelected.piece.type < field.piece.type  :
-								self.firstSelected.piece = Piece('', 0)
-								done = False
-								print('Lose')
-						if done:	
-							if self.firstSelected.piece.type == field.piece.type  :
-								field.piece = Piece('', 0)
-								self.firstSelected.piece = Piece('', 0)
-								done = False
-								print ('Draw')
-						
-						
-								
-								
+								elif field.piece == self.firstSelected.piece:
+									self.firstSelected.piece = Piece('', 0)
+									field.piece = Piece('',0)
+								else:
+									self.firstSelected.piece = Piece('', 0)
+						}
 						self.firstSelected = None
-
-				field.selected = False
-						
-					#	print('klik 2')
-					#print (x,y)
-					#field.selected = False
-					
+				field.selected = False					
 				if (field.barrier):
 					glColor3f(1, 0, 0)
 					
@@ -153,8 +111,4 @@ class PlayScreen:
 					
 				else:
 					glColor3f(1, 1, 1)
-					
-		
 				Drawer.drawField(field)
-				
-				
