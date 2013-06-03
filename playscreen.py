@@ -66,47 +66,44 @@ class PlayScreen:
 					if self.firstSelected is None:
 						if field.piece.type != '' and field.piece.type is not 'F' and field.piece.type is not'B' and field.piece.type is not '#':
 								self.firstSelected = field
-					else: 
+					elif self.firstSelected is not field: 
 						#TODO check if the player can take this amount of steps
-						switch(field.piece.type){
-							case '#':
-								print "blokkade"
-								break
-							case 10:
-								if self.firstSelected.piece.type == 1:
-									print('Spy =D')
-									field.piece = self.firstSelected.piece
-									self.firstSelected.piece = Piece('', 0)
-								break
-							case 'B':
-								if self.firstSelected.piece.type == 3:
-										print "bomb removed"
-										field.piece = self.firstSelected.piece
-										self.firstSelected.piece = Piece('', 0)
-								break
-							case 'F':
-								print "Victory!"
-								#TODO goto endscreen
-								break
-							case '':
+						if field.piece.type == '#':
+							print "blokkade"
+						elif field.piece.type == 10:
+							if self.firstSelected.piece.type == 1:
+								print('Spy =D')
 								field.piece = self.firstSelected.piece
 								self.firstSelected.piece = Piece('', 0)
-							default:
-								if field.piece < self.firstSelected.piece:
-									field.piece = self.firstSelected.piece
-									self.firstSelected.piece = Piece('', 0)
-								elif field.piece == self.firstSelected.piece:
-									self.firstSelected.piece = Piece('', 0)
-									field.piece = Piece('',0)
-								else:
-									self.firstSelected.piece = Piece('', 0)
-						}
+						elif field.piece.type == 'B':
+							if self.firstSelected.piece.type == 3:
+								print "bomb removed"
+								field.piece = self.firstSelected.piece
+								self.firstSelected.piece = Piece('', 0)
+							else :
+								self.firstSelected.piece = Piece('', 0)
+						elif field.piece.type == 'F':
+							print "Victory!"
+							#TODO goto endscreen
+						elif field.piece.type == '':
+							field.piece = self.firstSelected.piece
+							self.firstSelected.piece = Piece('', 0)
+						else:
+							if field.piece.type < self.firstSelected.piece.type:
+								field.piece = self.firstSelected.piece
+								self.firstSelected.piece = Piece('', 0)
+							elif field.piece.type == self.firstSelected.piece.type:
+								self.firstSelected.piece = Piece('', 0)
+								field.piece = Piece('',0)
+							else:
+								self.firstSelected.piece = Piece('', 0)
+						
 						self.firstSelected = None
-				field.selected = False					
+					field.selected = False					
 				if (field.barrier):
 					glColor3f(1, 0, 0)
 					
-				elif (self.firstSelected is field ):
+				elif self.firstSelected is field:
 					glColor3f(1,0,1)
 					
 				else:
