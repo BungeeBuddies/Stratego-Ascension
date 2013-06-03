@@ -25,10 +25,6 @@ class PlayScreen:
 		self.player2Pieces = [] 
 		self.firstSelected = None
 		
-		
-
-	#def checkPlayField(self):
-		
 	def createPlayField(self):
 		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
 
@@ -66,38 +62,40 @@ class PlayScreen:
 					if self.firstSelected is None:
 						if field.piece.type != '' and field.piece.type is not 'F' and field.piece.type is not'B' and field.piece.type is not '#':
 								self.firstSelected = field
+								self.firstSelectedXPosition = x
+								self.firstSelectedYPosition = y
 					elif self.firstSelected is not field: 
-						#TODO check if the player can take this amount of steps
-						if field.piece.type == '#':
-							print "blokkade"
-						elif field.piece.type == 10:
-							if self.firstSelected.piece.type == 1:
-								print('Spy =D')
+						if self.legalMove(self.firstSelected,self.firstSelectedXPosition,self.firstSelectedYPosition,field,x,y):
+							if field.piece.type == '#':
+								print "blokkade"
+							elif field.piece.type == 10:
+								if self.firstSelected.piece.type == 1:
+									print('Spy =D')
+									field.piece = self.firstSelected.piece
+									self.firstSelected.piece = Piece('', 0)
+							elif field.piece.type == 'B':
+								if self.firstSelected.piece.type == 3:
+									print "bomb removed"
+									field.piece = self.firstSelected.piece
+									self.firstSelected.piece = Piece('', 0)
+								else :
+									self.firstSelected.piece = Piece('', 0)
+							elif field.piece.type == 'F':
+								print "Victory!"
+								#TODO goto endscreen
+							elif field.piece.type == '':
 								field.piece = self.firstSelected.piece
 								self.firstSelected.piece = Piece('', 0)
-						elif field.piece.type == 'B':
-							if self.firstSelected.piece.type == 3:
-								print "bomb removed"
-								field.piece = self.firstSelected.piece
-								self.firstSelected.piece = Piece('', 0)
-							else :
-								self.firstSelected.piece = Piece('', 0)
-						elif field.piece.type == 'F':
-							print "Victory!"
-							#TODO goto endscreen
-						elif field.piece.type == '':
-							field.piece = self.firstSelected.piece
-							self.firstSelected.piece = Piece('', 0)
-						else:
-							if field.piece.type < self.firstSelected.piece.type:
-								field.piece = self.firstSelected.piece
-								self.firstSelected.piece = Piece('', 0)
-							elif field.piece.type == self.firstSelected.piece.type:
-								self.firstSelected.piece = Piece('', 0)
-								field.piece = Piece('',0)
 							else:
-								self.firstSelected.piece = Piece('', 0)
-						
+								if field.piece.type < self.firstSelected.piece.type:
+									field.piece = self.firstSelected.piece
+									self.firstSelected.piece = Piece('', 0)
+								elif field.piece.type == self.firstSelected.piece.type:
+									self.firstSelected.piece = Piece('', 0)
+									field.piece = Piece('',0)
+								else:
+									self.firstSelected.piece = Piece('', 0)
+							
 						self.firstSelected = None
 					field.selected = False					
 				if (field.barrier):
@@ -109,3 +107,21 @@ class PlayScreen:
 				else:
 					glColor3f(1, 1, 1)
 				Drawer.drawField(field)
+
+	def legalMove(self, source,sourceX,sourceY,target,targetX,targetY):
+		if sourceX == targetX or sourceY == targetY: #both fields are on the same line
+			delta = ( sourceY - targetY if sourceX == targetX  else sourceX - targetX) #the difference between the fields
+			if abs(delta) <= source.piece.steps: #check if the piece can move this far
+				if source.piece.steps > 1:
+					if sourceX == targetX:	#finally: check if something is in between (only applies if piece can set more then one step)
+						step = -1 if sourceY > targetY else 1 
+						for y in xrange(sourceY+step,targetY,step):
+							if self.fields[y][sourceX].piece.type != '':
+								return False
+					else:
+						step = -1 if sourceX > targetX else 1
+						for x in xrange(sourceX+step,targetX,step):
+							if self.fields[sourceY][x].piece.type != '':
+								return False
+				return True
+		return False
