@@ -2,6 +2,8 @@
 import pyglet
 import copy
 import threading
+import random
+
 from pyglet.gl import *
 from field import Field
 from piece import Piece
@@ -159,10 +161,15 @@ class SetupScreen:
 		self.footer.text = 'Player ' + str(self.activePlayer) + ', setup your field'
 
 	def autofill(self):
-		regels = self.fields[:len(self.fields)/2]
+		regels = self.fields[:len(self.fields)/2] 
 		emptyfields = [f for r in regels for f in r if f.piece.type != '']
-		topping = self.fields[len(self.fields)/2:]
+		topping = self.fields[len(self.fields)/2:] 
 		tobefilledfields = [f for r in topping for f in r if f.piece.type == '']
+		random.shuffle(tobefilledfields)
 		for (a, b) in zip(emptyfields, tobefilledfields):
 			b.piece = a.piece
 			a.piece = Piece('', 0)
+			
+			
+			
+			
