@@ -7,6 +7,7 @@ from time import time
 from copy import deepcopy
 from field import Field
 from piece import Piece
+from player import Player
 from playscreen import PlayScreen
 from setupscreen import SetupScreen
 from startscreen import StartScreen
@@ -24,15 +25,20 @@ class Window(pyglet.window.Window):
                 self.amountOfPieces = 80
                 self.pieces = self.createPieceList()
                 
-                self.startScreen = StartScreen(self)
-                self.playScreen = PlayScreen(self)
-                self.setupScreen = SetupScreen(self.pieces,self)
-
-                self.currentScreen = self.startScreen
                 self.selectedField = None
 
                 self.hoveredButton = None
                 self.selectedButton = None
+
+                self.whosTurn = 1
+                self.player1 = Player(False, self.createPieceList())
+                self.player2 = Player(True, self.createPieceList())
+
+                self.startScreen = StartScreen(self)
+                self.playScreen = PlayScreen(self, self.player1, self.player2)
+                self.setupScreen = SetupScreen(self.player1, self.player2, self)
+
+                self.currentScreen = self.startScreen
 
                 self.fpsLabel = pyglet.text.Label('Empty',
                           font_name='Arial',
@@ -49,6 +55,11 @@ class Window(pyglet.window.Window):
             if (self.selectedButton is not None):
                 self.selectedButton.selected = False
 
+            if (self.whosTurn is 1):
+                self.whosTurn = 2
+            elif (self.whosTurn is 2):
+                self.whosTurn = 1
+
         def on_mouse_motion(self, x, y, dx, dy):
 
                 if (self.hoveredButton is not None):
@@ -63,7 +74,7 @@ class Window(pyglet.window.Window):
         def on_mouse_press(self, x, y, button, modifiers):
 
                 isButton = self.isButton(x,y)
-                if isButton is not None:
+                if (isButton is not None):
                         self.selectedButton = isButton
                         self.selectedButton.selected = True
 
@@ -145,7 +156,7 @@ class Window(pyglet.window.Window):
 
         def createPieceList(self):
                         pieces = []
-                        #80 pieces, 40 of team a, 40 of team b. I only need to make this list for one player, thoug
+                        #80 pieces, 40 of team a, 40 of team b. I only need to make this list for one player, though
                         #Fourty pieces
                         #One Flag
                         for x in range(0,1):
