@@ -26,7 +26,8 @@ class Drawer(object):
 		pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
 			(field.x + field.size, field.y - field.size,
 			field.x + field.size, field.y + field.size)))
-
+		
+		
 		field.label.draw()
 
 	@staticmethod

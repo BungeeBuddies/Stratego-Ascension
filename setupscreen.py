@@ -91,8 +91,9 @@ class SetupScreen:
 				
 				if field.selected:
 					
-					if self.firstSelected is None and field.piece.type != '':
-						self.firstSelected = field
+					if self.firstSelected is None:
+						if field.piece.type != '':
+							self.firstSelected = field
 					else: 
 						
 						if field.piece.type == '':
@@ -144,11 +145,13 @@ class SetupScreen:
 			for y in xrange(len(self.fields)/2,len(self.fields)):
 				for x in xrange(0,len(self.fields[y])):
 					self.window.playScreen.fields[len(self.window.playScreen.fields) + len(self.fields)/2 - y - 1][len(self.fields[y])-x-1].piece = self.fields[y][x].piece
+					self.window.playScreen.player1Pieces.append(self.fields[y][x].piece)		
 		else: 
 			for y in xrange(len(self.fields)/2,len(self.fields)):
 				for x in xrange(0,len(self.fields[y])):
 					self.window.playScreen.fields[-len(self.fields)/2 + y][x].piece = self.fields[y][x].piece
 					self.window.currentScreen = self.window.playScreen
+					self.window.playScreen.player2Pieces.append(self.fields[y][x].piece)
 		self.populateField()
 		return True			
 
