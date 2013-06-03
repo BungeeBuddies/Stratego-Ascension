@@ -94,6 +94,7 @@ class SetupScreen:
 				if field.selected:
 					
 					if self.firstSelected is None:
+						
 						if field.piece.type != '':
 							self.firstSelected = field
 					else: 
@@ -161,6 +162,7 @@ class SetupScreen:
 		self.footer.text = 'Player ' + str(self.activePlayer) + ', setup your field'
 
 	def autofill(self):
+		self.firstSelected = None
 		regels = self.fields[:len(self.fields)/2] 
 		emptyfields = [f for r in regels for f in r if f.piece.type != '']
 		topping = self.fields[len(self.fields)/2:] 
