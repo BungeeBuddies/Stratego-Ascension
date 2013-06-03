@@ -78,13 +78,19 @@ class Window(pyglet.window.Window):
                         self.selectedButton = isButton
                         self.selectedButton.selected = True
 
-                isField = self.isField(x, y)
-                if (isField is not None):
-                        self.selectedField = isField
-                        self.selectedField.selected = True
+                clickedField = self.isField(x, y)
+                if (clickedField is not None):
+                    # Deselected last field
+                    if (self.selectedField is not None):
+                        self.selectedField.selected = False
 
-        def isButton(self,x,y):
-                if hasattr(self.currentScreen,'buttons'):
+                    # Select new one
+                    self.selectedField = clickedField
+                    self.selectedField.selected = True
+                    self.currentScreen.handleClick(clickedField)
+
+        def isButton(self, x, y):
+                if hasattr(self.currentScreen, 'buttons'):
                         buttonIndex = 0
                         buttonsList = []
                         for button in self.currentScreen.buttons:
@@ -102,27 +108,27 @@ class Window(pyglet.window.Window):
                         #return self.currentScreen.buttons[0]
 
         def isField(self, x, y):
-                if hasattr(self.currentScreen,'fields'):
+                if hasattr(self.currentScreen, 'fields'):
                 
-                        fieldIndex = 0
-                        fieldsList = []
+                    fieldIndex = 0
+                    fieldsList = []
 
-                        for row in range(0, len(self.currentScreen.fields)):
-                                for field in self.currentScreen.fields[row]:
-                                        fieldsList.append([field.y, field.x])
+                    for field in self.currentScreen.fields:
+                        fieldsList.append([field.y, field.x])
 
-                        fieldSize = self.currentScreen.sizeOfField
+                    fieldSize = self.currentScreen.sizeOfField
 
-                        for extraX in range(-fieldSize, fieldSize):
-                                for extraY in range(-fieldSize, fieldSize):
-                                        try:
-                                                fieldIndex = fieldsList.index([y + extraY, x + extraX])
-                                        except ValueError:
-                                                pass
-                                        else:
-                                                column = fieldIndex % self.currentScreen.widthOfField
-                                                row = (fieldIndex - column)/self.currentScreen.widthOfField
-                                                return self.currentScreen.fields[row][column]
+                    for extraX in range(-fieldSize, fieldSize):
+                        for extraY in range(-fieldSize, fieldSize):
+                            try:
+                                fieldIndex = fieldsList.index([y + extraY, x + extraX])
+                            except ValueError:
+                                pass
+                            else:
+                                print "field pressed"
+                                # column = fieldIndex % self.currentScreen.widthOfField
+                                # row = (fieldIndex - column)/self.currentScreen.widthOfField
+                                return self.currentScreen.fields[fieldIndex]
 
 
                                         
@@ -148,9 +154,9 @@ class Window(pyglet.window.Window):
                 fields = [[Field(0, 0, self.currentScreen.sizeOfField) for x in xrange(self.currentScreen.lengthOfField)] for y in xrange(self.currentScreen.lengthOfField)]
 
                 for y in range(0, len(fields)):
-                        for x in range(0, len(fields[0])):
-                                        fields[y][x].x = x * fields[y][x].size*2 + self.xOffset + self.fieldOffset * x
-                                        fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.fieldOffset * y
+                    for x in range(0, len(fields[0])):
+                        fields[y][x].x = x * fields[y][x].size*2 + self.xOffset + self.fieldOffset * x
+                        fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.fieldOffset * y
 
                 return fields
 
@@ -158,44 +164,56 @@ class Window(pyglet.window.Window):
                         pieces = []
                         #80 pieces, 40 of team a, 40 of team b. I only need to make this list for one player, though
                         #Fourty pieces
-                        #One Flag
+                        
+                        # One Flag
                         for x in range(0,1):
-                                        pieces.append(Piece('F',0))
+                            pieces.append(Piece('F',0))
                                         
-                        #six Bombs
+                        # Six Bombs
                         for x in range(0,6):
-                                        pieces.append(Piece('B',0))
-                        #One Spy
+                            pieces.append(Piece('B',0))
+                    
+                        # One Spy
                         for x in range(0,1):
-                                        pieces.append(Piece(1,1))
-                        #Eight Scouts
+                            pieces.append(Piece(1,1))
+                    
+                        # Eight Scouts
                         for x in range (0,8):
-                                        pieces.append(Piece(2,10))
-                        #Five Miners
+                            pieces.append(Piece(2,10))
+                    
+                        # Five Miners
                         for x in range(0,5):
-                                        pieces.append(Piece(3,1)) 
-                        #Four Sergeants
+                            pieces.append(Piece(3,1)) 
+                    
+                        # Four Sergeants
                         for x in range(0,4):
-                                        pieces.append(Piece(4,1))
-                        #Four Lieutenants 
+                            pieces.append(Piece(4,1))
+                    
+                        # Four Lieutenants 
                         for x in range(0,4):
-                                        pieces.append(Piece(5,1))
-                        #Four Captains
+                            pieces.append(Piece(5,1))
+                    
+                        # Four Captains
                         for x in range(0,4):
-                                        pieces.append(Piece(6,1))
-                        #Three Majors
+                            pieces.append(Piece(6,1))
+                    
+                        # Three Majors
                         for x in range(0,3):
-                                        pieces.append(Piece(7,1))
-                        #Two Colonels
+                            pieces.append(Piece(7,1))
+                    
+                        # Two Colonels
                         for x in range(0,2):
-                                        pieces.append(Piece(8,1))
-                        #One General
+                            pieces.append(Piece(8,1))
+                    
+                        # One General
                         for x in range(0,1):
-                                        pieces.append(Piece(9,1))
-                        #One Marshal
+                            pieces.append(Piece(9,1))
+                    
+                        # One Marshal
                         for x in range(0,1):
-                                        pieces.append(Piece(10,1))
-                        return pieces                   
+                            pieces.append(Piece(10,1))
+                    
+                        return pieces
 
         def on_draw(self):
                 pass
