@@ -115,6 +115,7 @@ class Window(pyglet.window.Window):
                     fieldsList = []
 
                     for field in self.currentScreen.fields:
+                        print field
                         fieldsList.append([field.y, field.x])
 
                     fieldSize = self.currentScreen.sizeOfField

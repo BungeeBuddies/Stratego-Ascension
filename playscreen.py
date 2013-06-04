@@ -24,47 +24,41 @@ class PlayScreen:
         self.isFieldSelected = False
         self.selectedField = 0
         self.color = [1, 1, 1]
-        self.fields = self.createPlayField()
+
+        self.playFields = self.createPlayField()
+        self.fields = [item for sublist in self.playFields for item in sublist]
+
         self.selectedField = None
         self.firstSelected = None
         
-        
+    def handleClick(self, field):
+        print "clicked"
 
     def createPlayField(self):
-        fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
+        playFields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
 
-        for y in range(0, len(fields)):
-            for x in range(0, len(fields[0])):
-                fields[y][x].x = x * fields[y][x].size*2 + self.xOffset + self.fieldOffset * x
-                fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.fieldOffset * y
+        for y in range(len(playFields)):
+            for x in range(len(playFields[0])):
+                playFields[y][x].x = x * playFields[y][x].size*2 + self.xOffset + self.fieldOffset * x
+                playFields[y][x].y = y * playFields[y][x].size*2 + self.yOffset + self.fieldOffset * y
                 
-                if (y in range(3)):
-                    fields[y][x].piece = self.player1.pieces[y*self.widthOfField+x]
+                if (y in range(4)):
+                    playFields[y][x].piece = self.player1.pieces[y][x]
 
-                if (y in range(7, 10)):
-                    fields[y][x].piece = self.player2.pieces[(y-6)*self.widthOfField+x]
-
+                if (y in range(6, 10)):
+                    playFields[y][x].piece = self.player2.pieces[y-6][x]
 
                 try:
                     self.barrierFields.index([x, y])
                 except ValueError:
                     pass
                 else:
-                    fields[y][x].barrier = True
-                    fields[y][x].piece = Piece('#', 0)
+                    playFields[y][x].barrier = True
+                    playFields[y][x].piece = Piece('#', 0)
 
-        return fields
+        return playFields
 
     def draw(self):
-
-        # Player 1's turn
-        # if (self.window.whosTurn is 1):
-        #     if (self.player1.isComputer is True):
-        #         print "lolbbqsauce"
-        # elif (self.window.whosTurn is 2):
-        #      # Player 2's turn
-        #     if (self.player2.isComputer is True):
-        #         self.player2.play()
 
         pyglet.text.Label('Player 1',
                           font_name='Arial',
@@ -77,11 +71,11 @@ class PlayScreen:
                           font_size=16,
                           x=self.window.get_size()[0]/2, y=20,
                           anchor_x='center', anchor_y='center').draw()
-        # Draw fields
-        for y in range(0, len(self.fields)):
-            for x in range(0, len(self.fields[y])):
+        # Draw playFields
+        for y in range(0, len(self.playFields)):
+            for x in range(0, len(self.playFields[y])):
 
-                field = self.fields[y][x]
+                field = self.playFields[y][x]
                 if field.selected:
 
                     if self.firstSelected is None:
@@ -95,6 +89,7 @@ class PlayScreen:
                         if field.piece.type is'B':
                             self.firstSelected = None
                             print ('Bom')
+                        
                         if field.piece.type is '#':
                             self.firstSelected = None
                             print ('Blok')

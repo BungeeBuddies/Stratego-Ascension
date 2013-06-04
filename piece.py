@@ -5,7 +5,11 @@ class Piece(object):
     def __init__(self, typePiece, steps):
         self.type = typePiece
         self._field = None
-        self.label = None
+        self.label = pyglet.text.Label(str(self.type),
+                        font_name='Arial',
+                        font_size=16,
+                        x=0, y=0,
+                        anchor_x='center', anchor_y='center')
         self.size = 20
         self.owner = 0
         self.steps = steps
@@ -17,11 +21,8 @@ class Piece(object):
             return self._field
         def fset(self, value):
             self._field = value
-            self.label = pyglet.text.Label(str(self.type),
-                        font_name='Arial',
-                        font_size=16,
-                        x=self._field.x, y=self._field.y,
-                        anchor_x='center', anchor_y='center')
+            self.label.x = self._field.x
+            self.label.y = self._field.y
         def fdel(self):
             del self._field
         return locals()

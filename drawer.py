@@ -19,7 +19,7 @@ class Drawer(object):
         glEnd()
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-        if (field.piece is not None and field.piece.label is not None):
+        if (field.piece is not None):
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
             glBegin(GL_QUADS)
             # Top left
@@ -33,7 +33,11 @@ class Drawer(object):
             glEnd()
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
             
-            field.piece.label.draw()
+            pyglet.text.Label(str(field.piece.type),
+                        font_name='Arial',
+                        font_size=16,
+                        x=field.x, y=field.y,
+                        anchor_x='center', anchor_y='center').draw()
 
     @staticmethod
     def drawButton(button):

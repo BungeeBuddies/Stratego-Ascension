@@ -62,7 +62,7 @@ class SetupScreen:
                 fields[y][x].y = y * fields[y][x].size*2 + yOffset + self.fieldOffset * y
                 
                 if (populate):
-                    fields[y][x].piece = self.player.pieces[y*self.widthOfField+x]
+                    fields[y][x].piece = self.player.pieces[y][x]
                     # fields[y][x].piece.field = fields[y][x]
 
         return fields
@@ -111,11 +111,6 @@ class SetupScreen:
                 field.piece = self.firstSelected.piece
                 self.firstSelected.piece = None
                 
-                for row in range(0, len(self.topArea)):
-                    for field in self.topArea[row]:
-                        if (field.piece is not None):
-                            print field.piece.type
-            
             self.firstSelected = None
 
     def draw(self):
