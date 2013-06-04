@@ -1,4 +1,5 @@
 import pyglet
+import copy
 from pyglet.gl import *
 from field import Field
 from piece import Piece
@@ -36,6 +37,8 @@ class PlayScreen:
                           x=self.window.get_size()[0]/2, y=20,
                           anchor_x='center', anchor_y='center')
 		self.changePlayerTurn();
+		self.hiddenField = Field(0,0,0)
+		self.hiddenField.piece = Piece('?',0)
 		
 	def createPlayField(self):
 		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
@@ -59,8 +62,8 @@ class PlayScreen:
 		self.footer.draw()
 		# Draw fields
 		for y in range(0, len(self.fields)):
-			for x in range( 0,len(self.fields[y])):				
-				field = self.fields[y][x]
+			for x in range( 0,len(self.fields[y])):	
+				field = self.fields[y][x]			
 				if field.selected:				
 					if self.firstSelected is None:
 						if field.piece.type != '' and field.piece.type is not 'F' and field.piece.type is not'B' and field.piece.type is not '#' and field.piece.owner == self.playersTurn:
@@ -101,6 +104,12 @@ class PlayScreen:
 							self.changePlayerTurn()							
 						self.firstSelected = None
 					field.selected = False
+				if field.piece.owner != self.playersTurn and field.piece.owner != 0:
+					self.hiddenField.x = field.x
+					self.hiddenField.y = field.y
+					self.hiddenField.size = field.size
+					self.hiddenField.piece.owner = field.piece.owner
+					field = self.hiddenField
 				if self.firstSelected is field:			
 					glColor3f(1, 0, 1)
 				elif field.piece.owner == 2:
