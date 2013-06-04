@@ -13,6 +13,11 @@ class PlayScreen:
         self.fieldOffset = 1
         self.barrierFields = [[2, 4], [3, 4], [6, 4], [7, 4], [2, 5], [3, 5], [6, 5], [7, 5]]
 
+        self.player1 = player1
+        self.player1Pieces = player1.pieces
+        self.player2 = player2
+        self.player2Pieces = player2.pieces
+
         self.widthOfField = 10
         self.heightOfField = 10
         self.sizeOfField = 25
@@ -23,11 +28,7 @@ class PlayScreen:
         self.selectedField = None
         self.firstSelected = None
         
-        self.player1 = player1
-        self.player1Pieces = []
-
-        self.player2 = player2
-        self.player2Pieces = []
+        
 
     def createPlayField(self):
         fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
@@ -36,6 +37,14 @@ class PlayScreen:
             for x in range(0, len(fields[0])):
                 fields[y][x].x = x * fields[y][x].size*2 + self.xOffset + self.fieldOffset * x
                 fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.fieldOffset * y
+                
+                if (y in range(3)):
+                    fields[y][x].piece = self.player1.pieces[y*self.widthOfField+x]
+
+                if (y in range(7, 10)):
+                    fields[y][x].piece = self.player2.pieces[(y-6)*self.widthOfField+x]
+
+
                 try:
                     self.barrierFields.index([x, y])
                 except ValueError:
@@ -49,13 +58,13 @@ class PlayScreen:
     def draw(self):
 
         # Player 1's turn
-        if (self.window.whosTurn is 1):
-            if (self.player1.isComputer is True):
-                print "lolbbqsauce"
-        elif (self.window.whosTurn is 2):
-             # Player 2's turn
-            if (self.player2.isComputer is True):
-                self.player2.play()
+        # if (self.window.whosTurn is 1):
+        #     if (self.player1.isComputer is True):
+        #         print "lolbbqsauce"
+        # elif (self.window.whosTurn is 2):
+        #      # Player 2's turn
+        #     if (self.player2.isComputer is True):
+        #         self.player2.play()
 
         pyglet.text.Label('Player 1',
                           font_name='Arial',

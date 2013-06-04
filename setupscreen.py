@@ -3,6 +3,7 @@ import pyglet
 import copy
 import threading
 import random
+from copy import copy
 from pyglet.gl import *
 from field import Field
 from piece import Piece
@@ -10,11 +11,9 @@ from button import Button
 from drawer import Drawer
 
 class SetupScreen:
-    def __init__(self, player1, player2, window):
+    def __init__(self, player, window):
         self.window = window
-        # self.pieces = pieces
-        self.player1 = player1
-        self.player2 = player2
+        self.player = player
 
         self.widthOfField = 10
         self.heightOfField = 4
@@ -63,8 +62,8 @@ class SetupScreen:
                 fields[y][x].y = y * fields[y][x].size*2 + yOffset + self.fieldOffset * y
                 
                 if (populate):
-                    fields[y][x].piece = self.player1.pieces[y*self.widthOfField+x]
-                    fields[y][x].piece.field = fields[y][x]
+                    fields[y][x].piece = self.player.pieces[y*self.widthOfField+x]
+                    # fields[y][x].piece.field = fields[y][x]
 
         return fields
 
@@ -120,85 +119,81 @@ class SetupScreen:
             self.firstSelected = None
 
     def draw(self):
-        self.header.draw()
-        self.footer.draw()
 
-        for area in [self.bottomArea, self.topArea]:
-            for y in range(0, len(area)):
-                for field in area[y]:
-     
-                    if (field is self.firstSelected):
-                        glColor3f(1, 0, 1)
-                    elif (field.selected):
-                        glColor3f(1, 1, 0)
-                    else:
-                        glColor3f(1, 1, 1)
+        if (self.player.isComputer):
+            print "is computer"
+            self.fillTopArea()
+            self.window.currentScreen = self.window.playScreen
 
+        else:
+            self.header.draw()
+            self.footer.draw()
+
+            for area in [self.bottomArea, self.topArea]:
+                for y in range(0, len(area)):
+                    for field in area[y]:
+         
+                        if (field is self.firstSelected):
+                            glColor3f(1, 0, 1)
+                        elif (field.selected):
+                            glColor3f(1, 1, 0)
+                        else:
+                            glColor3f(1, 1, 1)
+
+                        Drawer.drawField(field)
+
+                for field in self.barriers:
+                    glColor3f(1, 0, 0)
                     Drawer.drawField(field)
 
-            for field in self.barriers:
-                glColor3f(1, 0, 0)
-                Drawer.drawField(field)
-
-        glColor3f(1, 1, 1)
-        if self.buttons[0].selected:
-            # self.buttons[0].selected = False
-            if  not self.checkIfDone():
-                self.footer.text = "You have to place all your pieces before you can continue"
-                # Reset footer text to original after x seconds
-                if hasattr(self, 'textResetTimer') and self.textResetTimer.isAlive():
-                    self.textResetTimer.cancel()
-                    self.textResetTimer.join()
-                self.textResetTimer = threading.Timer(3, self.resetBottomText)
-                self.textResetTimer.start()
-        if self.buttons[1].selected:
-            self.autofill()
-            # self.buttons[1].selected = False
-        for button in self.buttons:
-            Drawer.drawButton(button)
+            glColor3f(1, 1, 1)
+            if self.buttons[0].selected:
+                # self.buttons[0].selected = False
+                if  not self.checkIfDone():
+                    self.footer.text = "You have to place all your pieces before you can continue"
+                    # Reset footer text to original after x seconds
+                    if hasattr(self, 'textResetTimer') and self.textResetTimer.isAlive():
+                        self.textResetTimer.cancel()
+                        self.textResetTimer.join()
+                    self.textResetTimer = threading.Timer(3, self.resetBottomText)
+                    self.textResetTimer.start()
+                else:
+                    self.window.currentScreen = self.window.setupScreenP2
+            if self.buttons[1].selected:
+                self.autofill()
+                # self.buttons[1].selected = False
+            for button in self.buttons:
+                Drawer.drawButton(button)
 
     def checkIfDone(self):
         # If there still are pieces in the bottom field, return false
-        for y in range(0, len(self.fields)/2):
-            for x in range(0, len(self.fields[y])):
-                if self.fields[y][x].piece.type != '':
+        for y in range(0, len(self.bottomArea)):
+            for x in range(0, len(self.bottomArea[y])):
+                if self.bottomArea[y][x].piece is not None:
                     return False
-
-        self.activePlayer += 1
-        self.resetBottomText()
-
-        # Fill pieces for player 1
-        if self.activePlayer == 2:
-            for y in xrange(len(self.fields)/2, len(self.fields)):
-                for x in xrange(0, len(self.fields[y])):
-                    self.window.playScreen.fields[len(self.window.playScreen.fields) + len(self.fields)/2 - y - 1][len(self.fields[y])-x-1].piece = self.fields[y][x].piece
-                    self.window.playScreen.player1Pieces.append(self.fields[y][x].piece)
-        # Fill pieces for player 2
-        else:
-            for y in xrange(len(self.fields)/2, len(self.fields)):
-                for x in xrange(0, len(self.fields[y])):
-                    self.window.playScreen.fields[-len(self.fields)/2 + y][x].piece = self.fields[y][x].piece
-                    self.window.currentScreen = self.window.playScreen
-                    self.window.playScreen.player2Pieces.append(self.fields[y][x].piece)
-        
-        # self.populateField()
         
         return True         
 
     def resetBottomText(self):
         self.footer.text = 'Player ' + str(self.activePlayer) + ', setup your field'
 
-    def autofill(self):
+    def fillTopArea(self):
+        tempArray = list([item for sublist in self.bottomArea for item in sublist])
+        random.shuffle(tempArray)
+
         for row in range(0, len(self.topArea)):
             for field in range(0, len(self.topArea[row])):
-                self.topArea[row][field].piece = self.bottomArea[row][field].piece
-                self.bottomArea[row][field].piece = None
-                random.sample(self.topArea, len(self.topArea))
+                self.topArea[row][field].piece = copy(tempArray[row*self.widthOfField+field].piece)
 
-        # regels = self.fields[:len(self.fields)/2]
-        # emptyfields = [f for r in regels for f in r if f.piece.type != '']
-        # topping = self.fields[len(self.fields)/2:]
-        # tobefilledfields = [f for r in topping for f in r if f.piece.type == '']
-        # for (a, b) in zip(emptyfields, tobefilledfields):
-        #     b.piece = a.piece
-        #     a.piece = Piece('', 0)
+    def autofill(self):
+        # if (self.player.isComputer):
+        #     self.fillTopArea()
+        #     self.window.currentScreen = self.window.playScreen
+        # else:
+        if (not self.checkIfDone()):
+            self.fillTopArea()
+            for row in range(0, len(self.bottomArea)):
+                for field in range(0, len(self.bottomArea[row])):
+                    self.bottomArea[row][field].piece = None
+        else:
+            self.fillTopArea()
