@@ -22,11 +22,10 @@ class Window(pyglet.window.Window):
                 self.firstClick = True
 
                 self.amountOfPieces = 80
-                self.pieces = self.createPieceList()
                 
                 self.startScreen = StartScreen(self)
                 self.playScreen = PlayScreen(self)
-                self.setupScreen = SetupScreen(self.pieces,self)
+                self.setupScreen = SetupScreen(self)
 
                 self.currentScreen = self.startScreen
                 self.selectedField = None
@@ -141,50 +140,7 @@ class Window(pyglet.window.Window):
                                         fields[y][x].x = x * fields[y][x].size*2 + self.xOffset + self.fieldOffset * x
                                         fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.fieldOffset * y
 
-                return fields
-
-        def createPieceList(self):
-                        pieces = []
-                        #80 pieces, 40 of team a, 40 of team b. I only need to make this list for one player, thoug
-                        #Fourty pieces
-                        #One Flag
-                        for x in range(0,1):
-                                        pieces.append(Piece('F',0))
-                                        
-                        #six Bombs
-                        for x in range(0,6):
-                                        pieces.append(Piece('B',0))
-                        #One Spy
-                        for x in range(0,1):
-                                        pieces.append(Piece(1,1))
-                        #Eight Scouts
-                        for x in range (0,8):
-                                        pieces.append(Piece(2,10))
-                        #Five Miners
-                        for x in range(0,5):
-                                        pieces.append(Piece(3,1)) 
-                        #Four Sergeants
-                        for x in range(0,4):
-                                        pieces.append(Piece(4,1))
-                        #Four Lieutenants 
-                        for x in range(0,4):
-                                        pieces.append(Piece(5,1))
-                        #Four Captains
-                        for x in range(0,4):
-                                        pieces.append(Piece(6,1))
-                        #Three Majors
-                        for x in range(0,3):
-                                        pieces.append(Piece(7,1))
-                        #Two Colonels
-                        for x in range(0,2):
-                                        pieces.append(Piece(8,1))
-                        #One General
-                        for x in range(0,1):
-                                        pieces.append(Piece(9,1))
-                        #One Marshal
-                        for x in range(0,1):
-                                        pieces.append(Piece(10,1))
-                        return pieces                   
+                return fields   
 
         def on_draw(self):
                 pass

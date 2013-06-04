@@ -9,9 +9,8 @@ from button import Button
 from drawer import Drawer
 
 class SetupScreen:
-	def __init__(self,pieces,window):
+	def __init__(self,window):
 		self.window = window
-		self.pieces = pieces
 
 		self.widthOfField = 10
 		self.heightOfField = 8
@@ -75,12 +74,13 @@ class SetupScreen:
 
 
 	def populateField(self):
+		pieces = self.createPieceList()
 		for y in range(len(self.fields)/2,len(self.fields)):
 			for x in range(0,len(self.fields[y])):
 				self.fields[y][x].piece = Piece('', 0)
 		for y in range(0,len(self.fields)/2):
 			for x in range(0,len(self.fields[y])):
-				self.fields[y][x].piece = self.pieces[y*10+x]
+				self.fields[y][x].piece = pieces[y*10+x]
 		self.extraFields[2].piece = self.extraFields[3].piece = self.extraFields[6].piece = self.extraFields[7].piece = Piece('#',0) 
 
 	def draw(self):
@@ -145,13 +145,13 @@ class SetupScreen:
 			for y in xrange(len(self.fields)/2,len(self.fields)):
 				for x in xrange(0,len(self.fields[y])):
 					self.window.playScreen.fields[len(self.window.playScreen.fields) + len(self.fields)/2 - y - 1][len(self.fields[y])-x-1].piece = self.fields[y][x].piece
-					self.window.playScreen.player1Pieces.append(self.fields[y][x].piece)		
+					self.window.playScreen.fields[len(self.window.playScreen.fields) + len(self.fields)/2 - y - 1][len(self.fields[y])-x-1].piece.owner = self.activePlayer-1
 		else: 
 			for y in xrange(len(self.fields)/2,len(self.fields)):
 				for x in xrange(0,len(self.fields[y])):
 					self.window.playScreen.fields[-len(self.fields)/2 + y][x].piece = self.fields[y][x].piece
+					self.window.playScreen.fields[-len(self.fields)/2 + y][x].piece.owner = self.activePlayer-1
 					self.window.currentScreen = self.window.playScreen
-					self.window.playScreen.player2Pieces.append(self.fields[y][x].piece)
 		self.populateField()
 		return True			
 
@@ -166,3 +166,46 @@ class SetupScreen:
 		for (a, b) in zip(emptyfields, tobefilledfields):
 			b.piece = a.piece
 			a.piece = Piece('', 0)
+
+	def createPieceList(self):
+                        pieces = []
+                        #80 pieces, 40 of team a, 40 of team b. I only need to make this list for one player, thoug
+                        #Fourty pieces
+                        #One Flag
+                        for x in range(0,1):
+                                        pieces.append(Piece('F',0))
+                                        
+                        #six Bombs
+                        for x in range(0,6):
+                                        pieces.append(Piece('B',0))
+                        #One Spy
+                        for x in range(0,1):
+                                        pieces.append(Piece(1,1))
+                        #Eight Scouts
+                        for x in range (0,8):
+                                        pieces.append(Piece(2,10))
+                        #Five Miners
+                        for x in range(0,5):
+                                        pieces.append(Piece(3,1)) 
+                        #Four Sergeants
+                        for x in range(0,4):
+                                        pieces.append(Piece(4,1))
+                        #Four Lieutenants 
+                        for x in range(0,4):
+                                        pieces.append(Piece(5,1))
+                        #Four Captains
+                        for x in range(0,4):
+                                        pieces.append(Piece(6,1))
+                        #Three Majors
+                        for x in range(0,3):
+                                        pieces.append(Piece(7,1))
+                        #Two Colonels
+                        for x in range(0,2):
+                                        pieces.append(Piece(8,1))
+                        #One General
+                        for x in range(0,1):
+                                        pieces.append(Piece(9,1))
+                        #One Marshal
+                        for x in range(0,1):
+                                        pieces.append(Piece(10,1))
+                        return pieces                

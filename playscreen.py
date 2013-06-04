@@ -64,8 +64,11 @@ class PlayScreen:
 								self.firstSelected = field
 								self.firstSelectedXPosition = x
 								self.firstSelectedYPosition = y
-					elif self.firstSelected is not field: 
-						if self.legalMove(self.firstSelected,self.firstSelectedXPosition,self.firstSelectedYPosition,field,x,y):
+					elif self.firstSelected is not field:
+						print self.firstSelected.piece.owner
+						print field.piece.owner
+						print  
+						if self.legalMove(self.firstSelected,self.firstSelectedXPosition,self.firstSelectedYPosition,field,x,y) and self.firstSelected.piece.owner != field.piece.owner:
 							if field.piece.type == '#':
 								print "blokkade"
 							elif field.piece.type == 10:
@@ -97,13 +100,13 @@ class PlayScreen:
 									self.firstSelected.piece = Piece('', 0)
 							
 						self.firstSelected = None
-					field.selected = False					
-				if (field.barrier):
+					field.selected = False
+				if self.firstSelected is field:			
+					glColor3f(1, 0, 1)
+				elif field.piece.owner == 2:
+					glColor3f(0, 0, 1)
+				elif field.piece.owner == 1:
 					glColor3f(1, 0, 0)
-					
-				elif self.firstSelected is field:
-					glColor3f(1,0,1)
-					
 				else:
 					glColor3f(1, 1, 1)
 				Drawer.drawField(field)
