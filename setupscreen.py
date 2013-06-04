@@ -2,6 +2,7 @@
 import pyglet
 import copy
 import threading
+import random
 from pyglet.gl import *
 from field import Field
 from piece import Piece
@@ -26,6 +27,7 @@ class SetupScreen:
 
         self.bottomArea = self.createArea(self.yOffset, True)
         self.betweenAreasYOffset = self.bottomArea[-1][-1].y + self.bottomArea[-1][-1].size*2 + 25
+        
         self.topArea = self.createArea(self.betweenAreasYOffset, False)
         self.fields = [item for sublist in self.topArea for item in sublist] + [item for sublist in self.bottomArea for item in sublist]
 
@@ -62,6 +64,7 @@ class SetupScreen:
                 
                 if (populate):
                     fields[y][x].piece = self.player1.pieces[y*self.widthOfField+x]
+                    fields[y][x].piece.field = fields[y][x]
 
         return fields
 
@@ -87,7 +90,7 @@ class SetupScreen:
                         # |-----------------Y------------------|   |----------Y-----------|   |---------Y--------------------------|
                         #                   |                                 |                         |- + (Offset between fields)
                         #                   |                                 |- + Distance between top and bottom areas
-                        #                   |- Height of area * Size of fields*2
+                        #                   |- Number of fields in height of top area * Size of fields*2
 
             # Check if field is a barrier
             try:
@@ -100,26 +103,19 @@ class SetupScreen:
 
         return fields
 
-
-    # def populateField(self):
-    #     # Populate bottom area
-    #     for y in range(len(self.fields)/2, len(self.fields)):
-    #         for x in range(0, len(self.fields[y])):
-    #             self.fields[y][x].piece = Piece('', 0)
-
-    #     # Populate top area
-    #     for y in range(0, len(self.fields)/2):
-    #         for x in range(0,len(self.fields[y])):
-    #             self.fields[y][x].piece = self.pieces[y*10+x]
-
     def handleClick(self, field):
         if (self.firstSelected is None):
             self.firstSelected = field
+
         elif (self.firstSelected is not field):
-            print "second click"
-            if (firstSelected.piece is not None):
+            if (self.firstSelected.piece is not None):
                 field.piece = self.firstSelected.piece
                 self.firstSelected.piece = None
+                
+                for row in range(0, len(self.topArea)):
+                    for field in self.topArea[row]:
+                        if (field.piece is not None):
+                            print field.piece.type
             
             self.firstSelected = None
 
@@ -131,32 +127,6 @@ class SetupScreen:
             for y in range(0, len(area)):
                 for field in area[y]:
      
-                    # if field.selected:
-                        
-                    #     #  If not selected
-                    #     if self.firstSelected is None:
-                    #         if field.piece.type != '':
-                    #             self.firstSelected = field
-                    #     else: 
-
-                    #         # If empty field
-                    #         if field.piece.type == '':
-                    #             field.piece = Piece(self.firstSelected.piece.type, self.firstSelected.piece.steps)
-                    #             self.firstSelected.piece = Piece('', 0)
-                    #         else:
-                    #             if field.piece.type != self.firstSelected.piece.type:
-                    #                 helpPiece = self.firstSelected.piece
-                    #                 self.firstSelected.piece = field.piece
-                    #                 field.piece = helpPiece
-                    #         self.firstSelected = None
-
-                    # field.selected = False
-                    
-                    # if field is self.firstSelected:
-                    #     glColor3f(1, 0, 1)
-                    # else:
-                    #     glColor3f(1, 1, 1)
-
                     if (field is self.firstSelected):
                         glColor3f(1, 0, 1)
                     elif (field.selected):
@@ -189,8 +159,8 @@ class SetupScreen:
 
     def checkIfDone(self):
         # If there still are pieces in the bottom field, return false
-        for y in range(0,len(self.fields)/2):
-            for x in range(0,len(self.fields[y])):
+        for y in range(0, len(self.fields)/2):
+            for x in range(0, len(self.fields[y])):
                 if self.fields[y][x].piece.type != '':
                     return False
 
@@ -219,10 +189,16 @@ class SetupScreen:
         self.footer.text = 'Player ' + str(self.activePlayer) + ', setup your field'
 
     def autofill(self):
-        regels = self.fields[:len(self.fields)/2]
-        emptyfields = [f for r in regels for f in r if f.piece.type != '']
-        topping = self.fields[len(self.fields)/2:]
-        tobefilledfields = [f for r in topping for f in r if f.piece.type == '']
-        for (a, b) in zip(emptyfields, tobefilledfields):
-            b.piece = a.piece
-            a.piece = Piece('', 0)
+        for row in range(0, len(self.topArea)):
+            for field in range(0, len(self.topArea[row])):
+                self.topArea[row][field].piece = self.bottomArea[row][field].piece
+                self.bottomArea[row][field].piece = None
+                random.sample(self.topArea, len(self.topArea))
+
+        # regels = self.fields[:len(self.fields)/2]
+        # emptyfields = [f for r in regels for f in r if f.piece.type != '']
+        # topping = self.fields[len(self.fields)/2:]
+        # tobefilledfields = [f for r in topping for f in r if f.piece.type == '']
+        # for (a, b) in zip(emptyfields, tobefilledfields):
+        #     b.piece = a.piece
+        #     a.piece = Piece('', 0)

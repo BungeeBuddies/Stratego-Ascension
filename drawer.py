@@ -18,7 +18,22 @@ class Drawer(object):
         glVertex2f(field.x + field.size, field.y - field.size)
         glEnd()
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-        field.piece.type.draw()
+
+        if (field.piece is not None and field.piece.label is not None):
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+            glBegin(GL_QUADS)
+            # Top left
+            glVertex2f(field.x + field.piece.size, field.y + field.piece.size)
+            # Top right
+            glVertex2f(field.x - field.piece.size, field.y + field.piece.size)
+            # Bottom right
+            glVertex2f(field.x - field.piece.size, field.y - field.piece.size)
+            # Bottom left
+            glVertex2f(field.x + field.piece.size, field.y - field.piece.size)
+            glEnd()
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+            
+            field.piece.label.draw()
 
     @staticmethod
     def drawButton(button):

@@ -52,7 +52,9 @@ class Field(object):
             return self._piece
         def fset(self, value):
             self._piece = value
-            self.label.text = str(value.type)
+            if (value is not None):
+                self._piece.field = self
+            # self.label.text = str(value.type)
 
         def fdel(self):
             del self._piece
