@@ -88,6 +88,8 @@ class Window(pyglet.window.Window):
                     # Select new one
                     self.selectedField = clickedField
                     self.selectedField.selected = True
+                    # print "field pressed"
+                    # print clickedField
                     self.currentScreen.handleClick(clickedField)
 
         def isButton(self, x, y):
@@ -115,7 +117,6 @@ class Window(pyglet.window.Window):
                     fieldsList = []
 
                     for field in self.currentScreen.fields:
-                        print field
                         fieldsList.append([field.y, field.x])
 
                     fieldSize = self.currentScreen.sizeOfField
@@ -127,7 +128,6 @@ class Window(pyglet.window.Window):
                             except ValueError:
                                 pass
                             else:
-                                print "field pressed"
                                 # column = fieldIndex % self.currentScreen.widthOfField
                                 # row = (fieldIndex - column)/self.currentScreen.widthOfField
                                 return self.currentScreen.fields[fieldIndex]

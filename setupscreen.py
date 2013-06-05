@@ -116,7 +116,6 @@ class SetupScreen:
     def draw(self):
 
         if (self.player.isComputer):
-            print "is computer"
             self.fillTopArea()
             self.window.currentScreen = self.window.playScreen
 
