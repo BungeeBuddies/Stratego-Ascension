@@ -3,7 +3,7 @@ from pyglet.gl import *
 from field import Field
 from button import Button
 
-class StartScreen:
+class VictoryScreen:
 
 	def __init__(self, window):
 		self.window = window
@@ -17,16 +17,21 @@ class StartScreen:
 		self.buttons = self.createButtons()
 		
         def createButtons(self):
-		amountOfButtons = 2
+		amountOfButtons = 3
 		buttons = [Button(0, 0, self.buttonXSize,self.buttonYSize) for x in xrange(amountOfButtons)]
-		buttons[0].label.text = "<font face=\"Arial\" color=\"white\" size=\"16\">Player vs Player</font>"
+		buttons[0].label.text = "<font face=\"Arial\" color=\"white\" size=\"16\">Rematch</font>"
                 buttons[0].label.font_size = 9
 		buttons[0].x = self.width/8
 		buttons[0].y = self.height-400
-		buttons[1].label.text = "<font face=\"Arial\" color=\"white\" size=\"16\">Player vs Computer</font>"
+		buttons[1].label.text = "<font face=\"Arial\" color=\"white\" size=\"16\">Main menu</font>"
 		buttons[1].label.font_size = 9
-		buttons[1].x = self.width/8*7
+		buttons[1].x = self.width/2
 		buttons[1].y = self.height-400
+		buttons[2].label.text = "<font face=\"Arial\" color=\"white\" size=\"16\">Exit game </font>"
+		buttons[2].label.font_size = 9
+		buttons[2].x = self.width/8*7
+		buttons[2].y = self.height-400
+
 		return buttons
 	
 
@@ -36,12 +41,14 @@ class StartScreen:
 			# self.buttons[0].selected = False
 			self.window.currentScreen = self.window.setupScreen
 		if self.buttons[1].selected:
-			self.window.currentScreen = self.window.setupScreen
+			self.window.currentScreen = self.window.startScreen
 			# self.buttons[1].selected = False
+		if self.buttons[2].selected:
+			self.window.close
 		for button in self.buttons:
 			self.drawButton(button)
 			
-		pyglet.text.Label('Stratego-Ascension',
+		pyglet.text.Label('Winner',
                           font_name='Arial',
                           font_size=30,
                           x=self.width/2, y= self.height-200,

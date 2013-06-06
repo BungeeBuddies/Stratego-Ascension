@@ -10,8 +10,12 @@ from piece import Piece
 from playscreen import PlayScreen
 from setupscreen import SetupScreen
 from startscreen import StartScreen
+from victoryscreen import VictoryScreen
+from pyglet.window import Window
 
 class Window(pyglet.window.Window):
+
+        
 
         def __init__(self):
                 super(Window, self).__init__()
@@ -26,6 +30,7 @@ class Window(pyglet.window.Window):
                 self.startScreen = StartScreen(self)
                 self.playScreen = PlayScreen(self)
                 self.setupScreen = SetupScreen(self)
+                self.victoryScreen = VictoryScreen(self)
 
                 self.currentScreen = self.startScreen
                 self.selectedField = None
@@ -40,6 +45,7 @@ class Window(pyglet.window.Window):
                           anchor_x='center', anchor_y='center')
                 self.last = time()
                 self.frames = 0
+            
 
         def on_key_press(self, symbol, modifiers):
                 pass

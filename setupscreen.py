@@ -13,17 +13,22 @@ from drawer import Drawer
 class SetupScreen:
 	def __init__(self,window):
 		self.window = window
-
+		self.width = 900
+		self.height = 700
+		window.set_size(self.width, self.height)
 		self.widthOfField = 10
 		self.heightOfField = 8
 		self.sizeOfField = 25
-		self.xOffset = self.window.get_size()[0]/4
-		self.yOffset = self.window.get_size()[1]/8 + 70
+		print self.width
+		print self.height
+		self.xOffset = self.width/4
+		self.yOffset = self.height/8 + 70
 		self.extraYOffset = 25
 		self.fieldOffset = 1
 		self.fields = self.createStartField()
 		self.extraFields = self.setupExtraFields()
-
+		# print self.width
+		# print self.window.get_size()[1]
 		self.buttonXSize = 50
 		self.buttonYSize = 25
 
@@ -35,12 +40,12 @@ class SetupScreen:
 		self.header = pyglet.text.Label('Setup Screen',
                           font_name='Arial',
                           font_size=16,
-                          x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-20,
+                          x=self.width/2, y=self.height-20,
                           anchor_x='center', anchor_y='center')
 		self.footer = pyglet.text.Label('Player ' + str(self.activePlayer) + ', setup your field',
                           font_name='Arial',
                           font_size=16,
-                          x=self.window.get_size()[0]/2, y=20,
+                          x=self.width/2, y=20,
                           anchor_x='center', anchor_y='center')
 
 	def createStartField(self):
@@ -59,11 +64,11 @@ class SetupScreen:
 		amountOfButtons = 2
 		buttons = [Button(0, 0, self.buttonXSize,self.buttonYSize) for x in xrange(amountOfButtons)]
 		buttons[0].label.text = "Done!"
-		buttons[0].x = self.window.get_size()[0]/8
-		buttons[0].y = self.window.get_size()[1]/4
+		buttons[0].x = self.width/8
+		buttons[0].y = self.height/4
 		buttons[1].label.text = "Autofill"
-		buttons[1].x = self.window.get_size()[0]/8*7
-		buttons[1].y = self.window.get_size()[1]/4
+		buttons[1].x = self.width/8*7
+		buttons[1].y = self.height/4
 		return buttons
 
 	def setupExtraFields(self):
@@ -172,6 +177,7 @@ class SetupScreen:
 			b.piece = a.piece
 			a.piece = Piece('', 0)
 
+			
 	def createPieceList(self):
                         pieces = []
                         #80 pieces, 40 of team a, 40 of team b. I only need to make this list for one player, thoug

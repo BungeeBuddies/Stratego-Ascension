@@ -11,11 +11,13 @@ class PlayScreen:
 
 	def __init__(self, window):
 		self.window = window
-		self.xOffset = self.window.get_size()[0]/4
-		self.yOffset = self.window.get_size()[1]/8 + 35
+		self.width = 900
+		self.height = 700
+		self.xOffset = self.width/4
+		self.yOffset = self.height/8 + 35
 		self.fieldOffset = 1
 		self.barrierFields = [[2, 4], [3, 4], [6, 4], [7, 4], [2, 5], [3, 5], [6, 5], [7, 5]]
-
+		
 		self.playersTurn = 2
 		self.widthOfField = 10
 		self.heightOfField = 10
@@ -143,6 +145,7 @@ class PlayScreen:
 				self.firstSelected.piece = Piece('', 0)
 		elif field.piece.type == 'F':
 			print "Victory!"
+			self.window.currentScreen = self.window.victoryScreen
 			#TODO goto endscreen
 		else:
 			if field.piece.type < self.firstSelected.piece.type:
