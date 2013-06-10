@@ -3,163 +3,218 @@ import copy
 from pyglet.gl import *
 from field import Field
 from piece import Piece
-from drawer import Drawer
+from utils import Utils
+from time import sleep
 import threading
 from threading import Lock
 
 class PlayScreen:
 
-	def __init__(self, window):
-		self.window = window
-		self.xOffset = self.window.get_size()[0]/4
-		self.yOffset = self.window.get_size()[1]/8 + 35
-		self.fieldOffset = 1
-		self.barrierFields = [[2, 4], [3, 4], [6, 4], [7, 4], [2, 5], [3, 5], [6, 5], [7, 5]]
+    def __init__(self, window, player1, player2):
+        self.init = False
+        self.window = window
+        self.xOffset = self.window.get_size()[0]/4
+        self.yOffset = self.window.get_size()[1]/8 + 35
+        self.fieldOffset = 1
+        self.barrierFields = [[2, 4], [3, 4], [6, 4], [7, 4], [2, 5], [3, 5], [6, 5], [7, 5]]
 
-		self.playersTurn = 2
-		self.widthOfField = 10
-		self.heightOfField = 10
-		self.sizeOfField = 25
-		self.isFieldSelected = False
-		self.selectedField = 0
-		self.color = [1, 1, 1]
-		self.fields = self.createPlayField()
-		self.selectedField = None
-		self.player1Pieces = []
-		self.player2Pieces = [] 
-		self.firstSelected = None
-		self.visibleEnemy = None
-		self.lockDownTime = 0.5
-		self.lockDown = False
-		self.headerP2 = pyglet.text.Label("Player 2's turn!",
+        self.player1 = player1
+        self.player2 = player2
+        self.playersTurn = None
+
+        self.widthOfField = 10
+        self.heightOfField = 10
+        self.sizeOfField = 25
+        self.isFieldSelected = False
+        self.selectedField = 0
+        self.color = [1, 1, 1]
+
+        self.visibleEnemy = None
+        self.lockDownTime = 0.5
+        self.lockDown = False
+        self.firstSelectedXPosition = None
+        self.firstSelectedYPosition = None
+        self.playFields = self.createPlayField()
+        self.fields = [item for sublist in self.playFields for item in sublist]
+
+        self.selectedField = None
+        self.firstSelected = None
+        
+
+        
+    def handleClick(self, field):
+        # If no field has been selected and has a piece in it
+        if (self.firstSelected is None and field.piece is not None):
+            
+            # If second field has a piece in it and is not a flag, bomb or barrier or an own piece
+            if field.piece.type is not 'F' and field.piece.type is not 'B' and field.piece.type is not '#' and field.piece.owner == self.playersTurn:
+                self.firstSelected = field
+                
+        # If it's the second field selected
+        elif (self.firstSelected is not None): 
+            
+            # If clicking the same field twice
+            if (field is self.firstSelected):
+                self.firstSelected = None
+
+            # If clicking some other piece
+            else:
+
+                if (Utils.isLegalMove(self.firstSelected, field, self.playFields)):
+
+                    # If clicking a field with a piece
+                    if (field.piece is not None):
+                        if self.lockDown == False:               
+                            
+                            # If piece is not a barrier
+                            if field.piece.type is not '#':
+                                print "not a barrier"
+                                if self.firstSelected.piece.owner is not field.piece.owner:
+                                   self.visibleEnemy = field
+                                   self.lockDown = True
+                                   field.piece.hidden = False
+                                   self.textResetTimer = threading.Timer(self.lockDownTime, self.onLockDownFinish, 
+                                                                            [self.firstSelected, field])
+                                   self.textResetTimer.start()
+                    
+                    else:
+                        field.piece = self.firstSelected.piece
+                        self.firstSelected.piece = None
+                        self.changePlayerTurn()
+
+            self.firstSelected = None
+
+    
+
+    def onLockDownFinish(self, source, target):
+        # field = self.visibleEnemy       
+        if target.piece.type is 10:
+            if source.piece.type is 1:
+                target.piece = source.piece
+                source.piece = None
+            else:
+                source.piece = None
+        elif target.piece.type is 'B':
+            if source.piece.type is 3:
+                target.piece = source.piece
+                source.piece = None
+            else :
+                source.piece = None
+        elif target.piece.type is 'F':
+            print "Victory!"
+            #TODO goto endscreen
+        else:
+            if target.piece.type < source.piece.type:
+                target.piece = source.piece
+                source.piece = None
+            elif target.piece.type is source.piece.type:
+                source.piece = None
+                target.piece = None
+            else:
+                source.piece = None
+        
+        self.changePlayerTurn()
+        self.lockDown = False   
+
+    def changePlayerTurn(self):
+        self.firstSelected = None
+        self.visibleEnemy = None
+        lastPlayer = None
+
+        if self.playersTurn is None:
+            self.playersTurn = self.player1
+            lastPlayer = self.player2
+        
+        elif self.playersTurn == self.player1:
+            self.playersTurn = self.player2
+            lastPlayer = self.player1
+        
+        else:
+            self.playersTurn = self.player1
+            lastPlayer = self.player2
+
+        # # Hide last player's pieces
+        # for row in lastPlayer.pieces:
+        #     for piece in row:
+        #         piece.hidden = True
+
+        # # Reveal current player's pieces
+        # for row in self.playersTurn.pieces:
+        #     for piece in row:
+        #         piece.hidden = False
+
+        if self.init:
+            if self.playersTurn.isComputer:
+                print "Computer playing"
+                self.playersTurn.play(self.playFields)
+                # thread = threading.Timer(0.5, self.playersTurn.play)
+                # thread.start()
+
+                # while thread.isAlive():
+                #     print "Thread alive"
+                #     sleep(0.5)
+                
+                # self.changePlayerTurn()
+                threading.Timer(0.5, self.changePlayerTurn).start()
+
+    def createPlayField(self):
+        playFields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
+
+        for y in range(len(playFields)):
+            for x in range(len(playFields[0])):
+                playFields[y][x].x = x * playFields[y][x].size*2 + self.xOffset + self.fieldOffset * x
+                playFields[y][x].y = y * playFields[y][x].size*2 + self.yOffset + self.fieldOffset * y
+                
+                # Add barriers
+                if (y in range(4)):
+                    playFields[y][x].piece = self.player1.pieces[y][x]
+                if (y in range(6, 10)):
+                    playFields[y][x].piece = self.player2.pieces[y-6][x]
+
+                try:
+                    self.barrierFields.index([x, y])
+                except ValueError:
+                    pass
+                else:
+                    playFields[y][x].barrier = True
+                    playFields[y][x].piece = Piece('#', 0)
+
+        return playFields
+
+    def draw(self):
+
+        if (not self.init):
+            self.init = True
+            self.changePlayerTurn()
+            # threading.Timer(0.5, self.playersTurn.play).start()
+
+        pyglet.text.Label('Player 1',
                           font_name='Arial',
                           font_size=16,
-                          color=(0,0,255,255),
                           x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-20,
-                          anchor_x='center', anchor_y='center')
-		self.headerP1 = pyglet.text.Label("Player 1's turn!",
-	                      color=(255,0,0,255),
+                          anchor_x='center', anchor_y='center').draw()
+
+        pyglet.text.Label('Player 2',
                           font_name='Arial',
                           font_size=16,
-                          x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-20,
-                          anchor_x='center', anchor_y='center')
-		self.changePlayerTurn();
-		self.hiddenField = Field(0,0,0)
-		self.hiddenField.piece = Piece('?',0)
-		
-	def createPlayField(self):
-		fields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
+                          x=self.window.get_size()[0]/2, y=20,
+                          anchor_x='center', anchor_y='center').draw()
+        
+        # Draw playFields
+        for y in range(0, len(self.playFields)):
+            for x in range(0, len(self.playFields[y])):
+                field = self.playFields[y][x]
 
-		for y in range(0, len(fields)):
-			for x in range(0, len(fields[0])):
-				fields[y][x].x = x * fields[y][x].size*2 + self.xOffset + self.fieldOffset * x
-				fields[y][x].y = y * fields[y][x].size*2 + self.yOffset + self.fieldOffset * y
-				try:
-					self.barrierFields.index([x, y])
-				except ValueError:
-					pass
-				else:
-					fields[y][x].barrier = True
-					fields[y][x].piece = Piece('#',0)
-
-		return fields
-		
-	def draw(self):
-		if self.playersTurn == 1:
-			self.headerP1.draw()
-		else:
-			self.headerP2.draw()
-		# Draw fields
-		for y in range(0, len(self.fields)):
-			for x in range( 0,len(self.fields[y])):	
-				field = self.fields[y][x]			
-				if field.selected and self.lockDown == False:				
-					if self.firstSelected is None:
-						if field.piece.type != '' and field.piece.type is not 'F' and field.piece.type is not'B' and field.piece.type is not '#' and field.piece.owner == self.playersTurn:
-								self.firstSelected = field
-								self.firstSelectedXPosition = x
-								self.firstSelectedYPosition = y
-					elif self.firstSelected is field:
-						self.firstSelected = None
-					elif field.piece.type != '#':
-						if self.legalMove(self.firstSelected,self.firstSelectedXPosition,self.firstSelectedYPosition,field,x,y) and self.firstSelected.piece.owner != field.piece.owner:
-							if field.piece.type == '':
-								field.piece = self.firstSelected.piece
-								self.firstSelected.piece = Piece('', 0)
-								self.changePlayerTurn()
-							else:
-								self.visibleEnemy = field
-								self.lockDown = True
-								self.textResetTimer = threading.Timer(self.lockDownTime,self.onLockDownFinish)
-								self.textResetTimer.start()
-					field.selected = False
-				if field.piece.owner != self.playersTurn and field.piece.owner != 0 and field is not self.visibleEnemy:
-					self.hiddenField.x = field.x
-					self.hiddenField.y = field.y
-					self.hiddenField.size = field.size
-					self.hiddenField.piece.owner = field.piece.owner
-					field = self.hiddenField
-				if self.firstSelected is field:			
-					glColor3f(1, 0, 1)
-				elif field.piece.owner == 2:
-					glColor3f(0, 0, 1)
-				elif field.piece.owner == 1:
-					glColor3f(1, 0, 0)
-				else:
-					glColor3f(1, 1, 1)
-				Drawer.drawField(field)
-
-	def legalMove(self, source,sourceX,sourceY,target,targetX,targetY):
-		if sourceX == targetX or sourceY == targetY: #both fields are on the same line
-			delta = ( sourceY - targetY if sourceX == targetX  else sourceX - targetX) #the difference between the fields
-			if abs(delta) <= source.piece.steps: #check if the piece can move this far
-				if source.piece.steps > 1:
-					if sourceX == targetX:	#finally: check if something is in between (only applies if piece can set more then one step)
-						step = -1 if sourceY > targetY else 1 
-						for y in xrange(sourceY+step,targetY,step):
-							if self.fields[y][sourceX].piece.type != '':
-								return False
-					else:
-						step = -1 if sourceX > targetX else 1
-						for x in xrange(sourceX+step,targetX,step):
-							if self.fields[sourceY][x].piece.type != '':
-								return False
-				return True
-		return False
-
-	def onLockDownFinish(self):
-		field = self.visibleEnemy		
-		if field.piece.type == 10:
-			if self.firstSelected.piece.type == 1:
-				field.piece = self.firstSelected.piece
-				self.firstSelected.piece = Piece('', 0)
-			else:
-				self.firstSelected.piece = Piece('',0)
-		elif field.piece.type == 'B':
-			if self.firstSelected.piece.type == 3:
-				field.piece = self.firstSelected.piece
-				self.firstSelected.piece = Piece('', 0)
-			else :
-				self.firstSelected.piece = Piece('', 0)
-		elif field.piece.type == 'F':
-			print "Victory!"
-			#TODO goto endscreen
-		else:
-			if field.piece.type < self.firstSelected.piece.type:
-				field.piece = self.firstSelected.piece
-				self.firstSelected.piece = Piece('', 0)
-			elif field.piece.type == self.firstSelected.piece.type:
-				self.firstSelected.piece = Piece('', 0)
-				field.piece = Piece('',0)
-			else:
-				self.firstSelected.piece = Piece('', 0)
-		self.changePlayerTurn()
-		self.lockDown = False	
-
-	def changePlayerTurn(self):
-		self.firstSelected = None
-		self.visibleEnemy = None
-		if self.playersTurn == 1:
-			self.playersTurn = 2
-		else:
-			self.playersTurn = 1
+                if (field.barrier):
+                    glColor3f(1, 0, 0)
+                elif (self.firstSelected is field):
+                    glColor3f(1, 0, 1)
+                elif (field.piece is not None):
+                    if (field.piece.owner is self.player1):
+                        glColor3f(1, 1, 0)
+                    elif (field.piece.owner is self.player2):
+                        glColor3f(0, 1, 0)
+                else: 
+                    glColor3f(1, 1, 1)
+                
+                Utils.drawField(field)
