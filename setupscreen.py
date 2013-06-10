@@ -25,8 +25,6 @@ class SetupScreen:
         self.isDone = False
         self.xOffset = self.width/4
         self.yOffset = self.height/8 + 70
-
-
         # Space between bottom and top field
         self.fieldOffset = 1
 
@@ -44,7 +42,6 @@ class SetupScreen:
 
         self.buttons = self.createButtons()
 
-        self.activePlayer = 1
         self.firstSelected = None
 
         self.header = pyglet.text.Label('Setup Screen',
@@ -53,7 +50,7 @@ class SetupScreen:
                           x=self.width/2, y=self.height-20,
                           anchor_x='center', anchor_y='center')
 
-        self.footer = pyglet.text.Label('Player ' + str(self.activePlayer) + ', setup your field',
+        self.footer = pyglet.text.Label('Player ' + player.name + ', setup your field',
                           font_name='Arial',
                           font_size=16,
                           x=self.width/2, y=20,
@@ -123,7 +120,8 @@ class SetupScreen:
     def draw(self):
 
         if (self.player.isComputer):
-            self.fillTopArea()
+            #self.fillTopArea()
+            self.autofillRandom()
             self.isDone = True
         if self.isDone:
             if self is self.window.setupScreenP2:
@@ -178,21 +176,35 @@ class SetupScreen:
         return True         
 
     def resetBottomText(self):
-        self.footer.text = 'Player ' + str(self.activePlayer) + ', setup your field'
+        self.footer.text = 'Player ' + self.player.name + ', setup your field'
 
     def fillTopArea(self):
         tempArray = list([item for sublist in self.bottomArea for item in sublist])
         random.shuffle(tempArray)
-
         for row in range(0, len(self.topArea)):
             for field in range(0, len(self.topArea[row])):
                 self.topArea[row][field].piece = copy(tempArray[row*self.widthOfField+field].piece)
 
+    def autofillRandom(self):
+        self.firstSelected = None
+        regels = self.bottomArea
+        emptyfields = [f for r in regels for f in r if f.piece is not None]
+        topping = self.topArea
+        tobefilledfields = [f for r in topping for f in r if f.piece is None]
+        random.shuffle(tobefilledfields)
+        for (a, b) in zip(emptyfields, tobefilledfields):
+            b.piece = a.piece
+            a.piece = None
+        self.fields = [item for sublist in self.topArea for item in sublist] + [item for sublist in self.bottomArea for item in sublist]
+
     def autofill(self):
-        if (not self.checkIfDone()):
-            self.fillTopArea()
-            for row in range(0, len(self.bottomArea)):
-                for field in range(0, len(self.bottomArea[row])):
-                    self.bottomArea[row][field].piece = None
-        else:
-            self.fillTopArea()
+        print "Here!"
+        self.firstSelected = None
+        regels = self.bottomArea
+        emptyfields = [f for r in regels for f in r if f.piece is not None]
+        topping = self.topArea
+        tobefilledfields = [f for r in topping for f in r if f.piece is None]
+        for (a, b) in zip(emptyfields, tobefilledfields):
+            b.piece = a.piece
+            a.piece = None
+        self.fields = [item for sublist in self.topArea for item in sublist] + [item for sublist in self.bottomArea for item in sublist]

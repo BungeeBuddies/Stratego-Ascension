@@ -6,12 +6,12 @@ import pyglet
 
 class Player(object):
 
-    def __init__(self, isComputer, pieces):
+    def __init__(self, isComputer, pieces,name):
         self.isComputer = isComputer
         self.sizeOfField = 25
         self.heightOfField = 4
         self.widthOfField = 10
-
+        self.name = name
         self._pieces = [[None for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
         
 

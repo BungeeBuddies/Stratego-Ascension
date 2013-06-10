@@ -31,8 +31,8 @@ class Window(pyglet.window.Window):
         self.selectedButton = None
 
         self.whosTurn = 1
-        self.player1 = Player(False, self.createPieceList())
-        self.player2 = Player(False, self.createPieceList())
+        self.player1 = Player(False, self.createPieceList(), "computer")
+        self.player2 = Player(False, self.createPieceList(), "computer")
 
         self.startScreen = StartScreen(self)
         self.setupScreenP1 = SetupScreen(self.player1, self)
