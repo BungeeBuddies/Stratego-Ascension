@@ -118,20 +118,21 @@ class PlayScreen:
     def changePlayerTurn(self):
         self.firstSelected = None
         self.visibleEnemy = None
-        lastPlayer = None
+        # lastPlayer = None
 
         if self.playersTurn is None:
             self.playersTurn = self.player1
-            lastPlayer = self.player2
+            # lastPlayer = self.player2
         
         elif self.playersTurn == self.player1:
             self.playersTurn = self.player2
-            lastPlayer = self.player1
+            # lastPlayer = self.player1
         
         else:
             self.playersTurn = self.player1
-            lastPlayer = self.player2
+            # lastPlayer = self.player2
 
+        # print self.playersTurn
         # # Hide last player's pieces
         # for row in lastPlayer.pieces:
         #     for piece in row:
@@ -144,17 +145,10 @@ class PlayScreen:
 
         if self.init:
             if self.playersTurn.isComputer:
-                print "Computer playing"
+                # print "Computer playing"
                 self.playersTurn.play(self.playFields)
-                # thread = threading.Timer(0.5, self.playersTurn.play)
-                # thread.start()
-
-                # while thread.isAlive():
-                #     print "Thread alive"
-                #     sleep(0.5)
                 
-                # self.changePlayerTurn()
-                threading.Timer(0.5, self.changePlayerTurn).start()
+                threading.Timer(0.1, self.changePlayerTurn).start()
 
     def createPlayField(self):
         playFields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
