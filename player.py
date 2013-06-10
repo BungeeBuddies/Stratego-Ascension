@@ -26,31 +26,30 @@ class Player(object):
 
         for row in self._pieces:
             for piece in row:
-                # if piece is not None:
-                    step = piece.steps+1
-                    index = Utils.getFieldIndex(piece.field, fields)
-                    y = index[0]
-                    x = index[1]
+                step = piece.steps+1
+                index = Utils.getFieldIndex(piece.field, fields)
+                y = index[0]
+                x = index[1]
 
-                    # Up
-                    for up in range(y, y+step if y+step+1 <= len(fields) else len(fields)):
-                        if fields[up][x].piece is None and Utils.isLegalMove(piece.field, fields[up][x], fields):
-                            playablePieces[piece.field] = fields[up][x]
+                # Up
+                for up in range(y, y+step if y+step <= len(fields) else len(fields)):
+                    if fields[up][x].piece is None and Utils.isLegalMove(piece.field, fields[up][x], fields):
+                        playablePieces[piece.field] = fields[up][x]
 
-                    # Down
-                    for down in range(y-step if y-step > 0 else 0, y):
-                        if fields[down][x].piece is None and Utils.isLegalMove(piece.field, fields[down][x], fields):
-                            playablePieces[piece.field] = fields[down][x]
-                    
-                    # Right
-                    for right in range(x, x+step if x+step < len(fields) else len(fields)-1):
-                        if fields[y][right] is None and Utils.isLegalMove(piece.field, fields[y][right], fields):
-                            playablePieces[piece.field] = fields[y][right]
-                    
-                    # Left
-                    for left in range(x+step if x+step < len(fields[1]) else len(fields[1]), x):
-                        if fields[y][left] is None and Utils.isLegalMove(piece.field, fields[upwards][left], fields):
-                            playablePieces[piece.field] = fields[y][left]
+                # Down
+                for down in range(y-step if y-step > 0 else 0, y):
+                    if fields[down][x].piece is None and Utils.isLegalMove(piece.field, fields[down][x], fields):
+                        playablePieces[piece.field] = fields[down][x]
+                
+                # Right
+                for right in range(x, x+step if x+step <= len(fields) else len(fields)):
+                    if fields[y][right].piece is None and Utils.isLegalMove(piece.field, fields[y][right], fields):
+                        playablePieces[piece.field] = fields[y][right]
+                
+                # Left
+                for left in range(x-step if x-step > 0 else 0, x):
+                    if fields[y][left].piece is None and Utils.isLegalMove(piece.field, fields[y][left], fields):
+                        playablePieces[piece.field] = fields[y][left]
 
         if (len(playablePieces) > 0):
             move = random.choice(playablePieces.keys())

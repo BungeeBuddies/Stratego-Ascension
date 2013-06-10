@@ -144,7 +144,7 @@ class Utils(object):
                             step = -1 if sourceX > targetX else 1 # Same as above
 
                             for x in xrange(sourceX+step, targetX, step):
-                                if fields[sourceY][x].piece.type is not None:
+                                if fields[sourceY][x].piece is not None:
                                     return False
                     
                     return True

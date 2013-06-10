@@ -120,21 +120,20 @@ class PlayScreen:
     def changePlayerTurn(self):
         self.firstSelected = None
         self.visibleEnemy = None
-        # lastPlayer = None
+        lastPlayer = None
 
         if self.playersTurn is None:
             self.playersTurn = self.player1
-            # lastPlayer = self.player2
+            lastPlayer = self.player2
         
         elif self.playersTurn == self.player1:
             self.playersTurn = self.player2
-            # lastPlayer = self.player1
+            lastPlayer = self.player1
         
         else:
             self.playersTurn = self.player1
-            # lastPlayer = self.player2
+            lastPlayer = self.player2
 
-        # print self.playersTurn
         # # Hide last player's pieces
         # for row in lastPlayer.pieces:
         #     for piece in row:
