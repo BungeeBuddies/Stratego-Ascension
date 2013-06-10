@@ -11,6 +11,8 @@ from player import Player
 from playscreen import PlayScreen
 from setupscreen import SetupScreen
 from startscreen import StartScreen
+from victoryscreen import VictoryScreen
+from pyglet.window import Window
 
 class Window(pyglet.window.Window):
 

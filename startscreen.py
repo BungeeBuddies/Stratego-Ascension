@@ -7,6 +7,8 @@ class StartScreen:
 
     def __init__(self, window):
         self.window = window
+        self.width = window.get_size()[0]
+        self.height = window.get_size()[1]
         self.xOffset = self.window.get_size()[0]/4
         self.yOffset = self.window.get_size()[1]/8 + 35
 
@@ -43,7 +45,7 @@ class StartScreen:
         pyglet.text.Label('Stratego-Ascension',
                           font_name='Arial',
                           font_size=30,
-                          x=self.window.get_size()[0]/2, y= 500,
+                          x=self.width/2, y= self.height-200,
                           anchor_x='center', anchor_y='center').draw()
 
 

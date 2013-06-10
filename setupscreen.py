@@ -14,6 +14,8 @@ class SetupScreen:
 
     def __init__(self, player, window):
         self.window = window
+        self.width = window.get_size()[0]
+        self.height = window.get_size()[1]
         self.player = player
 
         self.widthOfField = 10
@@ -43,14 +45,15 @@ class SetupScreen:
         self.firstSelected = None
 
         self.header = pyglet.text.Label('Setup Screen',
-                          font_name='Arial',
+                           font_name='Arial',
                           font_size=16,
-                          x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-20,
+                          x=self.width/2, y=self.height-20,
                           anchor_x='center', anchor_y='center')
+
         self.footer = pyglet.text.Label('Player ' + str(self.activePlayer) + ', setup your field',
                           font_name='Arial',
                           font_size=16,
-                          x=self.window.get_size()[0]/2, y=20,
+                          x=self.width/2, y=20,
                           anchor_x='center', anchor_y='center')
 
     def createArea(self, yOffset, populate):

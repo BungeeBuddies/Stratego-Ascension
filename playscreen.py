@@ -84,7 +84,6 @@ class PlayScreen:
 
             self.firstSelected = None
 
-    
 
     def onLockDownFinish(self, source, target):
         # field = self.visibleEnemy       
