@@ -7,10 +7,10 @@ class StartScreen:
 
     def __init__(self, window):
         self.window = window
-        self.width = window.get_size()[0]
-        self.height = window.get_size()[1]
-        self.xOffset = self.window.get_size()[0]/4
-        self.yOffset = self.window.get_size()[1]/8 + 35
+        self.width = 900
+        self.height = 700
+        self.xOffset = self.width/4
+        self.yOffset = self.height/8 + 35
 
         self.buttonXSize = 50
         self.buttonYSize = 25
@@ -18,38 +18,48 @@ class StartScreen:
         self.buttons = self.createButtons()
         
     def createButtons(self):
-        amountOfButtons = 2
+        amountOfButtons = 3
         buttons = [Button(0, 0, self.buttonXSize,self.buttonYSize) for x in xrange(amountOfButtons)]
         buttons[0].label.text = "<font face=\"Arial\" color=\"white\" size=\"16\">Player vs Player</font>"
         buttons[0].label.font_size = 9
-        buttons[0].x = self.window.get_size()[0]/8
-        buttons[0].y = self.window.get_size()[1]/4
+        buttons[0].x = self.width/8
+        buttons[0].y = self.height/8
         buttons[1].label.text = "<font face=\"Arial\" color=\"white\" size=\"16\">Player vs Computer</font>"
         buttons[1].label.font_size = 9
-        buttons[1].x = self.window.get_size()[0]/8*7
-        buttons[1].y = self.window.get_size()[1]/4
+        buttons[1].x = self.width/8*7
+        buttons[1].y = self.height/8
+        buttons[2].label.text = "<font face=\"Arial\" color=\"white\" size=\"16\">Computer vs Computer</font>"
+        buttons[2].label.font_size = 9
+        buttons[2].x = self.width/8*4
+        buttons[2].y = self.height/8
         return buttons
     
 
         
     def draw(self):
-        if self.buttons[0].selected:
-            # self.buttons[0].selected = False
+        if self.buttons[0].selected: #PvP
+            self.buttons[0].selected = False
+            self.window.player1.isComputer = False
+            self.window.player2.isComputer = False
             self.window.currentScreen = self.window.setupScreenP1
-        if self.buttons[1].selected:
+        elif self.buttons[1].selected: #PvPC
+            self.window.player1.isComputer = False
+            self.window.player2.isComputer = True
             self.window.currentScreen = self.window.setupScreenP1
-            # self.buttons[1].selected = False
-        for button in self.buttons:
-            self.drawButton(button)
-            
-        pyglet.text.Label('Stratego-Ascension',
-                          font_name='Arial',
-                          font_size=30,
-                          x=self.width/2, y= self.height-200,
-                          anchor_x='center', anchor_y='center').draw()
-
-
-
+            self.buttons[1].selected = False
+        elif self.buttons[2].selected: #PCvPC
+            self.window.player1.isComputer = True
+            self.window.player2.isComputer = True
+            self.window.currentScreen = self.window.setupScreenP1
+            self.buttons[2].selected = False
+        else:
+            for button in self.buttons:
+                self.drawButton(button)                
+            pyglet.text.Label('Stratego-Ascension',
+                              font_name='Arial',
+                              font_size=30,
+                              x=self.width/2, y= self.height-200,
+                              anchor_x='center', anchor_y='center').draw()
                         
     def drawButton(self,button):
 

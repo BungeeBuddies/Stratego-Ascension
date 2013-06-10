@@ -13,8 +13,10 @@ class PlayScreen:
     def __init__(self, window, player1, player2):
         self.init = False
         self.window = window
-        self.xOffset = self.window.get_size()[0]/4
-        self.yOffset = self.window.get_size()[1]/8 + 35
+        self.width = 900
+        self.height = 700
+        self.xOffset = self.width/4
+        self.yOffset = self.height/8 + 35
         self.fieldOffset = 1
         self.barrierFields = [[2, 4], [3, 4], [6, 4], [7, 4], [2, 5], [3, 5], [6, 5], [7, 5]]
 
@@ -171,13 +173,13 @@ class PlayScreen:
         pyglet.text.Label('Player 1',
                           font_name='Arial',
                           font_size=16,
-                          x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-20,
+                          x=self.width/2, y=self.height-20,
                           anchor_x='center', anchor_y='center').draw()
 
         pyglet.text.Label('Player 2',
                           font_name='Arial',
                           font_size=16,
-                          x=self.window.get_size()[0]/2, y=20,
+                          x=self.width/2, y=20,
                           anchor_x='center', anchor_y='center').draw()
         
         # Draw playFields
