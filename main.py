@@ -38,6 +38,7 @@ class Window(pyglet.window.Window):
         self.setupScreenP1 = SetupScreen(self.player1, self)
         self.setupScreenP2 = SetupScreen(self.player2, self)
         self.playScreen = PlayScreen(self, self.player1, self.player2)
+        self.victoryScreen = VictoryScreen(self)
 
         self.currentScreen = self.startScreen
 

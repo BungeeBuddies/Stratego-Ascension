@@ -87,33 +87,15 @@ class PlayScreen:
 
     def onLockDownFinish(self, source, target):
         # field = self.visibleEnemy       
-        if target.piece.type is 10:
-            if source.piece.type is 1:
-                target.piece = source.piece
-                source.piece = None
-            else:
-                source.piece = None
-        elif target.piece.type is 'B':
-            if source.piece.type is 3:
-                target.piece = source.piece
-                source.piece = None
-            else :
-                source.piece = None
-        elif target.piece.type is 'F':
-            print "Victory!"
-            self.window.victoryScreen.victoryPlayer = self.playersTurn
-            self.window.currentScreen = self.window.victoryScreen
-            #TODO goto endscreen
-        else:
-            if target.piece.type < source.piece.type:
-                target.piece = source.piece
-                source.piece = None
-            elif target.piece.type is source.piece.type:
-                source.piece = None
-                target.piece = None
-            else:
-                source.piece = None
+        # win = False
+        # win = Utils.attack(source, target)
         
+        # print "lolololol"
+        
+        # if (win):
+        #     self.window.victoryScreen.victoryPlayer = self.playersTurn
+        #     self.window.currentScreen = self.window.victoryScreen
+
         self.changePlayerTurn()
         self.lockDown = False   
 
@@ -147,8 +129,12 @@ class PlayScreen:
         if self.init:
             if self.playersTurn.isComputer:
                 # print "Computer playing"
-                self.playersTurn.play(self.playFields)
+                win = self.playersTurn.play(self.playFields)
                 
+                if win:
+                    self.window.victoryScreen.victoryPlayer = "1" if self.playersTurn is self.player1 else "2"
+                    self.window.currentScreen = self.window.victoryScreen
+
                 threading.Timer(0.1, self.changePlayerTurn).start()
 
     def createPlayField(self):

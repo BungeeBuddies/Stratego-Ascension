@@ -22,51 +22,64 @@ class Player(object):
 
     def play(self, fields):
 
-        playablePieces = {}
+        playableMoves = {}
 
         for row in self._pieces:
             for piece in row:
-                step = piece.steps+1
-                index = Utils.getFieldIndex(piece.field, fields)
-                y = index[0]
-                x = index[1]
+                if piece is not None:
+                    step = piece.steps+1
+                    index = Utils.getFieldIndex(piece.field, fields)
+                    y = index[0]
+                    x = index[1]
 
-                # Up
-                for up in range(y, y+step if y+step <= len(fields) else len(fields)):
-                    if fields[up][x].piece is None and Utils.isLegalMove(piece.field, fields[up][x], fields):
-                        playablePieces[piece.field] = fields[up][x]
+                    # Up
+                    for up in range(y, y+step if y+step <= len(fields) else len(fields)):
+                        if Utils.isLegalMove(piece.field, fields[up][x], fields):
+                            if fields[up][x].piece is None or fields[up][x].piece is not None and fields[up][x].piece.owner is not piece.owner:
+                                playableMoves[piece.field] = fields[up][x]
 
-                # Down
-                for down in range(y-step if y-step > 0 else 0, y):
-                    if fields[down][x].piece is None and Utils.isLegalMove(piece.field, fields[down][x], fields):
-                        playablePieces[piece.field] = fields[down][x]
-                
-                # Right
-                for right in range(x, x+step if x+step <= len(fields) else len(fields)):
-                    if fields[y][right].piece is None and Utils.isLegalMove(piece.field, fields[y][right], fields):
-                        playablePieces[piece.field] = fields[y][right]
-                
-                # Left
-                for left in range(x-step if x-step > 0 else 0, x):
-                    if fields[y][left].piece is None and Utils.isLegalMove(piece.field, fields[y][left], fields):
-                        playablePieces[piece.field] = fields[y][left]
+                    # Down
+                    for down in range(y-step if y-step > 0 else 0, y):
+                        if Utils.isLegalMove(piece.field, fields[down][x], fields):
+                            if fields[down][x].piece is None or fields[down][x].piece is not None and fields[down][x].piece.owner is not piece.owner:
+                                playableMoves[piece.field] = fields[down][x]
+                    
+                    # Right
+                    for right in range(x, x+step if x+step <= len(fields) else len(fields)):
+                        if Utils.isLegalMove(piece.field, fields[y][right], fields):
+                            if fields[y][right].piece is None or fields[y][right].piece is not None and fields[y][right].piece.owner is not piece.owner:
+                                playableMoves[piece.field] = fields[y][right]
+                    
+                    # Left
+                    for left in range(x-step if x-step > 0 else 0, x):
+                        if Utils.isLegalMove(piece.field, fields[y][left], fields):
+                            if fields[y][left].piece is None or fields[y][left].piece is not None and fields[y][left].piece.owner is not piece.owner:
+                                playableMoves[piece.field] = fields[y][left]
 
-        if (len(playablePieces) > 0):
-            move = random.choice(playablePieces.keys())
+            if (len(playableMoves) > 0):
 
-            tempPiece = playablePieces[move].piece
-            tempField = playablePieces[move]
+                move = random.choice(playableMoves.keys())
+                sourceField = move
+                targetField = playableMoves[move]
 
-            # Target
-            playablePieces[move].piece = move.piece
-            playablePieces[move] = move
-            
-            # Source
-            move.piece = tempPiece
-            move = tempField
-            
+                if (move.piece is not None):
+                    if (playableMoves[move].piece is None):
+                        tempPiece = targetField.piece
+                        tempField = targetField
 
-        return True
+                        # Target
+                        playableMoves[move].piece = sourceField.piece
+                        playableMoves[move] = sourceField
+                        
+                        # Source
+                        sourceField.piece = tempPiece
+                        sourceField = tempField
+
+                    else:
+                        if (targetField.piece.owner is not sourceField.piece.owner and targetField.piece.type is not '#'):
+                            win = Utils.attack(move, playableMoves[move])
+                            return win
+        return False
 
     def pieces():
         doc = "The pieces property."
