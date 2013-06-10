@@ -37,13 +37,13 @@ class PlayScreen:
                           font_name='Arial',
                           font_size=16,
                           color=(0,0,255,255),
-                          x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-20,
+                          x=self.width/2, y=self.height-20,
                           anchor_x='center', anchor_y='center')
 		self.headerP1 = pyglet.text.Label("Player 1's turn!",
 	                      color=(255,0,0,255),
                           font_name='Arial',
                           font_size=16,
-                          x=self.window.get_size()[0]/2, y=self.window.get_size()[1]-20,
+                          x=self.width/2, y=self.height-20,
                           anchor_x='center', anchor_y='center')
 		self.changePlayerTurn();
 		self.hiddenField = Field(0,0,0)
@@ -145,6 +145,7 @@ class PlayScreen:
 				self.firstSelected.piece = Piece('', 0)
 		elif field.piece.type == 'F':
 			print "Victory!"
+			self.window.victoryScreen.victoryPlayer = self.playersTurn
 			self.window.currentScreen = self.window.victoryScreen
 			#TODO goto endscreen
 		else:
