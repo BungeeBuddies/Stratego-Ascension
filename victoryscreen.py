@@ -13,6 +13,7 @@ class VictoryScreen:
 		self.yOffset = self.height/8 + 35
 		self.buttonXSize = 50
 		self.buttonYSize = 25
+		self.victoryPlayer = 0
 
 		self.buttons = self.createButtons()
 		
@@ -44,11 +45,11 @@ class VictoryScreen:
 			self.window.currentScreen = self.window.startScreen
 			# self.buttons[1].selected = False
 		if self.buttons[2].selected:
-			self.window.close
+			self.window.currentScreen = self.window.Exit
 		for button in self.buttons:
 			self.drawButton(button)
 			
-		pyglet.text.Label('Winner',
+		pyglet.text.Label('Player ' + str(self.victoryPlayer) + ' is the winner',
                           font_name='Arial',
                           font_size=30,
                           x=self.width/2, y= self.height-200,

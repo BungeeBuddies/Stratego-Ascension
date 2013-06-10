@@ -101,6 +101,8 @@ class PlayScreen:
                 source.piece = None
         elif target.piece.type is 'F':
             print "Victory!"
+            self.window.victoryScreen.victoryPlayer = self.playersTurn
+            self.window.currentScreen = self.window.victoryScreen
             #TODO goto endscreen
         else:
             if target.piece.type < source.piece.type:
