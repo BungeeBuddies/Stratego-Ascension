@@ -26,48 +26,34 @@ class Player(object):
 
         for row in self._pieces:
             for piece in row:
-                if piece is not None:
-                    step = piece.steps
+                # if piece is not None:
+                    step = piece.steps+1
                     index = Utils.getFieldIndex(piece.field, fields)
                     y = index[0]
                     x = index[1]
 
-                    print len(self._pieces) * len(row)
-
-                    # print "Current player: " + str(self)
-
-                    # print "current piece: " + str(piece.field.piece)
-                    
                     # Up
-                    for up in range(y, y+step if y+step < len(fields) else len(fields)):
-                        # print str(piece) + " -> " + str(piece.type) + ": " + str(up)
-
+                    for up in range(y, y+step if y+step+1 <= len(fields) else len(fields)):
                         if fields[up][x].piece is None and Utils.isLegalMove(piece.field, fields[up][x], fields):
                             playablePieces[piece.field] = fields[up][x]
-                            print "Up: " + str([x, up])
 
                     # Down
                     for down in range(y-step if y-step > 0 else 0, y):
                         if fields[down][x].piece is None and Utils.isLegalMove(piece.field, fields[down][x], fields):
-                            # print "Down: " + str(y - down)
                             playablePieces[piece.field] = fields[down][x]
                     
                     # Right
                     for right in range(x, x+step if x+step < len(fields) else len(fields)-1):
-                        # print "Right: " + str(right)
                         if fields[y][right] is None and Utils.isLegalMove(piece.field, fields[y][right], fields):
                             playablePieces[piece.field] = fields[y][right]
                     
-                    # # Left
-                    # for left in range(x+step if x+step < len(fields[1]) else len(fields[1]), x):
-                    #     if fields[y][left] is None and Utils.isLegalMove(piece.field, fields[upwards][left], fields):
-                    #         playablePieces[piece.field] = fields[y][left]
+                    # Left
+                    for left in range(x+step if x+step < len(fields[1]) else len(fields[1]), x):
+                        if fields[y][left] is None and Utils.isLegalMove(piece.field, fields[upwards][left], fields):
+                            playablePieces[piece.field] = fields[y][left]
 
         if (len(playablePieces) > 0):
-            # print "Length: " + str(len(playablePieces))
-
             move = random.choice(playablePieces.keys())
-            # print "Move: " + str(move)
 
             tempPiece = playablePieces[move].piece
             tempField = playablePieces[move]
@@ -79,7 +65,7 @@ class Player(object):
             # Source
             move.piece = tempPiece
             move = tempField
-            # print len(playablePieces)
+            
 
         return True
 
