@@ -7,10 +7,10 @@ class StartScreen:
 
     def __init__(self, window):
         self.window = window
-        self.width = window.get_size()[0]
-        self.height = window.get_size()[1]
-        self.xOffset = self.window.get_size()[0]/4
-        self.yOffset = self.window.get_size()[1]/8 + 35
+        self.width = 900
+        self.height = 700
+        self.xOffset = self.width/4
+        self.yOffset = self.height/8 + 35
 
         self.buttonXSize = 50
         self.buttonYSize = 25
@@ -22,16 +22,16 @@ class StartScreen:
         buttons = [Button(0, 0, self.buttonXSize,self.buttonYSize) for x in xrange(amountOfButtons)]
         buttons[0].label.text = "<font face=\"Arial\" color=\"white\" size=\"16\">Player vs Player</font>"
         buttons[0].label.font_size = 9
-        buttons[0].x = self.window.get_size()[0]/8
-        buttons[0].y = self.window.get_size()[1]/4
+        buttons[0].x = self.width/8
+        buttons[0].y = self.height/8
         buttons[1].label.text = "<font face=\"Arial\" color=\"white\" size=\"16\">Player vs Computer</font>"
         buttons[1].label.font_size = 9
-        buttons[1].x = self.window.get_size()[0]/8*4
-        buttons[1].y = self.window.get_size()[1]/4
+        buttons[1].x = self.width/8*7
+        buttons[1].y = self.height/8
         buttons[2].label.text = "<font face=\"Arial\" color=\"white\" size=\"16\">Computer vs Computer</font>"
         buttons[2].label.font_size = 9
-        buttons[2].x = self.window.get_size()[0]/8*7
-        buttons[2].y = self.window.get_size()[1]/4
+        buttons[2].x = self.width/8*4
+        buttons[2].y = self.height/8
         return buttons
     
 
