@@ -23,6 +23,7 @@ class SetupScreen:
         self.sizeOfField = 25
         self.xOffset = self.window.get_size()[0]/4
         self.yOffset = self.window.get_size()[1]/8 + 70
+        self.isDone = False
 
         # Space between bottom and top field
         self.fieldOffset = 1
@@ -121,8 +122,11 @@ class SetupScreen:
 
         if (self.player.isComputer):
             self.fillTopArea()
-            self.window.currentScreen = self.window.playScreen
-
+        elif self.isDone:
+            if self is self.window.setupScreenP2:
+                self.window.currentScreen = self.window.playScreen
+            else: 
+                self.window.currentScreen = self.window.setupScreenP2
         else:
             self.header.draw()
             self.footer.draw()
@@ -133,8 +137,6 @@ class SetupScreen:
          
                         if (field is self.firstSelected):
                             glColor3f(1, 0, 1)
-                        elif (field.selected):
-                            glColor3f(1, 1, 0)
                         else:
                             glColor3f(1, 1, 1)
 
@@ -146,7 +148,7 @@ class SetupScreen:
 
             glColor3f(1, 1, 1)
             if self.buttons[0].selected:
-                # self.buttons[0].selected = False
+                self.buttons[0].selected = False
                 if  not self.checkIfDone():
                     self.footer.text = "You have to place all your pieces before you can continue"
                     # Reset footer text to original after x seconds
@@ -156,10 +158,11 @@ class SetupScreen:
                     self.textResetTimer = threading.Timer(3, self.resetBottomText)
                     self.textResetTimer.start()
                 else:
-                    self.window.currentScreen = self.window.setupScreenP2
+                    self.player.pieces = self.topArea
+                    self.isDone = True
             if self.buttons[1].selected:
                 self.autofill()
-                # self.buttons[1].selected = False
+                self.buttons[1].selected = False
             for button in self.buttons:
                 Utils.drawButton(button)
 
@@ -168,8 +171,7 @@ class SetupScreen:
         for y in range(0, len(self.bottomArea)):
             for x in range(0, len(self.bottomArea[y])):
                 if self.bottomArea[y][x].piece is not None:
-                    return False
-        
+                    return False       
         return True         
 
     def resetBottomText(self):
@@ -184,10 +186,6 @@ class SetupScreen:
                 self.topArea[row][field].piece = copy(tempArray[row*self.widthOfField+field].piece)
 
     def autofill(self):
-        # if (self.player.isComputer):
-        #     self.fillTopArea()
-        #     self.window.currentScreen = self.window.playScreen
-        # else:
         if (not self.checkIfDone()):
             self.fillTopArea()
             for row in range(0, len(self.bottomArea)):

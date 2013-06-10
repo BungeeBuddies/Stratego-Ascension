@@ -31,8 +31,8 @@ class Window(pyglet.window.Window):
         self.selectedButton = None
 
         self.whosTurn = 1
-        self.player1 = Player(True, self.createPieceList())
-        self.player2 = Player(True, self.createPieceList())
+        self.player1 = Player(False, self.createPieceList())
+        self.player2 = Player(False, self.createPieceList())
 
         self.startScreen = StartScreen(self)
         self.setupScreenP1 = SetupScreen(self.player1, self)
@@ -55,11 +55,6 @@ class Window(pyglet.window.Window):
     def on_mouse_release(self, x, y, button, modifiers):
         if (self.selectedButton is not None):
             self.selectedButton.selected = False
-
-        if (self.whosTurn is 1):
-            self.whosTurn = 2
-        elif (self.whosTurn is 2):
-            self.whosTurn = 1
 
     def on_mouse_motion(self, x, y, dx, dy):
 
