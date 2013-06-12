@@ -104,12 +104,7 @@ class Utils(object):
 
     # @staticmethod
     # def getField(self, x, y, fields):
-
-    @staticmethod
-    def attack(source, target):
-       print "This should not be happening (Utils.Attack)"
-       
-
+    
     @staticmethod
     def isLegalMove(source, target, fields):
         #check if the target field is a barrier
