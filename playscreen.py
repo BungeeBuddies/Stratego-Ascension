@@ -57,9 +57,10 @@ class PlayScreen:
         if self.firstSelected is None and field.piece is not None:
             if field.piece.steps > 0 and field.piece.owner == self.currentPlayer:
                 self.firstSelected = field
-        elif (self.firstSelected is not None): 
-            if (field is self.firstSelected):
+        elif self.firstSelected is not None: 
+            if field is self.firstSelected:
                 self.firstSelected = None
+               
             elif (Utils.isLegalMove(self.firstSelected, field, self.playFields)): #if the move is legal, execute it
                 self.executeMove(self.firstSelected, field)
                             
@@ -100,7 +101,6 @@ class PlayScreen:
         for y in  self.currentPlayer.pieces:
             for piece in y:
                 if piece is not None:
-                    print "Changing Hidden"
                     piece.hidden = True
 
         
@@ -114,7 +114,7 @@ class PlayScreen:
 
         for y in  self.currentPlayer.pieces:
             for piece in y:
-                if piece is not None:
+                #if piece is not None:
                     piece.hidden = False
 
         # if self.init:
@@ -138,8 +138,7 @@ class PlayScreen:
                 if (y in range(4)):
                     playFields[y][x].piece = self.player1.pieces[y][x]
                 if (y in range(6, 10)):
-                    playFields[y][x].piece = self.player2.pieces[y-6][x]
-
+                    playFields[y][x].piece = self.player2.pieces[len(self.player2.pieces)-y+5][len(self.player2.pieces[-y+5])-1-x]
                 try:
                     self.barrierFields.index([x, y])
                 except ValueError:

@@ -3,7 +3,6 @@ import pyglet
 import copy
 import threading
 import random
-from copy import copy
 from pyglet.gl import *
 from field import Field
 from piece import Piece
@@ -112,13 +111,11 @@ class SetupScreen:
         if self.player.isComputer:
             self.autofillRandom()
             self.isDone = True
-        else:
-            self.autofill
-            self.isDone = True
+        # else:
+        #     self.autofill()
+        #     self.isDone = True
         if self.isDone:
             if self is self.window.setupScreenP2:
-                #invert the field of the current player
-                
                 self.window.currentScreen = self.window.playScreen
             else: 
                 self.window.currentScreen = self.window.setupScreenP2
@@ -128,8 +125,7 @@ class SetupScreen:
 
             for area in [self.bottomArea, self.topArea]:
                 for y in range(0, len(area)):
-                    for field in area[y]:
-         
+                    for field in area[y]:         
                         if (field is self.firstSelected):
                             glColor3f(1, 0, 1)
                         else:
@@ -153,7 +149,6 @@ class SetupScreen:
                     self.textResetTimer = threading.Timer(3, self.resetBottomText)
                     self.textResetTimer.start()
                 else:
-                    self.player.pieces = self.topArea
                     self.isDone = True
             if self.buttons[1].selected:
                 self.autofill()
