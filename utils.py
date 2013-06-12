@@ -107,34 +107,8 @@ class Utils(object):
 
     @staticmethod
     def attack(source, target):
-        if target.piece.type is 10:
-            if source.piece.type is 1:
-                target.piece = source.piece
-                source.piece = None
-            else:
-                source.piece = None
-
-        elif target.piece.type is 'B':
-            if source.piece.type is 3:
-                target.piece = source.piece
-                source.piece = None
-            else :
-                source.piece = None
-
-        elif target.piece.type is 'F':
-            return True
-
-        else:
-            if target.piece.type < source.piece.type:
-                target.piece = source.piece
-                source.piece = None
-            elif target.piece.type is source.piece.type:
-                source.piece = None
-                target.piece = None
-            else:
-                source.piece = None
-
-        return False
+       print "This should not be happening (Utils.Attack)"
+       
 
     @staticmethod
     def isLegalMove(source, target, fields):

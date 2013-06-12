@@ -1,3 +1,5 @@
+#Priorities: First get PvP to work awesome, then get AIvAI to work awesome and last of all PvAI
+
 import pyglet
 import copy
 from pyglet.gl import *
@@ -22,7 +24,7 @@ class PlayScreen:
 
         self.player1 = player1
         self.player2 = player2
-        self.playersTurn = None
+        self.currentPlayer = player1
 
         self.widthOfField = 10
         self.heightOfField = 10
@@ -33,11 +35,12 @@ class PlayScreen:
 
         self.aiDelay = 0.5
 
-        self.visibleEnemy = None
-        self.lockDownTime = 0.5
-        self.lockDown = False
-        self.firstSelectedXPosition = None
-        self.firstSelectedYPosition = None
+        self.visibleEnemyField = None
+        self.lockdownTimer = None
+        self.lockdownTime = 0.5
+        self.lockdown = False
+        # self.firstSelectedXPosition = None
+        # self.firstSelectedYPosition = None
         self.playFields = self.createPlayField()
         self.fields = [item for sublist in self.playFields for item in sublist]
 
@@ -48,11 +51,12 @@ class PlayScreen:
         
     def handleClick(self, field):
         #if the currentPlayer is a computer, ignore all of this. Also ignore if lockdown is true
-        if self.playersTurn.isComputer or self.lockDown:
+        if self.currentPlayer.isComputer or self.lockdown:
+            print "here"
             return
         #Firstclick: check if no piece has been selected before and if there is a piece there, and if this piece is his. If all of this is true, then check if he clicked a piece which can move.
         if self.firstSelected is None and field.piece is not None:
-            if field.piece.steps > 0 and field.piece.owner == self.playersTurn:
+            if field.piece.steps > 0 and field.piece.owner == self.currentPlayer:
                 self.firstSelected = field
         elif (self.firstSelected is not None): 
             if (field is self.firstSelected):
@@ -63,56 +67,60 @@ class PlayScreen:
 
 
     def onLockDownFinish(self, source, target):
-        # field = self.visibleEnemy       
-        # win = False
-        # win = Utils.attack(source, target)
-        
-        # print "lolololol"
-        
-        # if (win):
-        #     self.window.victoryScreen.victoryPlayer = self.playersTurn
-        #     self.window.currentScreen = self.window.victoryScreen
-
+        #execute the attack
+        if target.piece.type is 10:
+            if source.piece.type is 1:
+                target.piece = source.piece
+                source.piece = None
+            else:
+                source.piece = None
+        elif target.piece.type is 'B':
+            if source.piece.type is 3:
+                target.piece = source.piece
+                source.piece = None
+            else :
+                source.piece = None
+        elif target.piece.type is 'F':
+            self.win(self.currentPlayer)            
+        else:
+            if target.piece.type < source.piece.type:
+                target.piece = source.piece
+                source.piece = None
+            elif target.piece.type is source.piece.type:
+                source.piece = None
+                target.piece = None
+            else:
+                source.piece = None
         self.changePlayerTurn()
-        self.lockDown = False   
+        self.lockdown = False   
 
     def changePlayerTurn(self):
         self.firstSelected = None
-        self.visibleEnemy = None
+        self.visibleEnemyField = None
         lastPlayer = None
 
-        if self.playersTurn is None:
-            self.playersTurn = self.player1
+        if self.currentPlayer is None:
+            self.currentPlayer = self.player1
             lastPlayer = self.player2
         
-        elif self.playersTurn == self.player1:
-            self.playersTurn = self.player2
+        elif self.currentPlayer == self.player1:
+            self.currentPlayer = self.player2
             lastPlayer = self.player1
         
         else:
-            self.playersTurn = self.player1
+            self.currentPlayer = self.player1
             lastPlayer = self.player2
 
-        # # Hide last player's pieces
-        # for row in lastPlayer.pieces:
-        #     for piece in row:
-        #         piece.hidden = True
-
-        # # Reveal current player's pieces
-        # for row in self.playersTurn.pieces:
-        #     for piece in row:
-        #         piece.hidden = False
-
-        if self.init:
-            if self.playersTurn.isComputer:
-                # print "Computer playing"
-                win = self.playersTurn.play(self.playFields)
+        # if self.init:
+        #     if self.currentPlayer.isComputer:
+        #         # print "Computer playing"
+        #         win = self.currentPlayer.play(self.playFields)
                 
-                if win:
-                    self.window.victoryScreen.victoryPlayer = "1" if self.playersTurn is self.player1 else "2"
-                    self.window.currentScreen = self.window.victoryScreen
+        #         if win:
+        #             self.window.victoryScreen.victoryPlayer = "1" if self.currentPlayer is self.player1 else "2"
+        #             self.window.currentScreen = self.window.victoryScreen
 
-                threading.Timer(0.1, self.changePlayerTurn).start()
+        #         threading.Timer(0.1, self.changePlayerTurn).start()
 
     def createPlayField(self):
         playFields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
@@ -138,10 +146,10 @@ class PlayScreen:
 
     def draw(self):
 
-        if (not self.init):
-            self.init = True
-            self.changePlayerTurn()
-            # threading.Timer(0.5, self.playersTurn.play).start()
+        # if (not self.init):
+        #     self.init = True
+        #     self.changePlayerTurn()
+            # threading.Timer(0.5, self.currentPlayer.play).start()
 
         pyglet.text.Label('Player 1',
                           font_name='Arial',
@@ -178,21 +186,28 @@ class PlayScreen:
                 
                 Utils.drawField(field)
 
+    #returns true after making the move, if this fails for some reason it returns false
     def executeMove(self,source, target):
         #check if its a legal move
-        Utils.isLegalMove(source, target, self.playFields)
-        pass
-        # if self.firstSelected.piece.owner is not field.piece.owner:
-        #                        self.visibleEnemy = field
-        #                        self.lockDown = True
-        #                        field.piece.hidden = False
-        #                        self.textResetTimer = threading.Timer(self.lockDownTime, self.onLockDownFinish, 
-        #                                                                 [self.firstSelected, field])
-        #                        self.textResetTimer.start()
-                    
-        #             else:
-        #                 field.piece = self.firstSelected.piece
-        #                 self.firstSelected.piece = None
-        #                 self.changePlayerTurn()
+        if not Utils.isLegalMove(source, target, self.playFields) or self.lockdown:
+            return False
+        #If the target is an empty field, do it instantly
+        if target.piece is None:
+            target.piece = source.piece
+            source.piece = None
+            #If its an AI, delay the game for a bit
+            if self.currentPlayer.isComputer:
+                self.AIDelayTimer = threading.timer(self.aiDelay,self.changePlayerTurn)
+            else:
+                self.changePlayerTurn()
+        #else set the timer
+        else:
+            self.visibleEnemyField = target
+            self.firstSelected = None
+            self.lockdown = True
+            self.lockdownTimer = threading.Timer(self.lockdownTime, self.onLockDownFinish,[source,target])
+            self.lockdownTimer.start()
+        return True
 
-        #     self.firstSelected = None
+    def win(self,player):
+        pass
