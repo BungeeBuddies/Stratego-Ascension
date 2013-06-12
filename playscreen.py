@@ -31,6 +31,8 @@ class PlayScreen:
         self.selectedField = 0
         self.color = [1, 1, 1]
 
+        self.aiDelay = 0.5
+
         self.visibleEnemy = None
         self.lockDownTime = 0.5
         self.lockDown = False
@@ -45,46 +47,19 @@ class PlayScreen:
 
         
     def handleClick(self, field):
-        # If no field has been selected and has a piece in it
-        if (self.firstSelected is None and field.piece is not None):
-            
-            # If second field has a piece in it and is not a flag, bomb or barrier or an own piece
-            if field.piece.type is not 'F' and field.piece.type is not 'B' and field.piece.type is not '#' and field.piece.owner == self.playersTurn:
+        #if the currentPlayer is a computer, ignore all of this. Also ignore if lockdown is true
+        if self.playersTurn.isComputer or self.lockDown:
+            return
+        #Firstclick: check if no piece has been selected before and if there is a piece there, and if this piece is his. If all of this is true, then check if he clicked a piece which can move.
+        if self.firstSelected is None and field.piece is not None:
+            if field.piece.steps > 0 and field.piece.owner == self.playersTurn:
                 self.firstSelected = field
-                
-        # If it's the second field selected
         elif (self.firstSelected is not None): 
-            
-            # If clicking the same field twice
             if (field is self.firstSelected):
                 self.firstSelected = None
-
-            # If clicking some other piece
-            else:
-
-                if (Utils.isLegalMove(self.firstSelected, field, self.playFields)):
-
-                    # If clicking a field with a piece
-                    if (field.piece is not None):
-                        if self.lockDown == False:               
+            elif (Utils.isLegalMove(self.firstSelected, field, self.playFields)): #if the move is legal, execute it
+                self.executeMove(self.firstSelected, field)
                             
-                            # If piece is not a barrier
-                            if field.piece.type is not '#':
-                                print "not a barrier"
-                                if self.firstSelected.piece.owner is not field.piece.owner:
-                                   self.visibleEnemy = field
-                                   self.lockDown = True
-                                   field.piece.hidden = False
-                                   self.textResetTimer = threading.Timer(self.lockDownTime, self.onLockDownFinish, 
-                                                                            [self.firstSelected, field])
-                                   self.textResetTimer.start()
-                    
-                    else:
-                        field.piece = self.firstSelected.piece
-                        self.firstSelected.piece = None
-                        self.changePlayerTurn()
-
-            self.firstSelected = None
 
 
     def onLockDownFinish(self, source, target):
@@ -146,8 +121,6 @@ class PlayScreen:
             for x in range(len(playFields[0])):
                 playFields[y][x].x = x * playFields[y][x].size*2 + self.xOffset + self.fieldOffset * x
                 playFields[y][x].y = y * playFields[y][x].size*2 + self.yOffset + self.fieldOffset * y
-                
-                # Add barriers
                 if (y in range(4)):
                     playFields[y][x].piece = self.player1.pieces[y][x]
                 if (y in range(6, 10)):
@@ -183,10 +156,14 @@ class PlayScreen:
                           anchor_x='center', anchor_y='center').draw()
         
         # Draw playFields
+                    #         self.hiddenField.x = field.x
+                    # self.hiddenField.y = field.y
+                    # self.hiddenField.size = field.size
+                    # self.hiddenField.piece.owner = field.piece.owner
+                    # field = self.hiddenField
         for y in range(0, len(self.playFields)):
             for x in range(0, len(self.playFields[y])):
                 field = self.playFields[y][x]
-
                 if (field.barrier):
                     glColor3f(1, 0, 0)
                 elif (self.firstSelected is field):
@@ -200,3 +177,22 @@ class PlayScreen:
                     glColor3f(1, 1, 1)
                 
                 Utils.drawField(field)
+
+    def executeMove(self,source, target):
+        #check if its a legal move
+        Utils.isLegalMove(source, target, self.playFields)
+        pass
+        # if self.firstSelected.piece.owner is not field.piece.owner:
+        #                        self.visibleEnemy = field
+        #                        self.lockDown = True
+        #                        field.piece.hidden = False
+        #                        self.textResetTimer = threading.Timer(self.lockDownTime, self.onLockDownFinish, 
+        #                                                                 [self.firstSelected, field])
+        #                        self.textResetTimer.start()
+                    
+        #             else:
+        #                 field.piece = self.firstSelected.piece
+        #                 self.firstSelected.piece = None
+        #                 self.changePlayerTurn()
+
+        #     self.firstSelected = None

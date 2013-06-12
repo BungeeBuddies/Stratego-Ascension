@@ -138,45 +138,39 @@ class Utils(object):
 
     @staticmethod
     def isLegalMove(source, target, fields):
-            sourceX = None
-            sourceY = None
-            targetX = None
-            targetY = None
-
-            for i, x in enumerate(fields):
-                if source in x:
-                    sourceY = i
-                    sourceX = x.index(source)
-                if target in x:
-                    targetY = i
-                    targetX = x.index(target)
-            if source.piece is not None:
-                if sourceX == targetX or sourceY == targetY: # Both fields are on the same line
-                    delta = (sourceY - targetY if sourceX == targetX  else sourceX - targetX) # The difference between the fields
-                    
-                    if abs(delta) <= source.piece.steps: # Check if the piece can move this far
-                        # If the piece can move more than 1 space
-                        if source.piece.steps > 1:
-                            
-                            # Finally: Check if something is in between (only applies if piece can set more then one step)
-                            if sourceX == targetX:  # Check if the source and target are on the same row
-                                
-                                # If the target field is above the source, start at the field above else at the field below
-                                step = -1 if sourceY > targetY else 1 
-                                
-                                # Check if all fields until the target are empty
-                                for y in xrange(sourceY+step, targetY, step):
-                                    if fields[y][sourceX].piece is not None:
-                                        return False
-                            
-                            # Check if the source and target are one the same column
-                            else:
-                                step = -1 if sourceX > targetX else 1 # Same as above
-
-                                for x in xrange(sourceX+step, targetX, step):
-                                    if fields[sourceY][x].piece is not None:
-                                        return False
-                        
-                        return True
-
-                return False
+        #check if the target field is a barrier
+        if target.piece is not None and target.piece.type == '#':
+            return False    
+        sourceX = None
+        sourceY = None
+        targetX = None
+        targetY = None
+        for i, x in enumerate(fields):
+            if source in x:
+                sourceY = i
+                sourceX = x.index(source)
+            if target in x:
+                targetY = i
+                targetX = x.index(target)
+        if source.piece is not None:
+            if sourceX == targetX or sourceY == targetY: # Both fields are on the same line
+                delta = (sourceY - targetY if sourceX == targetX  else sourceX - targetX) # The difference between the fields                    
+                if abs(delta) <= source.piece.steps: # Check if the piece can move this far
+                    # If the piece can move more than 1 space
+                    if source.piece.steps > 1:                            
+                        # Finally: Check if something is in between (only applies if piece can set more then one step)
+                        if sourceX == targetX:  # Check if the source and target are on the same row                                
+                            # If the target field is above the source, start at the field above else at the field below
+                            step = -1 if sourceY > targetY else 1                                 
+                            # Check if all fields until the target are empty
+                            for y in xrange(sourceY+step, targetY, step):
+                                if fields[y][sourceX].piece is not None:
+                                    return False                            
+                        # Check if the source and target are one the same column
+                        else:
+                            step = -1 if sourceX > targetX else 1 # Same as above
+                            for x in xrange(sourceX+step, targetX, step):
+                                if fields[sourceY][x].piece is not None:
+                                    return False                      
+                    return True
+            return False

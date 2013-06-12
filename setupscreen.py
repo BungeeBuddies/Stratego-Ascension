@@ -17,39 +17,29 @@ class SetupScreen:
         self.width = 900
         self.height = 700
         self.player = player
-
         self.widthOfField = 10
         self.heightOfField = 4
         self.sizeOfField = 25
-
         self.isDone = False
         self.xOffset = self.width/4
         self.yOffset = self.height/8 + 70
         # Space between bottom and top field
         self.fieldOffset = 1
-
         self.bottomArea = self.createArea(self.yOffset, True)
-        self.betweenAreasYOffset = self.bottomArea[-1][-1].y + self.bottomArea[-1][-1].size*2 + 25
-        
+        self.betweenAreasYOffset = self.bottomArea[-1][-1].y + self.bottomArea[-1][-1].size*2 + 25        
         self.topArea = self.createArea(self.betweenAreasYOffset, False)
         self.fields = [item for sublist in self.topArea for item in sublist] + [item for sublist in self.bottomArea for item in sublist]
-
         self.barrierFields = [2, 3, 6, 7]
         self.barriers = self.setupBarriers()
-
         self.buttonXSize = 50
         self.buttonYSize = 25
-
         self.buttons = self.createButtons()
-
         self.firstSelected = None
-
         self.header = pyglet.text.Label('Setup Screen',
                            font_name='Arial',
                           font_size=16,
                           x=self.width/2, y=self.height-20,
                           anchor_x='center', anchor_y='center')
-
         self.footer = pyglet.text.Label('Player ' + player.name + ', setup your field',
                           font_name='Arial',
                           font_size=16,
@@ -120,7 +110,6 @@ class SetupScreen:
     def draw(self):
 
         if (self.player.isComputer):
-            #self.fillTopArea()
             self.autofillRandom()
             self.isDone = True
         if self.isDone:
@@ -178,13 +167,6 @@ class SetupScreen:
     def resetBottomText(self):
         self.footer.text = 'Player ' + self.player.name + ', setup your field'
 
-    def fillTopArea(self):
-        tempArray = list([item for sublist in self.bottomArea for item in sublist])
-        random.shuffle(tempArray)
-        for row in range(0, len(self.topArea)):
-            for field in range(0, len(self.topArea[row])):
-                self.topArea[row][field].piece = copy(tempArray[row*self.widthOfField+field].piece)
-
     def autofillRandom(self):
         self.firstSelected = None
         regels = self.bottomArea
@@ -195,10 +177,8 @@ class SetupScreen:
         for (a, b) in zip(emptyfields, tobefilledfields):
             b.piece = a.piece
             a.piece = None
-        self.fields = [item for sublist in self.topArea for item in sublist] + [item for sublist in self.bottomArea for item in sublist]
 
     def autofill(self):
-        print "Here!"
         self.firstSelected = None
         regels = self.bottomArea
         emptyfields = [f for r in regels for f in r if f.piece is not None]
@@ -207,4 +187,3 @@ class SetupScreen:
         for (a, b) in zip(emptyfields, tobefilledfields):
             b.piece = a.piece
             a.piece = None
-        self.fields = [item for sublist in self.topArea for item in sublist] + [item for sublist in self.bottomArea for item in sublist]
