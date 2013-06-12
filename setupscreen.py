@@ -109,11 +109,16 @@ class SetupScreen:
 
     def draw(self):
 
-        if (self.player.isComputer):
+        if self.player.isComputer:
             self.autofillRandom()
+            self.isDone = True
+        else:
+            self.autofill
             self.isDone = True
         if self.isDone:
             if self is self.window.setupScreenP2:
+                #invert the field of the current player
+                
                 self.window.currentScreen = self.window.playScreen
             else: 
                 self.window.currentScreen = self.window.setupScreenP2

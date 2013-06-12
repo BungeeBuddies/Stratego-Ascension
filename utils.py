@@ -34,12 +34,7 @@ class Utils(object):
             glVertex2f(field.x + piece.size, field.y - piece.size)
             glEnd()
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-            
-            pyglet.text.Label("?" if piece.hidden else str(piece.type),
-                        font_name='Arial',
-                        font_size=16,
-                        x=field.x, y=field.y,
-                        anchor_x='center', anchor_y='center').draw()
+            field.label.draw()
 
     @staticmethod
     def drawButton(button):

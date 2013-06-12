@@ -10,11 +10,11 @@ class Field(object):
         self.color = [1, 1, 1]
         self.selected = False
         self._piece = None
-        self.label = pyglet.text.Label(self._piece.type if (self._piece is not None) else '',
-                          font_name='Arial',
-                          font_size=16,
-                          x=self._x, y=self._y,
-                          anchor_x='center', anchor_y='center')
+        self._label = pyglet.text.Label('',
+                font_name='Arial',
+                font_size=16,
+                x=12, y=12,
+                anchor_x='center', anchor_y='center')
 
     def draw():
         pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2i', 
@@ -25,9 +25,9 @@ class Field(object):
         doc = "The x property."
         def fget(self):
             return self._x
-        def fset(self, value):
-            self._x = value
+        def fset(self, value):            
             self.label.x = value
+            self._x = value
         def fdel(self):
             del self._x
         return locals()
@@ -60,3 +60,19 @@ class Field(object):
             del self._piece
         return locals()
     piece = property(**piece())
+
+    def label():
+        doc = "The label property."
+        def fget(self):
+            if self._piece is not None:
+                if self._piece.hidden:
+                    self._label.text = '?'
+                else:
+                    self._label.text = str(self._piece.type)
+            return self._label
+        def fset(self, value):
+            self._label = value
+        def fdel(self):
+            del self._label
+        return locals()
+    label = property(**label())

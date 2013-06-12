@@ -24,7 +24,7 @@ class PlayScreen:
 
         self.player1 = player1
         self.player2 = player2
-        self.currentPlayer = player1
+        self.currentPlayer = None
 
         self.widthOfField = 10
         self.heightOfField = 10
@@ -41,7 +41,7 @@ class PlayScreen:
         self.lockdown = False
         # self.firstSelectedXPosition = None
         # self.firstSelectedYPosition = None
-        self.playFields = self.createPlayField()
+        self.playFields = self._createPlayField()
         self.fields = [item for sublist in self.playFields for item in sublist]
 
         self.selectedField = None
@@ -52,7 +52,6 @@ class PlayScreen:
     def handleClick(self, field):
         #if the currentPlayer is a computer, ignore all of this. Also ignore if lockdown is true
         if self.currentPlayer.isComputer or self.lockdown:
-            print "here"
             return
         #Firstclick: check if no piece has been selected before and if there is a piece there, and if this piece is his. If all of this is true, then check if he clicked a piece which can move.
         if self.firstSelected is None and field.piece is not None:
@@ -66,7 +65,7 @@ class PlayScreen:
                             
 
 
-    def onLockDownFinish(self, source, target):
+    def _onLockDownFinish(self, source, target):
         #execute the attack
         if target.piece.type is 10:
             if source.piece.type is 1:
@@ -91,25 +90,32 @@ class PlayScreen:
                 target.piece = None
             else:
                 source.piece = None
-        self.changePlayerTurn()
+        self._changePlayerTurn()
         self.lockdown = False   
 
-    def changePlayerTurn(self):
+    def _changePlayerTurn(self):
         self.firstSelected = None
         self.visibleEnemyField = None
         lastPlayer = None
+        for y in  self.currentPlayer.pieces:
+            for piece in y:
+                if piece is not None:
+                    print "Changing Hidden"
+                    piece.hidden = True
 
-        if self.currentPlayer is None:
-            self.currentPlayer = self.player1
-            lastPlayer = self.player2
         
-        elif self.currentPlayer == self.player1:
+        if self.currentPlayer == self.player1:
             self.currentPlayer = self.player2
             lastPlayer = self.player1
         
         else:
             self.currentPlayer = self.player1
             lastPlayer = self.player2
+
+        for y in  self.currentPlayer.pieces:
+            for piece in y:
+                if piece is not None:
+                    piece.hidden = False
 
         # if self.init:
         #     if self.currentPlayer.isComputer:
@@ -120,9 +126,9 @@ class PlayScreen:
         #             self.window.victoryScreen.victoryPlayer = "1" if self.currentPlayer is self.player1 else "2"
         #             self.window.currentScreen = self.window.victoryScreen
 
-        #         threading.Timer(0.1, self.changePlayerTurn).start()
+        #         threading.Timer(0.1, self._changePlayerTurn).start()
 
-    def createPlayField(self):
+    def _createPlayField(self):
         playFields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
 
         for y in range(len(playFields)):
@@ -144,11 +150,18 @@ class PlayScreen:
 
         return playFields
 
-    def draw(self):
+    def draw(self):        
+        if self.currentPlayer is None:
+            self.currentPlayer = self.player1
+            lastPlayer = self.player2
+            for y in  self.player2.pieces:
+                for piece in y:
+                    if piece is not None:
+                        piece.hidden = True
 
         # if (not self.init):
         #     self.init = True
-        #     self.changePlayerTurn()
+        #     self._changePlayerTurn()
             # threading.Timer(0.5, self.currentPlayer.play).start()
 
         pyglet.text.Label('Player 1',
@@ -162,13 +175,6 @@ class PlayScreen:
                           font_size=16,
                           x=self.width/2, y=20,
                           anchor_x='center', anchor_y='center').draw()
-        
-        # Draw playFields
-                    #         self.hiddenField.x = field.x
-                    # self.hiddenField.y = field.y
-                    # self.hiddenField.size = field.size
-                    # self.hiddenField.piece.owner = field.piece.owner
-                    # field = self.hiddenField
         for y in range(0, len(self.playFields)):
             for x in range(0, len(self.playFields[y])):
                 field = self.playFields[y][x]
@@ -197,15 +203,15 @@ class PlayScreen:
             source.piece = None
             #If its an AI, delay the game for a bit
             if self.currentPlayer.isComputer:
-                self.AIDelayTimer = threading.timer(self.aiDelay,self.changePlayerTurn)
+                self.AIDelayTimer = threading.timer(self.aiDelay,self._changePlayerTurn)
             else:
-                self.changePlayerTurn()
+                self._changePlayerTurn()
         #else set the timer
         else:
-            self.visibleEnemyField = target
+            target.piece.hidden = False
             self.firstSelected = None
             self.lockdown = True
-            self.lockdownTimer = threading.Timer(self.lockdownTime, self.onLockDownFinish,[source,target])
+            self.lockdownTimer = threading.Timer(self.lockdownTime, self._onLockDownFinish,[source,target])
             self.lockdownTimer.start()
         return True
 
