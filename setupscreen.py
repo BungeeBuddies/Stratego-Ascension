@@ -110,6 +110,10 @@ class SetupScreen:
 
         if self.player.isComputer:
             self.autofillRandom()
+            if self is self.window.setupScreenP2:
+                self.player.name = "computer 2"
+            else:
+                self.player.name = "Computer 1"
             self.isDone = True
         # else:
         #     self.autofill()

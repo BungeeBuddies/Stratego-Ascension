@@ -1,4 +1,4 @@
-#Priorities: First get PvP to work awesome, then get AIvAI to work awesome and last of all PvAI
+#Priorities: then get AIvAI to work awesome and last of all PvAI
 
 import pyglet
 import copy
@@ -33,7 +33,7 @@ class PlayScreen:
         self.selectedField = 0
         self.color = [1, 1, 1]
 
-        self.aiDelay = 0.5
+        self.aiDelay = .5
 
         self.visibleEnemyField = None
         self.lockdownTimer = None
@@ -46,6 +46,13 @@ class PlayScreen:
 
         self.selectedField = None
         self.firstSelected = None
+        self._changePlayerTurnArray = [self._changePlayerTurnPvP,self._changePlayerTurnPvAI,self._changePlayerTurnAIvAI]
+        self._changePlayerTurn = self._changePlayerTurnArray[2]
+        self.header = pyglet.text.Label('',
+                          font_name='Arial',
+                          font_size=16,
+                          x=self.width/2, y=self.height-20,
+                          anchor_x='center', anchor_y='center')
         
 
         
@@ -94,39 +101,65 @@ class PlayScreen:
         self._changePlayerTurn()
         self.lockdown = False   
 
-    def _changePlayerTurn(self):
+    def _changePlayerTurnPvP(self):
+        if self.currentPlayer is None:
+            self.currentPlayer = self.player1
+            self.header.text = self.currentPlayer.name
+            lastPlayer = self.player2
+            for y in  self.player2.pieces:
+                for piece in y:
+                    if piece is not None:
+                        piece.hidden = True
+            return
         self.firstSelected = None
         self.visibleEnemyField = None
         lastPlayer = None
         for y in  self.currentPlayer.pieces:
             for piece in y:
-                if piece is not None:
                     piece.hidden = True
-
-        
         if self.currentPlayer == self.player1:
             self.currentPlayer = self.player2
-            lastPlayer = self.player1
+            self.lastPlayer = self.player1
         
         else:
             self.currentPlayer = self.player1
-            lastPlayer = self.player2
-
+            self.lastPlayer = self.player2
+        self.header.text = self.currentPlayer.name
+        self.lastPlayer.isPlaying = False
         for y in  self.currentPlayer.pieces:
             for piece in y:
-                #if piece is not None:
                     piece.hidden = False
 
-        # if self.init:
-        #     if self.currentPlayer.isComputer:
-        #         # print "Computer playing"
-        #         win = self.currentPlayer.play(self.playFields)
-                
-        #         if win:
-        #             self.window.victoryScreen.victoryPlayer = "1" if self.currentPlayer is self.player1 else "2"
-        #             self.window.currentScreen = self.window.victoryScreen
+    def _changePlayerTurnPvAI(self):
+        if self.currentPlayer is None:
+            self.currentPlayer = self.player1
+            self.header.text = self.currentPlayer.name
+            lastPlayer = self.player2
+            for y in  self.player2.pieces:
+                for piece in y:
+                    if piece is not None:
+                        piece.hidden = True
+            return        
+        if self.currentPlayer == self.player1:
+            self.currentPlayer = self.player2
+            self.lastPlayer = self.player1
+        
+        else:
+            self.currentPlayer = self.player1
+            self.lastPlayer = self.player2
+        self.header.text = self.currentPlayer.name
+        self.lastPlayer.isPlaying = False
 
-        #         threading.Timer(0.1, self._changePlayerTurn).start()
+    def _changePlayerTurnAIvAI(self):
+        if self.currentPlayer == self.player1:
+            self.currentPlayer = self.player2
+            self.lastPlayer = self.player1
+        
+        else:
+            self.currentPlayer = self.player1
+            self.lastPlayer = self.player2
+        self.header.text = self.currentPlayer.name
+        self.lastPlayer.isPlaying = False
 
     def _createPlayField(self):
         playFields = [[Field(0, 0, self.sizeOfField) for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
@@ -149,31 +182,12 @@ class PlayScreen:
 
         return playFields
 
-    def draw(self):        
+    def draw(self):
         if self.currentPlayer is None:
-            self.currentPlayer = self.player1
-            lastPlayer = self.player2
-            for y in  self.player2.pieces:
-                for piece in y:
-                    if piece is not None:
-                        piece.hidden = True
-
-        # if (not self.init):
-        #     self.init = True
-        #     self._changePlayerTurn()
-            # threading.Timer(0.5, self.currentPlayer.play).start()
-
-        pyglet.text.Label('Player 1',
-                          font_name='Arial',
-                          font_size=16,
-                          x=self.width/2, y=self.height-20,
-                          anchor_x='center', anchor_y='center').draw()
-
-        pyglet.text.Label('Player 2',
-                          font_name='Arial',
-                          font_size=16,
-                          x=self.width/2, y=20,
-                          anchor_x='center', anchor_y='center').draw()
+            self._changePlayerTurn()
+        if self.currentPlayer.isComputer and not self.currentPlayer.isPlaying:
+            self.currentPlayer.play(self)
+        self.header.draw()
         for y in range(0, len(self.playFields)):
             for x in range(0, len(self.playFields[y])):
                 field = self.playFields[y][x]
@@ -187,8 +201,7 @@ class PlayScreen:
                     elif (field.piece.owner is self.player2):
                         glColor3f(0, 1, 0)
                 else: 
-                    glColor3f(1, 1, 1)
-                
+                    glColor3f(1, 1, 1)                
                 Utils.drawField(field)
 
     #returns true after making the move, if this fails for some reason it returns false
@@ -202,16 +215,19 @@ class PlayScreen:
             source.piece = None
             #If its an AI, delay the game for a bit
             if self.currentPlayer.isComputer:
-                self.AIDelayTimer = threading.timer(self.aiDelay,self._changePlayerTurn)
+                self.AIDelayTimer = threading.Timer(self.aiDelay,self._changePlayerTurn)
+                self.AIDelayTimer.start()
             else:
                 self._changePlayerTurn()
         #else set the timer
         else:
+            print "Vechteee!"
             target.piece.hidden = False
             self.firstSelected = None
             self.lockdown = True
             self.lockdownTimer = threading.Timer(self.lockdownTime, self._onLockDownFinish,[source,target])
             self.lockdownTimer.start()
+            self.lockdownTimer.join()
         return True
 
     def win(self,player):

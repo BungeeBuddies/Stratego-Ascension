@@ -92,11 +92,11 @@ class Utils(object):
         button.label.draw()
 
     @staticmethod
-    def getFieldIndex(field, fields):
-        for i, x in enumerate(fields):
-            if field in x:
-                return [i, x.index(field)]
-
+    def getFieldIndex(piece, fields):
+        for y in xrange(0,len(fields)):
+            for x in xrange(0,len(fields[y])):
+                if fields[y][x].piece is piece:
+                    return[y,x]
     # @staticmethod
     # def getField(self, x, y, fields):
     
