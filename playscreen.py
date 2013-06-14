@@ -33,11 +33,9 @@ class PlayScreen:
         self.selectedField = 0
         self.color = [1, 1, 1]
 
-        self.aiDelay = .5
-
-        self.visibleEnemyField = None
+        self.aiDelay = 0.5
         self.lockdownTimer = None
-        self.lockdownTime = 0.5
+        self.lockdownTime = 0.8
         self.lockdown = False
         # self.firstSelectedXPosition = None
         # self.firstSelectedYPosition = None
@@ -53,9 +51,7 @@ class PlayScreen:
                           font_size=16,
                           x=self.width/2, y=self.height-20,
                           anchor_x='center', anchor_y='center')
-        
 
-        
     def handleClick(self, field):
         #if the currentPlayer is a computer, ignore all of this. Also ignore if lockdown is true
         if self.currentPlayer.isComputer or self.lockdown:
@@ -66,12 +62,9 @@ class PlayScreen:
                 self.firstSelected = field
         elif self.firstSelected is not None: 
             if field is self.firstSelected:
-                self.firstSelected = None
-               
+                self.firstSelected = None               
             elif (Utils.isLegalMove(self.firstSelected, field, self.playFields)): #if the move is legal, execute it
                 self.executeMove(self.firstSelected, field)
-                            
-
 
     def _onLockDownFinish(self, source, target):
         #execute the attack
@@ -111,9 +104,6 @@ class PlayScreen:
                     if piece is not None:
                         piece.hidden = True
             return
-        self.firstSelected = None
-        self.visibleEnemyField = None
-        lastPlayer = None
         for y in  self.currentPlayer.pieces:
             for piece in y:
                     piece.hidden = True
@@ -131,15 +121,8 @@ class PlayScreen:
                     piece.hidden = False
 
     def _changePlayerTurnPvAI(self):
-        if self.currentPlayer is None:
-            self.currentPlayer = self.player1
-            self.header.text = self.currentPlayer.name
-            lastPlayer = self.player2
-            for y in  self.player2.pieces:
-                for piece in y:
-                    if piece is not None:
-                        piece.hidden = True
-            return        
+        self.firstSelected = None
+        lastPlayer = None   
         if self.currentPlayer == self.player1:
             self.currentPlayer = self.player2
             self.lastPlayer = self.player1
@@ -149,8 +132,14 @@ class PlayScreen:
             self.lastPlayer = self.player2
         self.header.text = self.currentPlayer.name
         self.lastPlayer.isPlaying = False
+        for y in self.player2.pieces:
+            for piece in y:
+                if piece is not None:
+                    piece.hidden = True
 
     def _changePlayerTurnAIvAI(self):
+        self.firstSelected = None
+        lastPlayer = None
         if self.currentPlayer == self.player1:
             self.currentPlayer = self.player2
             self.lastPlayer = self.player1
@@ -184,6 +173,11 @@ class PlayScreen:
 
     def draw(self):
         if self.currentPlayer is None:
+            print "Dit zou je maar een keer moeten zien"
+            if not self.player1.isComputer and self.player2.isComputer:
+                self._changePlayerTurn = self._changePlayerTurnArray[1]
+            elif not self.player1.isComputer and not self.player2.isComputer:
+                self._changePlayerTurn = self._changePlayerTurnArray[0]
             self._changePlayerTurn()
         if self.currentPlayer.isComputer and not self.currentPlayer.isPlaying:
             self.currentPlayer.play(self)
@@ -219,15 +213,12 @@ class PlayScreen:
                 self.AIDelayTimer.start()
             else:
                 self._changePlayerTurn()
-        #else set the timer
         else:
             print "Vechteee!"
             target.piece.hidden = False
-            self.firstSelected = None
             self.lockdown = True
             self.lockdownTimer = threading.Timer(self.lockdownTime, self._onLockDownFinish,[source,target])
             self.lockdownTimer.start()
-            self.lockdownTimer.join()
         return True
 
     def win(self,player):
