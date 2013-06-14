@@ -4,7 +4,7 @@ from field import Field
 from button import Button
 from utils import Utils
 
-class VictoryScreen:
+class VictoryScreen(object):
 
     def __init__(self, window):
         self.window = window
@@ -14,12 +14,7 @@ class VictoryScreen:
         self.yOffset = self.height/8 + 35
         self.buttonXSize = 50
         self.buttonYSize = 25
-        self._victoryPlayer = None
-        self.bottomLabel = pyglet.text.Label('blblabla',
-                          font_name='Arial',
-                          font_size=30,
-                          x=self.width/2, y= self.height-200,
-                          anchor_x='center', anchor_y='center') 
+        self.victoryPlayer = None 
         self.buttons = self.createButtons()
         
     def createButtons(self):
@@ -53,16 +48,8 @@ class VictoryScreen:
             self.window.currentScreen = self.window.Exit
         for button in self.buttons:
             Utils.drawButton(button)
-        self.bottomLabel.draw()
-
-    def vicoryPlayer():
-        doc = "The vicoryPlayer property."
-        def fget(self):
-            return self._vicoryPlayer
-        def fset(self, value):
-            self._vicoryPlayer = value
-            self.bottomLabel.text = 'Player ' + value.name + ' is the winner!'
-        def fdel(self):
-            del self._vicoryPlayer
-        return locals()
-    vicoryPlayer = property(**vicoryPlayer())
+        pyglet.text.Label(self.victoryPlayer.name + ' has won!',
+                  font_name='Arial',
+                  font_size=30,
+                  x=self.width/2, y= self.height-200,
+                  anchor_x='center', anchor_y='center').draw()
