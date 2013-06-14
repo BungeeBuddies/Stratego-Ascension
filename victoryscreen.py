@@ -14,8 +14,8 @@ class VictoryScreen:
         self.yOffset = self.height/8 + 35
         self.buttonXSize = 50
         self.buttonYSize = 25
-        self.victoryPlayer = 0
-        self.bottomLabel = pyglet.text.Label('Player ' + str(self.victoryPlayer) + ' is the winner',
+        self._victoryPlayer = None
+        self.bottomLabel = pyglet.text.Label('blblabla',
                           font_name='Arial',
                           font_size=30,
                           x=self.width/2, y= self.height-200,
@@ -53,4 +53,16 @@ class VictoryScreen:
             self.window.currentScreen = self.window.Exit
         for button in self.buttons:
             Utils.drawButton(button)
-        bottomLabel.draw()
+        self.bottomLabel.draw()
+
+    def vicoryPlayer():
+        doc = "The vicoryPlayer property."
+        def fget(self):
+            return self._vicoryPlayer
+        def fset(self, value):
+            self._vicoryPlayer = value
+            self.bottomLabel.text = 'Player ' + value.name + ' is the winner!'
+        def fdel(self):
+            del self._vicoryPlayer
+        return locals()
+    vicoryPlayer = property(**vicoryPlayer())

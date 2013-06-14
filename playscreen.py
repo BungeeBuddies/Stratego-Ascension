@@ -58,12 +58,14 @@ class PlayScreen:
             return
         #Firstclick: check if no piece has been selected before and if there is a piece there, and if this piece is his. If all of this is true, then check if he clicked a piece which can move.
         if self.firstSelected is None and field.piece is not None:
-            if field.piece.steps > 0 and field.piece.owner == self.currentPlayer:
+            if field.piece.steps > 0 and field.piece.owner is self.currentPlayer:
                 self.firstSelected = field
         elif self.firstSelected is not None: 
             if field is self.firstSelected:
-                self.firstSelected = None               
-            elif (Utils.isLegalMove(self.firstSelected, field, self.playFields)): #if the move is legal, execute it
+                self.firstSelected = None
+            elif field.piece is not None and field.piece.owner is self.currentPlayer:
+                pass               
+            elif Utils.isLegalMove(self.firstSelected, field, self.playFields): #if the move is legal, execute it
                 self.executeMove(self.firstSelected, field)
 
     def _onLockDownFinish(self, source, target):
@@ -223,4 +225,5 @@ class PlayScreen:
         return True
 
     def win(self,player):
-        pass
+        self.window.victoryScreen.victoryPlayer = player
+        self.window.currentScreen = self.window.victoryScreen
