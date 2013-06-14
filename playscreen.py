@@ -157,10 +157,6 @@ class PlayScreen:
             for x in range(len(playFields[0])):
                 playFields[y][x].x = x * playFields[y][x].size*2 + self.xOffset + self.fieldOffset * x
                 playFields[y][x].y = y * playFields[y][x].size*2 + self.yOffset + self.fieldOffset * y
-                if (y in range(4)):
-                    playFields[y][x].piece = self.player1.pieces[y][x]
-                if (y in range(6, 10)):
-                    playFields[y][x].piece = self.player2.pieces[len(self.player2.pieces)-y+5][len(self.player2.pieces[-y+5])-1-x]
                 try:
                     self.barrierFields.index([x, y])
                 except ValueError:

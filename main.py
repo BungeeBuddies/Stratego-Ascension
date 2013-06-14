@@ -76,9 +76,6 @@ class Window(pyglet.window.Window):
 
         clickedField = self.isField(x, y)
         if (clickedField is not None):
-
-            print "Piece pressed: " + str(clickedField.piece)
-
             # Deselected last field
             if (self.selectedField is not None):
                 self.selectedField.selected = False

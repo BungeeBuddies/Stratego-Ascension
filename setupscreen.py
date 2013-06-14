@@ -96,14 +96,16 @@ class SetupScreen:
         return fields
 
     def handleClick(self, field):
-        if (self.firstSelected is None):
+        if (self.firstSelected is None and field.piece is not None):
             self.firstSelected = field
-
-        elif (self.firstSelected is not field):
-            if (self.firstSelected.piece is not None):
-                field.piece = self.firstSelected.piece
-                self.firstSelected.piece = None
-                
+        elif ( field is not self.firstSelected and field.piece is None):
+            field.piece = self.firstSelected.piece
+            self.firstSelected.piece = None                
+            self.firstSelected = None
+        else:
+            tempPiece = field.piece
+            field.piece = self.firstSelected.piece
+            self.firstSelected.piece = tempPiece
             self.firstSelected = None
 
     def draw(self):
@@ -114,13 +116,17 @@ class SetupScreen:
             else:
                 self.player.name = "Computer 1"
             self.isDone = True
-        # else:
-        #     self.autofill()
-        #     self.isDone = True
         if self.isDone:
+            fields = self.topArea + self.bottomArea
             if self is self.window.setupScreenP2:
+                for y in range(6,10):
+                    for x in range(0,10):
+                        self.window.playScreen.playFields[y][x].piece = self.topArea[9-y][9-x].piece
                 self.window.currentScreen = self.window.playScreen
             else: 
+                for y in range(0,4):
+                    for x in range (0,10):
+                        self.window.playScreen.playFields[y][x].piece = self.topArea[y][x].piece
                 self.window.currentScreen = self.window.setupScreenP2
         else:
             self.header.draw()
