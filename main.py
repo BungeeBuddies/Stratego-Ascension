@@ -31,8 +31,8 @@ class Window(pyglet.window.Window):
         self.selectedButton = None
 
         self.whosTurn = 1
-        self.player1 = Player(False, self.createPieceList(), "player 1")
-        self.player2 = Player(False, self.createPieceList(), "player 2")
+        self.player1 = Player(False, self.createPieceList(), 'Player 1')
+        self.player2 = Player(False, self.createPieceList(), 'Player 2')
         self.startScreen = StartScreen(self)
         self.setupScreenP1 = SetupScreen(self.player1, self)
         self.setupScreenP2 = SetupScreen(self.player2, self)
@@ -227,5 +227,5 @@ class Window(pyglet.window.Window):
                 
 if __name__ == '__main__':
     window = Window()
-    pyglet.clock.schedule_interval(window.update, 1.0/60.0)
+    pyglet.clock.schedule_interval(window.update, 1.0/20.0)
     pyglet.app.run()

@@ -35,7 +35,7 @@ class PlayScreen:
 
         self.aiDelay = 0.5
         self.lockdownTimer = None
-        self.lockdownTime = 0.8
+        self.lockdownTime = 0.5
         self.lockdown = False
         # self.firstSelectedXPosition = None
         # self.firstSelectedYPosition = None
@@ -104,6 +104,8 @@ class PlayScreen:
                     if piece is not None:
                         piece.hidden = True
             return
+        self.firstSelected = None
+        lastPlayer = None
         for y in  self.currentPlayer.pieces:
             for piece in y:
                     piece.hidden = True
@@ -169,11 +171,14 @@ class PlayScreen:
 
     def draw(self):
         if self.currentPlayer is None:
-            print "Dit zou je maar een keer moeten zien"
             if not self.player1.isComputer and self.player2.isComputer:
                 self._changePlayerTurn = self._changePlayerTurnArray[1]
             elif not self.player1.isComputer and not self.player2.isComputer:
                 self._changePlayerTurn = self._changePlayerTurnArray[0]
+            else:
+                self._changePlayerTurn = self._changePlayerTurnArray[2]
+                self.aiDelay = 0.1
+                self.lockdownTime = 0.1
             self._changePlayerTurn()
         if self.currentPlayer.isComputer and not self.currentPlayer.isPlaying:
             self.currentPlayer.play(self)
@@ -210,8 +215,8 @@ class PlayScreen:
             else:
                 self._changePlayerTurn()
         else:
-            print "Vechteee!"
             target.piece.hidden = False
+            source.piece.hidden = False
             self.lockdown = True
             self.lockdownTimer = threading.Timer(self.lockdownTime, self._onLockDownFinish,[source,target])
             self.lockdownTimer.start()

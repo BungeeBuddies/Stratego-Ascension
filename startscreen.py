@@ -41,22 +41,25 @@ class StartScreen:
         if self.buttons[0].selected: #PvP
             self.buttons[0].selected = False
             self.window.player1.isComputer = False
-            self.window.player1.name = "1"
+            self.window.player1.name = "Player 1"
             self.window.player2.isComputer = False
-            self.window.player2.name = "2"
+            self.window.player2.name = "Player 2"
             self.window.setupScreenP1.resetBottomText()
             self.window.setupScreenP2.resetBottomText()
             self.window.currentScreen = self.window.setupScreenP1
         elif self.buttons[1].selected: #PvPC
             self.window.player1.isComputer = False
-            self.window.player1.name = "1"
+            self.window.player1.name = "Player"
             self.window.player2.isComputer = True
+            self.window.player2.name = "Computer"
             self.window.setupScreenP1.resetBottomText()
             self.window.currentScreen = self.window.setupScreenP1
             self.buttons[1].selected = False
         elif self.buttons[2].selected: #PCvPC
             self.window.player1.isComputer = True
+            self.window.player1.name = "Computer 1"
             self.window.player2.isComputer = True
+            self.window.player2.name = "Computer 2"
             self.window.currentScreen = self.window.setupScreenP1
             self.buttons[2].selected = False
         else:

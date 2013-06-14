@@ -111,10 +111,6 @@ class SetupScreen:
     def draw(self):
         if self.player.isComputer:
             self.autofillRandom()
-            if self is self.window.setupScreenP2:
-                self.player.name = "computer 2"
-            else:
-                self.player.name = "Computer 1"
             self.isDone = True
         if self.isDone:
             fields = self.topArea + self.bottomArea
@@ -177,7 +173,6 @@ class SetupScreen:
         self.footer.text = 'Player ' + self.player.name + ', setup your field'
 
     def autofillRandom(self):
-        print "autofillRandom"
         self.firstSelected = None
         regels = self.bottomArea
         emptyfields = [f for r in regels for f in r if f.piece is not None]
