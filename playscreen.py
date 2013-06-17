@@ -92,10 +92,6 @@ class PlayScreen:
             else :
                 source.piece = None
         elif target.piece.type is 'F':
-            music = pyglet.resource.media('sounds/Victory.mp3')
-            musicPlayer = pyglet.media.ManagedSoundPlayer()
-            musicPlayer.queue(music)
-            musicPlayer.play()
             self.win(self.currentPlayer)            
         else:
             # self.playSound()
@@ -245,5 +241,9 @@ class PlayScreen:
         return True
 
     def win(self,player):
+        # music = pyglet.resource.media('sounds/Victory.mp3')
+        # musicPlayer = pyglet.media.ManagedSoundPlayer()
+        # musicPlayer.queue(music)
+        # musicPlayer.play()
         self.window.victoryScreen.victoryPlayer = player
         self.window.currentScreen = self.window.victoryScreen
