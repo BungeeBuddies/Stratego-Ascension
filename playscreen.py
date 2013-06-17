@@ -35,15 +35,14 @@ class PlayScreen:
         self.lockdownTimer = None
         self.lockdownTime = 0.5
         self.lockdown = False
-        # self.firstSelectedXPosition = None
-        # self.firstSelectedYPosition = None
+
         self.playFields = self._createPlayField()
         self.fields = [item for sublist in self.playFields for item in sublist]
 
 
         self.selectedField = None
         self.firstSelected = None
-        self._changePlayerTurnArray = [self._changePlayerTurnPvP,self._changePlayerTurnPvAI,self._changePlayerTurnAIvAI]
+        self._changePlayerTurnArray = [self._changePlayerTurnPvP, self._changePlayerTurnPvAI, self._changePlayerTurnAIvAI]
         self._changePlayerTurn = self._changePlayerTurnArray[2]
         self.header = pyglet.text.Label('',
                           font_name='Arial',
@@ -67,16 +66,16 @@ class PlayScreen:
             elif Utils.isLegalMove(self.firstSelected, field, self.playFields): #if the move is legal, execute it
                 self.executeMove(self.firstSelected, field)
 
-    def playSound(self):
-            music = pyglet.resource.media('sounds/battle003.mp3')
-            musicPlayer = pyglet.media.ManagedSoundPlayer()
-            musicPlayer.queue(music)
-            musicPlayer.play()
+    # def playSound(self):
+    #         music = pyglet.resource.media('sounds/battle003.mp3')
+    #         musicPlayer = pyglet.media.ManagedSoundPlayer()
+    #         musicPlayer.queue(music)
+    #         musicPlayer.play()
 
     def _onLockDownFinish(self, source, target):
         #execute the attack
         if target.piece.type is 10:
-            self.playSound()
+            # self.playSound()
             if source.piece.type is 1:
                 target.piece = source.piece
                 source.piece = None
@@ -86,7 +85,7 @@ class PlayScreen:
             else:
                 source.piece = None
         elif target.piece.type is 'B':
-            self.playSound()
+            # self.playSound()
             if source.piece.type is 3:
                 target.piece = source.piece
                 source.piece = None
@@ -99,7 +98,7 @@ class PlayScreen:
             musicPlayer.play()
             self.win(self.currentPlayer)            
         else:
-            self.playSound()
+            # self.playSound()
             if target.piece.type < source.piece.type:
                 target.piece = source.piece
                 source.piece = None
