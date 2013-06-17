@@ -17,13 +17,18 @@ class Player(object):
         self._pieces = [[None for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
         self.isPlaying = False
         
-        self.music = pyglet.resource.media('sounds/scifi003.mp3')
-
         for y in range(len(self._pieces)):
             for x in range(len(self._pieces[y])):
                 self._pieces[y][x] = pieces[y*self.widthOfField+x]
                 self._pieces[y][x].owner = self
 
+    def playSound(self):
+        music = pyglet.resource.media('sounds/scifi003.mp3')
+        musicPlayer = pyglet.media.ManagedSoundPlayer()
+        musicPlayer.volume = 0.1
+        musicPlayer.queue(music)
+        musicPlayer.play()
+  
     def play(self, playScreen):
         self.isPlaying = True
         fields = playScreen.playFields
@@ -71,6 +76,9 @@ class Player(object):
                 fields[playableMoves[key].targetY][playableMoves[key].targetX])
 
             # self.music.play()
+
+            # self.musicPlayer.play()
+            self.playSound()
 
             # print fields[playableMoves[key].sourceY][playableMoves[key].sourceX].x
             glLineWidth(5.0)
