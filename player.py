@@ -3,6 +3,8 @@ from time import sleep
 from utils import Utils
 import random
 import pyglet
+from pyglet.gl import *
+
 
 class Player(object):
 
@@ -15,6 +17,7 @@ class Player(object):
         self._pieces = [[None for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
         self.isPlaying = False
         
+        self.music = pyglet.resource.media('sounds/scifi003.mp3')
 
         for y in range(len(self._pieces)):
             for x in range(len(self._pieces[y])):
@@ -64,7 +67,21 @@ class Player(object):
                                     key +=1
         if (len(playableMoves) > 0):
             key = random.choice(playableMoves.keys())
-            playScreen.executeMove(fields[playableMoves[key].sourceY][playableMoves[key].sourceX],fields[playableMoves[key].targetY][playableMoves[key].targetX])
+            playScreen.executeMove(fields[playableMoves[key].sourceY][playableMoves[key].sourceX], 
+                fields[playableMoves[key].targetY][playableMoves[key].targetX])
+
+            # self.music.play()
+
+            # print fields[playableMoves[key].sourceY][playableMoves[key].sourceX].x
+            glLineWidth(5.0)
+            glBegin(GL_LINES)
+            glColor3f(1, 0, 1)
+            glVertex2f(fields[playableMoves[key].sourceY][playableMoves[key].sourceX].x, fields[playableMoves[key].sourceY][playableMoves[key].sourceX].y)
+            glVertex2f(fields[playableMoves[key].targetY][playableMoves[key].targetX].x, fields[playableMoves[key].targetY][playableMoves[key].targetX].y)
+            # glLineWidth(1)
+            glEnd()
+            glLineWidth(1.0)
+
             return
 
     def movementPossible(self, playScreen):
