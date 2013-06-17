@@ -42,11 +42,27 @@ class VictoryScreen(object):
         if self.buttons[0].selected:
             self.buttons[0].selected = False
             self.window.resetWindows()
+            for y in  self.window.player1.pieces:
+                for piece in y:
+                    if piece is not None:
+                        piece.hidden = False
+            for y in  self.window.player2.pieces:
+                for piece in y:
+                    if piece is not None:
+                        piece.hidden = False
             self.window.currentScreen = self.window.setupScreenP1
         if self.buttons[1].selected:
             self.window.resetWindows()
             self.window.currentScreen = self.window.startScreen
             self.buttons[1].selected = False
+            for y in  self.window.player1.pieces:
+                for piece in y:
+                    if piece is not None:
+                        piece.hidden = False
+            for y in  self.window.player2.pieces:
+                for piece in y:
+                    if piece is not None:
+                        piece.hidden = False
         if self.buttons[2].selected:
             sys.exit()
         for button in self.buttons:
