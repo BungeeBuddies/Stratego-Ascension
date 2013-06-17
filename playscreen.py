@@ -18,7 +18,7 @@ class PlayScreen:
         self.xOffset = self.width/4
         self.yOffset = self.height/8 + 35
         self.fieldOffset = 1
-        self.barrierFields = [[2, 4], [3, 4], [6, 4], [7, 4], [2, 5], [3, 5], [6, 5], [7, 5]]
+        self.barrierFields = [[1, 4], [3, 4], [6, 4], [8, 4], [1, 5], [3, 5], [6, 5], [8, 5]]
 
         self.player1 = player1
         self.player2 = player2
@@ -39,6 +39,7 @@ class PlayScreen:
         # self.firstSelectedYPosition = None
         self.playFields = self._createPlayField()
         self.fields = [item for sublist in self.playFields for item in sublist]
+
 
         self.selectedField = None
         self.firstSelected = None

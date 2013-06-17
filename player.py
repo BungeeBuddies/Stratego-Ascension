@@ -17,6 +17,7 @@ class Player(object):
         self._pieces = [[None for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
         self.isPlaying = False
         
+        self.music = pyglet.resource.media('sounds/scifi003.mp3')
 
         for y in range(len(self._pieces)):
             for x in range(len(self._pieces[y])):
@@ -68,6 +69,8 @@ class Player(object):
             key = random.choice(playableMoves.keys())
             playScreen.executeMove(fields[playableMoves[key].sourceY][playableMoves[key].sourceX], 
                 fields[playableMoves[key].targetY][playableMoves[key].targetX])
+
+            self.music.play()
 
             # print fields[playableMoves[key].sourceY][playableMoves[key].sourceX].x
             glLineWidth(5.0)
