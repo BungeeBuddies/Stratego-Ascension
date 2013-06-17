@@ -200,8 +200,8 @@ class PlayScreen:
                 self._changePlayerTurn = self._changePlayerTurnArray[0]
             else:
                 self._changePlayerTurn = self._changePlayerTurnArray[2]
-                self.aiDelay = 0.05
-                self.lockdownTime = 0.05
+                self.aiDelay = 0
+                self.lockdownTime = 0
             self._changePlayerTurn()
         if self.currentPlayer.isComputer and not self.currentPlayer.isPlaying:
             self.currentPlayer.play(self)
