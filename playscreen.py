@@ -72,6 +72,9 @@ class PlayScreen:
             if source.piece.type is 1:
                 target.piece = source.piece
                 source.piece = None
+            elif source.piece.type  == target.piece.type:
+                target.piece = None
+                source.piece = None
             else:
                 source.piece = None
         elif target.piece.type is 'B':
