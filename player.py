@@ -16,9 +16,6 @@ class Player(object):
         self.name = name
         self._pieces = [[None for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
         self.isPlaying = False
-        
-        self.music = pyglet.resource.media('sounds/scifi003.mp3')
-
         for y in range(len(self._pieces)):
             for x in range(len(self._pieces[y])):
                 self._pieces[y][x] = pieces[y*self.widthOfField+x]
