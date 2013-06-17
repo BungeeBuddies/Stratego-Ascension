@@ -17,12 +17,6 @@ class Player(object):
         self.name = name
         self._pieces = [[None for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
         self.isPlaying = False
-<<<<<<< HEAD
-         
-        
-
-=======
->>>>>>> c297eefe734da78401d90168eb85843b00eeb38a
         for y in range(len(self._pieces)):
             for x in range(len(self._pieces[y])):
                 self._pieces[y][x] = pieces[y*self.widthOfField+x]
@@ -97,7 +91,7 @@ class Player(object):
             glLineWidth(1.0)
 
             return
-<<<<<<< HEAD
+
     def setuppieces(self,bottomArea,topArea):
         #topArea
         self.firstSelected = None
@@ -109,9 +103,6 @@ class Player(object):
         for (a, b) in zip(emptyfields, tobefilledfields):
             b.piece = a.piece
             a.piece = None
-            
-        
-=======
 
     def movementPossible(self, playScreen):
         fields = playScreen.playFields
@@ -149,8 +140,6 @@ class Player(object):
                                     return True
         return False
 
-
->>>>>>> c297eefe734da78401d90168eb85843b00eeb38a
     def pieces():
         doc = "The pieces property."
         def fget(self):
