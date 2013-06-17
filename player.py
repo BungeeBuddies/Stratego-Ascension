@@ -1,4 +1,5 @@
 from piece import Piece
+from setupscreen import SetupScreen
 from time import sleep
 from utils import Utils
 import random
@@ -14,6 +15,7 @@ class Player(object):
         self.name = name
         self._pieces = [[None for x in xrange(self.widthOfField)] for y in xrange(self.heightOfField)]
         self.isPlaying = False
+         
         
 
         for y in range(len(self._pieces)):
@@ -66,7 +68,19 @@ class Player(object):
             key = random.choice(playableMoves.keys())
             playScreen.executeMove(fields[playableMoves[key].sourceY][playableMoves[key].sourceX],fields[playableMoves[key].targetY][playableMoves[key].targetX])
             return
-
+    def setuppieces(self,bottomArea,topArea):
+        #topArea
+        self.firstSelected = None
+        regels = bottomArea
+        emptyfields = [f for r in regels for f in r if f.piece is not None]
+        topping = topArea
+        tobefilledfields = [f for r in topping for f in r if f.piece is None]
+        random.shuffle(emptyfields)
+        for (a, b) in zip(emptyfields, tobefilledfields):
+            b.piece = a.piece
+            a.piece = None
+            
+        
     def pieces():
         doc = "The pieces property."
         def fget(self):
