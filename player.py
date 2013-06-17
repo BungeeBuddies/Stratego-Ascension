@@ -70,7 +70,7 @@ class Player(object):
             playScreen.executeMove(fields[playableMoves[key].sourceY][playableMoves[key].sourceX], 
                 fields[playableMoves[key].targetY][playableMoves[key].targetX])
 
-            self.music.play()
+            # self.music.play()
 
             # print fields[playableMoves[key].sourceY][playableMoves[key].sourceX].x
             glLineWidth(5.0)
