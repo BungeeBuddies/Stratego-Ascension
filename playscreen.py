@@ -18,7 +18,7 @@ class PlayScreen:
         self.xOffset = self.width/4
         self.yOffset = self.height/8 + 35
         self.fieldOffset = 1
-        self.barrierFields = [[1, 4], [3, 4], [6, 4], [8, 4], [1, 5], [3, 5], [6, 5], [8, 5]]
+        self.barrierFields = [[2, 4], [3, 4], [6, 4], [7, 4], [2, 5], [3, 5], [6, 5], [7, 5]]
 
         self.player1 = player1
         self.player2 = player2
@@ -103,7 +103,7 @@ class PlayScreen:
             if target.piece.type < source.piece.type:
                 target.piece = source.piece
                 source.piece = None
-            elif target.piece.type is source.piece.type:
+            elif target.piece.type == source.piece.type:
                 source.piece = None
                 target.piece = None
             else:
@@ -135,6 +135,8 @@ class PlayScreen:
             self.lastPlayer = self.player2
         self.header.text = self.currentPlayer.name
         self.lastPlayer.isPlaying = False
+        if not self.currentPlayer.movementPossible(self):
+            self.win(self.lastPlayer)
         for y in  self.currentPlayer.pieces:
             for piece in y:
                     piece.hidden = False
@@ -142,7 +144,7 @@ class PlayScreen:
     def _changePlayerTurnPvAI(self):
         self.firstSelected = None
         lastPlayer = None   
-        if self.currentPlayer == self.player1:
+        if self.currentPlayer is self.player1:
             self.currentPlayer = self.player2
             self.lastPlayer = self.player1
         
@@ -151,6 +153,8 @@ class PlayScreen:
             self.lastPlayer = self.player2
         self.header.text = self.currentPlayer.name
         self.lastPlayer.isPlaying = False
+        if not self.currentPlayer.movementPossible(self):
+            self.win(self.lastPlayer)
         for y in self.player2.pieces:
             for piece in y:
                 if piece is not None:
@@ -159,13 +163,15 @@ class PlayScreen:
     def _changePlayerTurnAIvAI(self):
         self.firstSelected = None
         lastPlayer = None
-        if self.currentPlayer == self.player1:
+        if self.currentPlayer is self.player1:
             self.currentPlayer = self.player2
             self.lastPlayer = self.player1
         
         else:
             self.currentPlayer = self.player1
             self.lastPlayer = self.player2
+        if not self.currentPlayer.movementPossible(self):
+            self.win(self.lastPlayer)
         self.header.text = self.currentPlayer.name
         self.lastPlayer.isPlaying = False
 
