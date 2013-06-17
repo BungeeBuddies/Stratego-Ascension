@@ -40,6 +40,7 @@ class PlayScreen:
         self.playFields = self._createPlayField()
         self.fields = [item for sublist in self.playFields for item in sublist]
 
+
         self.selectedField = None
         self.firstSelected = None
         self._changePlayerTurnArray = [self._changePlayerTurnPvP,self._changePlayerTurnPvAI,self._changePlayerTurnAIvAI]
@@ -66,9 +67,16 @@ class PlayScreen:
             elif Utils.isLegalMove(self.firstSelected, field, self.playFields): #if the move is legal, execute it
                 self.executeMove(self.firstSelected, field)
 
+    def playSound(self):
+            music = pyglet.resource.media('sounds/battle003.mp3')
+            musicPlayer = pyglet.media.ManagedSoundPlayer()
+            musicPlayer.queue(music)
+            musicPlayer.play()
+
     def _onLockDownFinish(self, source, target):
         #execute the attack
         if target.piece.type is 10:
+            self.playSound()
             if source.piece.type is 1:
                 target.piece = source.piece
                 source.piece = None
@@ -78,18 +86,24 @@ class PlayScreen:
             else:
                 source.piece = None
         elif target.piece.type is 'B':
+            self.playSound()
             if source.piece.type is 3:
                 target.piece = source.piece
                 source.piece = None
             else :
                 source.piece = None
         elif target.piece.type is 'F':
+            music = pyglet.resource.media('sounds/Victory.mp3')
+            musicPlayer = pyglet.media.ManagedSoundPlayer()
+            musicPlayer.queue(music)
+            musicPlayer.play()
             self.win(self.currentPlayer)            
         else:
+            self.playSound()
             if target.piece.type < source.piece.type:
                 target.piece = source.piece
                 source.piece = None
-            elif target.piece.type is source.piece.type:
+            elif target.piece.type == source.piece.type:
                 source.piece = None
                 target.piece = None
             else:
@@ -121,6 +135,8 @@ class PlayScreen:
             self.lastPlayer = self.player2
         self.header.text = self.currentPlayer.name
         self.lastPlayer.isPlaying = False
+        if not self.currentPlayer.movementPossible(self):
+            self.win(self.lastPlayer)
         for y in  self.currentPlayer.pieces:
             for piece in y:
                     piece.hidden = False
@@ -128,7 +144,7 @@ class PlayScreen:
     def _changePlayerTurnPvAI(self):
         self.firstSelected = None
         lastPlayer = None   
-        if self.currentPlayer == self.player1:
+        if self.currentPlayer is self.player1:
             self.currentPlayer = self.player2
             self.lastPlayer = self.player1
         
@@ -137,6 +153,8 @@ class PlayScreen:
             self.lastPlayer = self.player2
         self.header.text = self.currentPlayer.name
         self.lastPlayer.isPlaying = False
+        if not self.currentPlayer.movementPossible(self):
+            self.win(self.lastPlayer)
         for y in self.player2.pieces:
             for piece in y:
                 if piece is not None:
@@ -145,13 +163,15 @@ class PlayScreen:
     def _changePlayerTurnAIvAI(self):
         self.firstSelected = None
         lastPlayer = None
-        if self.currentPlayer == self.player1:
+        if self.currentPlayer is self.player1:
             self.currentPlayer = self.player2
             self.lastPlayer = self.player1
         
         else:
             self.currentPlayer = self.player1
             self.lastPlayer = self.player2
+        if not self.currentPlayer.movementPossible(self):
+            self.win(self.lastPlayer)
         self.header.text = self.currentPlayer.name
         self.lastPlayer.isPlaying = False
 
@@ -180,8 +200,8 @@ class PlayScreen:
                 self._changePlayerTurn = self._changePlayerTurnArray[0]
             else:
                 self._changePlayerTurn = self._changePlayerTurnArray[2]
-                self.aiDelay = 0.05
-                self.lockdownTime = 0.05
+                self.aiDelay = 0
+                self.lockdownTime = 0
             self._changePlayerTurn()
         if self.currentPlayer.isComputer and not self.currentPlayer.isPlaying:
             self.currentPlayer.play(self)
