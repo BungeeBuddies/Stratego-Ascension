@@ -25,7 +25,7 @@ class Player(object):
         self.isPlaying = True
         fields = playScreen.playFields
         playableMoves = {}
-
+        key = 0
         for row in self._pieces:
             for piece in row:
                 if piece is not None:
@@ -39,30 +39,32 @@ class Player(object):
                         for up in range(y, y+step if y+step <= len(fields) else len(fields)):
                             if Utils.isLegalMove(fields[y][x], fields[up][x], fields):
                                 if fields[up][x].piece is None or fields[up][x].piece is not None and fields[up][x].piece.owner is not piece.owner:
-                                    playableMoves[fields[y][x]] = fields[up][x]
-
-                        # Down
-                        for down in range(y-step if y-step > 0 else 0, y):
-                            if Utils.isLegalMove(fields[y][x], fields[down][x], fields):
-                                if fields[down][x].piece is None or fields[down][x].piece is not None and fields[down][x].piece.owner is not piece.owner:
-                                    playableMoves[fields[y][x]] = fields[down][x]
+                                    playableMoves[key] = moveDTO(x,y,x,up)
+                                    key +=1                       
                         
                         # Right
                         for right in range(x, x+step if x+step <= len(fields) else len(fields)):
                             if Utils.isLegalMove(fields[y][x], fields[y][right], fields):
                                 if fields[y][right].piece is None or fields[y][right].piece is not None and fields[y][right].piece.owner is not piece.owner:
-                                    playableMoves[fields[y][x]] = fields[y][right]
+                                    playableMoves[key] = moveDTO(x,y,right,y)
+                                    key +=1
                         
                         # Left
                         for left in range(x-step if x-step > 0 else 0, x):
                             if Utils.isLegalMove(fields[y][x], fields[y][left], fields):
                                 if fields[y][left].piece is None or fields[y][left].piece is not None and fields[y][left].piece.owner is not piece.owner:
-                                    playableMoves[fields[y][x]] = fields[y][left]
+                                    playableMoves[key] = moveDTO(x,y,left,y)
+                                    key +=1
+
+                        # Down
+                        for down in range(y-step if y-step > 0 else 0, y):
+                            if Utils.isLegalMove(fields[y][x], fields[down][x], fields):
+                                if fields[down][x].piece is None or fields[down][x].piece is not None and fields[down][x].piece.owner is not piece.owner:
+                                    playableMoves[key] = moveDTO(x,y,x,down)
+                                    key +=1
         if (len(playableMoves) > 0):
-            move = random.choice(playableMoves.keys())
-            sourceField = move
-            targetField = playableMoves[move]
-            playScreen.executeMove(sourceField, targetField)
+            key = random.choice(playableMoves.keys())
+            playScreen.executeMove(fields[playableMoves[key].sourceY][playableMoves[key].sourceX],fields[playableMoves[key].targetY][playableMoves[key].targetX])
             return
 
     def pieces():
@@ -75,3 +77,10 @@ class Player(object):
             del self._pieces
         return locals()
     pieces = property(**pieces())
+
+class moveDTO:
+    def __init__(self,sourceX, sourceY,targetX,targetY):
+        self.sourceY = sourceY
+        self.sourceX = sourceX
+        self.targetX = targetX
+        self.targetY = targetY
