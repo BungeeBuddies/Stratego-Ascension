@@ -67,6 +67,43 @@ class Player(object):
             playScreen.executeMove(fields[playableMoves[key].sourceY][playableMoves[key].sourceX],fields[playableMoves[key].targetY][playableMoves[key].targetX])
             return
 
+    def movementPossible(self, playScreen):
+        fields = playScreen.playFields
+        for row in self._pieces:
+            for piece in row:
+                if piece is not None:
+                    step = piece.steps+1
+                    index = Utils.getFieldIndex(piece, fields)
+                    if index is not None: #Piece has died, apparently
+                        y = index[0]
+                        x = index[1]
+
+                        # Up
+                        for up in range(y, y+step if y+step <= len(fields) else len(fields)):
+                            if Utils.isLegalMove(fields[y][x], fields[up][x], fields):
+                                if fields[up][x].piece is None or fields[up][x].piece is not None and fields[up][x].piece.owner is not piece.owner:
+                                    return True
+                        
+                        # Right
+                        for right in range(x, x+step if x+step <= len(fields) else len(fields)):
+                            if Utils.isLegalMove(fields[y][x], fields[y][right], fields):
+                                if fields[y][right].piece is None or fields[y][right].piece is not None and fields[y][right].piece.owner is not piece.owner:
+                                    return True
+                        
+                        # Left
+                        for left in range(x-step if x-step > 0 else 0, x):
+                            if Utils.isLegalMove(fields[y][x], fields[y][left], fields):
+                                if fields[y][left].piece is None or fields[y][left].piece is not None and fields[y][left].piece.owner is not piece.owner:
+                                    return True
+
+                        # Down
+                        for down in range(y-step if y-step > 0 else 0, y):
+                            if Utils.isLegalMove(fields[y][x], fields[down][x], fields):
+                                if fields[down][x].piece is None or fields[down][x].piece is not None and fields[down][x].piece.owner is not piece.owner:
+                                    return True
+        return False
+
+
     def pieces():
         doc = "The pieces property."
         def fget(self):
