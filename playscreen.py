@@ -1,5 +1,3 @@
-#Priorities: then get AIvAI to work awesome and last of all PvAI
-
 import pyglet
 import copy
 from pyglet.gl import *
@@ -33,7 +31,7 @@ class PlayScreen:
         self.selectedField = 0
         self.color = [1, 1, 1]
 
-        self.aiDelay = 0.5
+        self.aiDelay = 1.0
         self.lockdownTimer = None
         self.lockdownTime = 0.5
         self.lockdown = False
@@ -179,8 +177,8 @@ class PlayScreen:
                 self._changePlayerTurn = self._changePlayerTurnArray[0]
             else:
                 self._changePlayerTurn = self._changePlayerTurnArray[2]
-                self.aiDelay = 0.1
-                self.lockdownTime = 0.1
+                self.aiDelay = 0.05
+                self.lockdownTime = 0.05
             self._changePlayerTurn()
         if self.currentPlayer.isComputer and not self.currentPlayer.isPlaying:
             self.currentPlayer.play(self)

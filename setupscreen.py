@@ -39,7 +39,7 @@ class SetupScreen:
                           font_size=16,
                           x=self.width/2, y=self.height-20,
                           anchor_x='center', anchor_y='center')
-        self.footer = pyglet.text.Label('Player ' + player.name + ', setup your field',
+        self.footer = pyglet.text.Label(player.name + ', setup your field',
                           font_name='Arial',
                           font_size=16,
                           x=self.width/2, y=20,
@@ -170,7 +170,7 @@ class SetupScreen:
         return True         
 
     def resetBottomText(self):
-        self.footer.text = 'Player ' + self.player.name + ', setup your field'
+        self.footer.text = self.player.name + ', setup your field'
 
     def autofillRandom(self):
         self.firstSelected = None

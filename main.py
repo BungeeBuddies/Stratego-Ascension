@@ -33,12 +33,8 @@ class Window(pyglet.window.Window):
         self.whosTurn = 1
         self.player1 = Player(False, self.createPieceList(), 'Player 1')
         self.player2 = Player(False, self.createPieceList(), 'Player 2')
-        self.startScreen = StartScreen(self)
-        self.setupScreenP1 = SetupScreen(self.player1, self)
-        self.setupScreenP2 = SetupScreen(self.player2, self)
-        self.playScreen = PlayScreen(self, self.player1, self.player2)
+        self.resetWindows()
         self.victoryScreen = VictoryScreen(self)
-
         self.currentScreen = self.startScreen
 
         self.fpsLabel = pyglet.text.Label('Empty',
@@ -66,6 +62,12 @@ class Window(pyglet.window.Window):
     #         if (isButton is not None):
     #                 isButton.hover = True
     #                 self.hoveredButton = isButton
+
+    def resetWindows(self):
+        self.startScreen = StartScreen(self)
+        self.setupScreenP1 = SetupScreen(self.player1, self)
+        self.setupScreenP2 = SetupScreen(self.player2, self)
+        self.playScreen = PlayScreen(self, self.player1, self.player2)
 
     def on_mouse_press(self, x, y, button, modifiers):
 

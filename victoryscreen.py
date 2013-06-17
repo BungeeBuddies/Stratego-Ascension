@@ -1,4 +1,5 @@
 import pyglet
+import sys
 from pyglet.gl import *
 from field import Field
 from button import Button
@@ -39,13 +40,15 @@ class VictoryScreen(object):
         
     def draw(self):
         if self.buttons[0].selected:
-            # self.buttons[0].selected = False
-            self.window.currentScreen = self.window.setupScreen
+            self.buttons[0].selected = False
+            self.window.resetWindows()
+            self.window.currentScreen = self.window.setupScreenP1
         if self.buttons[1].selected:
+            self.window.resetWindows()
             self.window.currentScreen = self.window.startScreen
-            # self.buttons[1].selected = False
+            self.buttons[1].selected = False
         if self.buttons[2].selected:
-            self.window.currentScreen = self.window.Exit
+            sys.exit()
         for button in self.buttons:
             Utils.drawButton(button)
         pyglet.text.Label(self.victoryPlayer.name + ' has won!',
