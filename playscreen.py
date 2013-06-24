@@ -66,16 +66,16 @@ class PlayScreen:
             elif Utils.isLegalMove(self.firstSelected, field, self.playFields): #if the move is legal, execute it
                 self.executeMove(self.firstSelected, field)
 
-    # def playSound(self):
-    #         music = pyglet.resource.media('sounds/battle003.mp3')
-    #         musicPlayer = pyglet.media.ManagedSoundPlayer()
-    #         musicPlayer.queue(music)
-    #         musicPlayer.play()
+    def playSound(self):
+            music = pyglet.resource.media('sounds/battle003.mp3')
+            musicPlayer = pyglet.media.ManagedSoundPlayer()
+            musicPlayer.queue(music)
+            musicPlayer.play()
 
     def _onLockDownFinish(self, source, target):
         #execute the attack
         if target.piece.type is 10:
-            # self.playSound()
+            self.playSound()
             if source.piece.type is 1:
                 target.piece = source.piece
                 source.piece = None
@@ -85,7 +85,7 @@ class PlayScreen:
             else:
                 source.piece = None
         elif target.piece.type is 'B':
-            # self.playSound()
+            self.playSound()
             if source.piece.type is 3:
                 target.piece = source.piece
                 source.piece = None
@@ -199,8 +199,8 @@ class PlayScreen:
                 self._changePlayerTurn = self._changePlayerTurnArray[0]
             else:
                 self._changePlayerTurn = self._changePlayerTurnArray[2]
-                self.aiDelay = 0
-                self.lockdownTime = 0
+                self.aiDelay = 0.005
+                self.lockdownTime = 0.005
             self._changePlayerTurn()
         if self.currentPlayer.isComputer and not self.currentPlayer.isPlaying:
             self.currentPlayer.play(self)
