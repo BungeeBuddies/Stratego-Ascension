@@ -8,3 +8,4 @@ class Piece(object):
         self.owner = None
         self.hidden = False
         self.steps = steps
+        self.field = None

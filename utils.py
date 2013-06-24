@@ -6,6 +6,10 @@ class Utils(object):
 
     @staticmethod
     def drawField(field):
+
+        if (field.selected):
+            glColor3f(1, 0, 1)
+
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
         glBegin(GL_QUADS)
         # Top left

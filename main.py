@@ -52,17 +52,6 @@ class Window(pyglet.window.Window):
         if (self.selectedButton is not None):
             self.selectedButton.selected = False
 
-    # def on_mouse_motion(self, x, y, dx, dy):
-
-    #         if (self.hoveredButton is not None):
-    #                 if ([self.hoveredButton.x, self.hoveredButton.y] is not [x, y]):
-    #                         self.hoveredButton.hover = False
-
-    #         isButton = self.isButton(x, y)
-    #         if (isButton is not None):
-    #                 isButton.hover = True
-    #                 self.hoveredButton = isButton
-
     def resetWindows(self):
         self.startScreen = StartScreen(self)
         self.setupScreenP1 = SetupScreen(self.player1, self)
