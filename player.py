@@ -99,30 +99,42 @@ class Player(object):
                 targetPiece = fields[targetY][targetX].piece
 
                 if targetPiece is not None:
-                    movesScore[move] += 1
+                    movesScore[move] += 1 # 1
 
                     if targetPiece in self.knownPieces:
-                        movesScore[move] += 1
+                        print "------------------- Target is a bomb -------------------"
+                        movesScore[move] += 1 # 2
                         
                         # If target is a bomb
                         if (targetPiece.type is 'B'):
+                            print "------------------- Target is a bomb -------------------"
                             if (sourcePiece.type is 3):
-                                movesScore[move] = 4
+                                print str(sourcePiece.type) + " is dismantling bomb"
+                                movesScore[move] += 2 # 4
+                            else:
+                                print str(sourcePiece.type) + " is not attacking bomb"
+                                movesScore[move] = -1
 
                         # If target is not a bomb
                         else:
+                            print "------------------- Target is not a bomb -------------------"
                             # If source is stronger than target, set highest priority
                             if targetPiece.type < sourcePiece.type:
-                                movesScore[move] += 1
+                                print str(sourcePiece.type) + " is stronger than " + str(targetPiece.type)
+                                movesScore[move] += 1 # 3
 
                             # If source is a spy and target is a marshall, set highest priority
                             elif sourcePiece.type is 1 and targetPiece.type is 10:
-                                movesScore[move] = 5
+                                print str(sourcePiece.type) + " is capturing " + str(targetPiece.type)
+                                movesScore[move] += 3 # 5
                             
                             # Else do nothing
                             else:
+                                print str(sourcePiece.type) + " is not doing anything"
                                 movesScore[move] = -1
 
+            print "" 
+            
             highestScore = max(movesScore.iteritems(), key=operator.itemgetter(1))[1]
             highestMoves = []
 
@@ -136,7 +148,6 @@ class Player(object):
                 fields[highestMove.targetY][highestMove.targetX])
 
             attackedField = fields[highestMove.targetY][highestMove.targetX]
-
             if (attackedField is not None):
                 self.knownPieces.append(attackedField.piece)
 
