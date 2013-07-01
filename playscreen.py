@@ -8,6 +8,7 @@ from time import sleep
 import threading
 from threading import Lock
 
+
 class PlayScreen:
 
     def __init__(self, window, player1, player2):
@@ -39,7 +40,7 @@ class PlayScreen:
         self.playFields = self._createPlayField()
         self.fields = [item for sublist in self.playFields for item in sublist]
 
-
+        self.fieldMutex = Lock()
         self.selectedField = None
         self.firstSelected = None
         self._changePlayerTurnArray = [self._changePlayerTurnPvP, self._changePlayerTurnPvAI, self._changePlayerTurnAIvAI]
@@ -74,6 +75,7 @@ class PlayScreen:
 
     def _onLockDownFinish(self, source, target):
         #execute the attack
+        self.fieldMutex.acquire()
         if target.piece.type is 10:
             # self.playSound()
             if source.piece.type is 1:
@@ -104,6 +106,7 @@ class PlayScreen:
             else:
                 source.piece = None
         self._changePlayerTurn()
+        self.fieldMutex.release()
         self.lockdown = False   
 
     def _changePlayerTurnPvP(self):
@@ -188,6 +191,7 @@ class PlayScreen:
         return playFields
 
     def draw(self):
+        self.fieldMutex.acquire()
         if self.currentPlayer is None:
             if not self.player1.isComputer and self.player2.isComputer:
                 self._changePlayerTurn = self._changePlayerTurnArray[1]
@@ -216,7 +220,7 @@ class PlayScreen:
                 else: 
                     glColor3f(1, 1, 1)                
                 Utils.drawField(field)
-
+        self.fieldMutex.release()
     #returns true after making the move, if this fails for some reason it returns false
     def executeMove(self,source, target):
         #check if its a legal move

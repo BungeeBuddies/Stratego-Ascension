@@ -131,7 +131,7 @@ class Player(object):
                             # Else do nothing
                             else:
                                 print str(sourcePiece.type) + " is not doing anything"
-                                movesScore[move] = -1
+                                movesScore[move] = 1
 
             print "" 
             
